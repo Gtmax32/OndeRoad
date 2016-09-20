@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">OndeRoad</string>
+
+    <string name="facebook_app_id">1262194670479172</string>
+
+    <string name="main_fragment">Main</string>
+
+    <string name="favorites_fragment">Favorites</string>
+
+    <string name="spot_fragment">Spot</string>
+
+    <string name="settings_fragment">Settings</string>
+
+    <string name="login_button">Facebook Login</string>
+
+    <string name="info_create">Crea il tuo viaggio</string>
+
+    <string name="region_label">Regione:</string>
+
+    <string name="province_label">Provincia:</string>
+
+    <string name="meeting_label">Punto di ritrovo:</string>
+
+    <string name="date_label">Data:</string>
+
+    <string-array name="region_array">
+        <item>Liguria</item>
+        <item>Toscana</item>
+    </string-array>
+
+    <string-array name="province_array">
+        <item>La Spezia</item>
+        <item>Genova</item>
+        <item>Viareggio</item>
+    </string-array>
+</resources>
