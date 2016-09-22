@@ -5,6 +5,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -12,13 +13,16 @@ import android.widget.Spinner;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.fragment.DateFragment;
 import com.unimi.mobidev.onderoad.fragment.TimeFragment;
+import com.unimi.mobidev.onderoad.other.RegionProvinceDict;
 
 import java.util.Calendar;
 import java.util.Locale;
 
 public class CreateActivity extends AppCompatActivity {
-    private Spinner regionSpinner;
-    private Spinner provinceSpinner;
+    private Spinner regionDepartureSpinner;
+    private Spinner provinceDepartureSpinner;
+    private Spinner regionDestinationSpinner;
+    private Spinner provinceDestinationSpinner;
     private Button datePickerButton;
     private Button timePickerButton;
 
@@ -37,17 +41,34 @@ public class CreateActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.info_create);
 
-        regionSpinner = (Spinner) findViewById(R.id.departureRegionSpinner);
+        regionDepartureSpinner = (Spinner) findViewById(R.id.departureRegionSpinner);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.region_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        regionSpinner.setAdapter(adapter);
+        ArrayAdapter<String> regionAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, RegionProvinceDict.getKeys());
+        regionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        regionDepartureSpinner.setAdapter(regionAdapter);
 
-        provinceSpinner = (Spinner) findViewById(R.id.departureProvinceSpinner);
+        provinceDepartureSpinner = (Spinner) findViewById(R.id.departureProvinceSpinner);
+        provinceDepartureSpinner.setEnabled(false);
 
-        adapter = ArrayAdapter.createFromResource(this, R.array.province_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        provinceSpinner.setAdapter(adapter);
+        regionDepartureSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                provinceDepartureSpinner.setEnabled(true);
+
+                //ArrayAdapter<String> adapter = new ArrayAdapter<String>(selectedItemView,android.R.layout.simple_spinner_item,RegionProvinceDict.getElemFromKey(parentView.getItemAtPosition(position).toString()));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+
+        ArrayAdapter<String> provinceAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, RegionProvinceDict.getKeys());
+        provinceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        provinceDepartureSpinner.setAdapter(provinceAdapter);
 
         datePickerButton = (Button) findViewById(R.id.dateButton);
         datePickerButton.setText(todayText);

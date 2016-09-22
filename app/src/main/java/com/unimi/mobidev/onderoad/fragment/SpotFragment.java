@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.unimi.mobidev.onderoad.R;
 
@@ -13,7 +14,7 @@ import com.unimi.mobidev.onderoad.R;
  * A simple {@link Fragment} subclass.
  */
 public class SpotFragment extends Fragment {
-
+    private TextView temp;
 
     public SpotFragment() {
         // Required empty public constructor
@@ -24,6 +25,11 @@ public class SpotFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this com.unimi.mobidev.onderoad.fragment
+
+        temp = (TextView) container.findViewById(R.id.tempTextView);
+
+
+
         return inflater.inflate(R.layout.fragment_spot, container, false);
     }
 

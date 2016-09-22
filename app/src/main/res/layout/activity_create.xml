@@ -24,7 +24,7 @@
         android:layout_centerHorizontal="true" >
 
         <!--Departure Info-->
-        
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -131,7 +131,7 @@
                 android:background="@android:color/darker_gray"
                 android:elevation="5dp"
                 android:layout_alignParentBottom="false"
-                android:layout_below="@+id/departureLayout">
+                android:layout_below="@id/departureLayout">
 
                 <TextView
                     android:id="@+id/destinationRegionLabel"
