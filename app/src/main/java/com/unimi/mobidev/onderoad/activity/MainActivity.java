@@ -25,9 +25,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String facebook_data = "";
+        String facebook_data;
 
-        facebook_data = getIntent().getStringExtra("User_name") + getIntent().getStringExtra("User_surname");
+        facebook_data = getIntent().getStringExtra("User_name");
 
         System.out.println("Facebook data: "  + facebook_data);
 

@@ -24,9 +24,8 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 
@@ -42,22 +41,23 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = (LoginButton) findViewById(R.id.loginButton);
 
         loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_birthday", "user_friends"));
+
         loginButton.registerCallback(cm, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                String name = "",surname = "";
+                String name = "";
 
                 System.out.println("In onSuccess...");
-                Profile user =  Profile.getCurrentProfile();
-                if(user != null){
+
+                Profile user = Profile.getCurrentProfile();
+                if (user != null) {
                     name = user.getName();
 
-                    System.out.println("Facebook data: "  + name + " " + surname);
+                    System.out.println("Facebook data: " + name);
                 }
 
-                loginIntent = new Intent(getApplicationContext(),MainActivity.class);
-                loginIntent.putExtra("User_name",name);
-                loginIntent.putExtra("User_surname",surname);
+                loginIntent = new Intent(getApplicationContext(), MainActivity.class);
+                loginIntent.putExtra("User_name", name);
                 startActivity(loginIntent);
             }
 

@@ -37,13 +37,13 @@ public class CreateActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.info_create);
 
-        regionSpinner = (Spinner) findViewById(R.id.regionSpinner);
+        regionSpinner = (Spinner) findViewById(R.id.departureRegionSpinner);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.region_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         regionSpinner.setAdapter(adapter);
 
-        provinceSpinner = (Spinner) findViewById(R.id.provinceSpinner);
+        provinceSpinner = (Spinner) findViewById(R.id.departureProvinceSpinner);
 
         adapter = ArrayAdapter.createFromResource(this, R.array.province_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
