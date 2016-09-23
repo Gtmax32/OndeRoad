@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -40,37 +41,52 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton = (LoginButton) findViewById(R.id.loginButton);
 
-        loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_birthday", "user_friends"));
+        if (AccessToken.getCurrentAccessToken() == null){
+            loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_birthday", "user_friends"));
 
-        loginButton.registerCallback(cm, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                String name = "";
+            loginButton.registerCallback(cm, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    String name = "";
 
-                System.out.println("In onSuccess...");
+                    System.out.println("In onSuccess...");
 
-                Profile user = Profile.getCurrentProfile();
-                if (user != null) {
-                    name = user.getName();
+                    Profile user = Profile.getCurrentProfile();
+                    if (user != null) {
+                        name = user.getName();
 
-                    System.out.println("Facebook data: " + name);
+                        System.out.println("Facebook data: " + name);
+                    }
+
+                    loginIntent = new Intent(getApplicationContext(), MainActivity.class);
+                    loginIntent.putExtra("User_name", name);
+                    startActivity(loginIntent);
                 }
 
-                loginIntent = new Intent(getApplicationContext(), MainActivity.class);
-                loginIntent.putExtra("User_name", name);
-                startActivity(loginIntent);
+                @Override
+                public void onCancel() {
+                    System.out.println("In onCancel...");
+                }
+
+                @Override
+                public void onError(FacebookException exception) {
+                    System.out.println("In onError...");
+                }
+            });
+        }
+        else{
+            String name = "";
+            Profile user = Profile.getCurrentProfile();
+            if (user != null) {
+                name = user.getName();
+
+                System.out.println("Facebook data: " + name);
             }
 
-            @Override
-            public void onCancel() {
-                System.out.println("In onCancel...");
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                System.out.println("In onError...");
-            }
-        });
+            loginIntent = new Intent(getApplicationContext(), MainActivity.class);
+            loginIntent.putExtra("User_name", name);
+            startActivity(loginIntent);
+        }
     }
 
     @Override

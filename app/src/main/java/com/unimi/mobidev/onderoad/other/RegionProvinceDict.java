@@ -2,8 +2,8 @@ package com.unimi.mobidev.onderoad.other;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Created by Giuseppe on 22/09/2016.
@@ -11,9 +11,9 @@ import java.util.List;
 
 public class RegionProvinceDict {
 
-    private static final HashMap<String, List<String>> DICT;
+    private static final TreeMap<String, List<String>> DICT;
     static{
-        DICT = new HashMap<>();
+        DICT = new TreeMap<>();
         DICT.put("Abruzzo", Arrays.asList("Chieti","L'Aquila","Pescara","Teramo"));
         DICT.put("Basilicata",Arrays.asList("Matera","Potenza"));
         DICT.put("Calabria",Arrays.asList("Catanzaro","Cosenza","Crotone","Reggio di Calabria","Vibo Valentia"));
@@ -34,6 +34,7 @@ public class RegionProvinceDict {
         DICT.put("Umbria",Arrays.asList("Perugia","Terni"));
         DICT.put("Valle d'Aosta",Arrays.asList("Aosta"));
         DICT.put("Veneto",Arrays.asList("Belluno","Padova","Rovigo","Treviso","Vicenza","Venezia","Verona"));
+
     }
 
     public static ArrayList<String> getKeys(){

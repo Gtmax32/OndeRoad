@@ -21,25 +21,52 @@
         android:layout_below="@+id/infoToolbar"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_centerHorizontal="true" >
-
-        <!--Departure Info-->
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!--Departure Info-->
+            <LinearLayout
+                android:id="@+id/departureLabelLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFD9D9D9"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:elevation="5dp">
+
+                <TextView
+                    android:id="@+id/departureLayoutLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/departure_label"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"/>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="#FF000000"/>
+
+            </LinearLayout>
 
             <GridLayout
                 android:id="@+id/departureLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
+                android:layout_below="@id/departureLabelLayout"
                 android:useDefaultMargins="false"
                 android:rowCount="4"
                 android:columnCount="2"
-                android:background="@android:color/darker_gray"
-                android:elevation="5dp">
+                android:background="#FFB3B3B3"
+                android:elevation="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp">
 
                 <TextView
                     android:id="@+id/departureRegionLabel"
@@ -72,29 +99,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/meeting_label"
-                    android:layout_marginStart="10dp" />
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp" />
 
                 <EditText
                     android:id="@+id/addressTextField"
                     android:layout_width="wrap_content"
-                    android:layout_height="35dp"
+                    android:layout_height="wrap_content"
                     android:inputType="textPostalAddress"
                     android:ems="10"
                     android:layout_row="2"
                     android:layout_column="1"
                     android:layout_marginStart="10dp"
+                    android:gravity="start|center_vertical"
                     android:layout_marginTop="10dp"/>
 
                 <ImageView
                     android:id="@+id/dateIcon"
                     android:src="@drawable/ic_today_black_24dp"
-                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
                 <Button
                     android:id="@+id/dateButton"
-                    android:background="@android:color/darker_gray"
+                    android:background="#FFB3B3B3"
                     android:layout_marginTop="8dp"
                     android:textAllCaps="false"
                     android:onClick="datePickerListener"
@@ -109,29 +138,58 @@
 
                 <Button
                     android:id="@+id/timeButton"
-                    android:background="@android:color/darker_gray"
+                    android:background="#FFB3B3B3"
                     android:layout_marginTop="8dp"
                     android:textAllCaps="false"
                     android:onClick="timePickerListener"
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content" />
+                    android:layout_width="wrap_content"
+                    android:layout_marginBottom="10dp" />
 
             </GridLayout>
 
             <!--Destination Info-->
 
+            <LinearLayout
+                android:id="@+id/destinationLabelLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFD9D9D9"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:layout_below="@id/departureLayout"
+                android:elevation="5dp">
+
+                <TextView
+                    android:id="@+id/destinationLayoutLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/destination_label"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"/>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="#FF000000"/>
+
+            </LinearLayout>
+
             <GridLayout
                 android:id="@+id/destinationLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:useDefaultMargins="false"
                 android:rowCount="2"
                 android:columnCount="2"
-                android:background="@android:color/darker_gray"
+                android:background="#FFB3B3B3"
                 android:elevation="5dp"
                 android:layout_alignParentBottom="false"
-                android:layout_below="@id/departureLayout">
+                android:layout_below="@id/destinationLabelLayout"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp">
 
                 <TextView
                     android:id="@+id/destinationRegionLabel"
@@ -144,22 +202,125 @@
                     android:id="@+id/destinationRegionSpinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp" />
 
                 <TextView
                     android:id="@+id/destinationProvinceLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/province_label"
-                    android:layout_marginStart="10dp"/>
+                    android:layout_margin="10dp" />
 
                 <Spinner
                     android:id="@+id/destinationProvinceSpinner"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp" />
+
+            </GridLayout>
+
+            <!--Car Info Layout-->
+
+            <LinearLayout
+                android:id="@+id/carInfoLabelLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFD9D9D9"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:layout_below="@id/destinationLayout"
+                android:elevation="5dp">
+
+                <TextView
+                    android:id="@+id/carInfoLayoutLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/car_info_label"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"/>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="#FF000000"/>
+
+            </LinearLayout>
+
+            <GridLayout
+                android:id="@+id/carInfoLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:useDefaultMargins="false"
+                android:rowCount="5"
+                android:columnCount="2"
+                android:background="#FFB3B3B3"
+                android:elevation="5dp"
+                android:layout_alignParentBottom="false"
+                android:layout_below="@id/carInfoLabelLayout"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp">
+
+                <TextView
+                    android:id="@+id/priceLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/price_label"
+                    android:layout_margin="10dp"/>
+
+                <TextView
+                    android:id="@+id/passengersLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/passengers_label"
+                    android:layout_margin="10dp"/>
+
+                <Spinner
+                    android:id="@+id/passengersSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"/>
+
+                <TextView
+                    android:id="@+id/outboundLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/outbound_label"
+                    android:layout_margin="10dp"/>
+
+                <CheckBox
+                    android:id="@+id/outboundCheckBox"
+                    android:layout_margin="10dp"/>
+
+                <TextView
+                    android:id="@+id/surfboardNumberLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/surfboard_number"
+                    android:layout_margin="10dp"/>
+
+                <Spinner
+                    android:id="@+id/surfboardNumberSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"/>
+
+                <TextView
+                    android:id="@+id/carSupportTypeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/car_table_support"
+                    android:layout_margin="10dp"/>
+
+                <Spinner
+                    android:id="@+id/carSupportTypeSpinner"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
             </GridLayout>
+
 
         </RelativeLayout>
 

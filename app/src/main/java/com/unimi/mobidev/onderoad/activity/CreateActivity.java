@@ -15,6 +15,7 @@ import com.unimi.mobidev.onderoad.fragment.DateFragment;
 import com.unimi.mobidev.onderoad.fragment.TimeFragment;
 import com.unimi.mobidev.onderoad.other.RegionProvinceDict;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -41,11 +42,13 @@ public class CreateActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.info_create);
 
+        //Departure Info
+
         regionDepartureSpinner = (Spinner) findViewById(R.id.departureRegionSpinner);
 
-        ArrayAdapter<String> regionAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, RegionProvinceDict.getKeys());
-        regionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        regionDepartureSpinner.setAdapter(regionAdapter);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, RegionProvinceDict.getKeys());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        regionDepartureSpinner.setAdapter(adapter);
 
         provinceDepartureSpinner = (Spinner) findViewById(R.id.departureProvinceSpinner);
         provinceDepartureSpinner.setEnabled(false);
@@ -53,9 +56,7 @@ public class CreateActivity extends AppCompatActivity {
         regionDepartureSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                provinceDepartureSpinner.setEnabled(true);
-
-                //ArrayAdapter<String> adapter = new ArrayAdapter<String>(selectedItemView,android.R.layout.simple_spinner_item,RegionProvinceDict.getElemFromKey(parentView.getItemAtPosition(position).toString()));
+                spinnerItemSelected(provinceDepartureSpinner,parentView,selectedItemView,position,id);
             }
 
             @Override
@@ -64,17 +65,35 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
-
-
-        ArrayAdapter<String> provinceAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, RegionProvinceDict.getKeys());
-        provinceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        provinceDepartureSpinner.setAdapter(provinceAdapter);
-
         datePickerButton = (Button) findViewById(R.id.dateButton);
         datePickerButton.setText(todayText);
 
         timePickerButton = (Button) findViewById(R.id.timeButton);
         timePickerButton.setText(nowText);
+
+        //Destination Info
+
+        regionDestinationSpinner = (Spinner) findViewById(R.id.destinationRegionSpinner);
+
+        // TODO: Inserire regioni e province degli spot
+        //adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, RegionProvinceDict.getKeys());
+        //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        regionDestinationSpinner.setAdapter(adapter);
+
+        provinceDestinationSpinner = (Spinner) findViewById(R.id.destinationProvinceSpinner);
+        provinceDestinationSpinner.setEnabled(false);
+
+        regionDestinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                spinnerItemSelected(provinceDestinationSpinner,parentView,selectedItemView,position,id);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
     }
 
@@ -88,4 +107,18 @@ public class CreateActivity extends AppCompatActivity {
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
+    private void spinnerItemSelected(Spinner provinceSpinner, AdapterView<?> parentView, View selectedItemView, int position, long id){
+        if (!provinceSpinner.isEnabled())
+            provinceSpinner.setEnabled(true);
+
+        ArrayAdapter<String> adapter = null;
+        ArrayList<String> provinceList = RegionProvinceDict.getElemFromKey(parentView.getItemAtPosition(position).toString());
+
+        if(provinceList != null) {
+            adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, provinceList);
+
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            provinceSpinner.setAdapter(adapter);
+        }
+    }
 }

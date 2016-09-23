@@ -13,6 +13,12 @@
 
     <string name="login_button">Facebook Login</string>
 
+    <string name="departure_label">Informazioni Partenza</string>
+
+    <string name="destination_label">Informazioni Destinazione</string>
+
+    <string name="car_info_label">Informazioni Macchina</string>
+
     <string name="info_create">Crea il tuo viaggio</string>
 
     <string name="region_label">Regione:</string>
@@ -21,5 +27,20 @@
 
     <string name="meeting_label">Punto di ritrovo:</string>
 
-    <string name="date_label">Data:</string>\
+    <string name="date_label">Data:</string>
+
+    <string name="price_label">Prezzo:</string>
+    
+    <string name="passengers_label">Passeggeri:</string>
+    
+    <string name="outbound_label">Solo andata?</string>
+    
+    <string name="surfboard_number">Tavole trasportabili:</string>
+    
+    <string name="car_table_support">Tipologia supporto:</string>
+
+    <string-array name="support_types">
+        <item>Soft rack</item>
+        <item>Fascioni</item>
+    </string-array>
 </resources>
