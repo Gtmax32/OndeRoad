@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "com.unimi.mobidev.onderoad"
-        minSdkVersion 23
-        targetSdkVersion 23
+        minSdkVersion 22
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
@@ -17,8 +17,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
 
+}
 repositories {
     mavenCentral()
 }
