@@ -1,7 +1,9 @@
 package com.unimi.mobidev.onderoad.other;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,6 +22,12 @@ public class PriceSelector extends LinearLayout {
 
     private int minValue = 0;
     private int maxValue = 50;
+
+    private boolean plusButtonIsPressed = false;
+    private boolean minusButtonIsPressed = false;
+    private final long REPEAT_INTERVAL_MS = 100l;
+
+    private Handler handler = new Handler();
 
     public PriceSelector(Context context){
         super(context);
@@ -45,6 +53,25 @@ public class PriceSelector extends LinearLayout {
                 decrementValue();
             }
         });
+        minusButton.setOnLongClickListener(
+                new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View arg0) {
+                        minusButtonIsPressed = true;
+                        handler.post(new AutoDecrementer());
+                        return false;
+                    }
+                }
+        );
+        minusButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if ((event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)) {
+                    minusButtonIsPressed = false;
+                }
+                return false;
+            }
+        });
 
         plusButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,19 +79,85 @@ public class PriceSelector extends LinearLayout {
                 incrementValue();
             }
         });
+        plusButton.setOnLongClickListener(
+                new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View arg0) {
+                        plusButtonIsPressed = true;
+                        handler.post(new AutoIncrementer());
+                        return false;
+                    }
+                }
+        );
+
+        plusButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if ((event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)) {
+                    plusButtonIsPressed = false;
+                }
+                return false;
+            }
+        });
+    }
+
+    public int getMinValue(){
+        return this.minValue;
+    }
+
+    public void setMinValue(int value){
+        this.minValue = value;
+    }
+
+    public int getMaxValue(){
+        return this.maxValue;
+    }
+
+    public void setMaxValue(int value){
+        this.maxValue = value;
+    }
+
+    public int getValue(){
+        return Integer.valueOf(priceTextView.getText().toString());
+    }
+
+    public void setValue(int value){
+        if(value < minValue)
+            priceTextView.setText(String.valueOf(minValue));
+        else if (value > maxValue)
+            priceTextView.setText(String.valueOf(maxValue));
+            else
+                priceTextView.setText(String.valueOf(value));
     }
 
     private void decrementValue(){
-        int currentValue = Integer.valueOf(priceTextView.getText().toString());
+        int currentValue = this.getValue();
 
-        if (currentValue > minValue)
-            priceTextView.setText(String.valueOf(currentValue - 1));
+        this.setValue(currentValue - 1);
     }
 
     private void incrementValue(){
-        int currentValue = Integer.valueOf(priceTextView.getText().toString());
+        int currentValue = this.getValue();
 
-        if (currentValue < maxValue)
-            priceTextView.setText(String.valueOf(currentValue + 1));
+        this.setValue(currentValue + 1);
+    }
+
+    private class AutoIncrementer implements Runnable {
+        @Override
+        public void run() {
+            if(plusButtonIsPressed){
+                incrementValue();
+                handler.postDelayed( new AutoIncrementer(), REPEAT_INTERVAL_MS);
+            }
+        }
+    }
+    private class AutoDecrementer implements Runnable {
+        @Override
+        public void run() {
+            if(minusButtonIsPressed){
+                decrementValue();
+                handler.postDelayed(new AutoDecrementer(), REPEAT_INTERVAL_MS);
+            }
+        }
     }
 }

@@ -328,6 +328,15 @@
 
             </GridLayout>
 
+            <Button
+                android:id="@+id/saveCarButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/carInfoLayout"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="10dp"
+                android:text="@string/save_car_button"
+                android:onClick="saveCarListener"/>
 
         </RelativeLayout>
 

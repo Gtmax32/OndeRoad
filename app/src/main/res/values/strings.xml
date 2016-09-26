@@ -39,6 +39,8 @@
     
     <string name="car_table_support">Tipologia supporto:</string>
 
+    <string name="save_car_button">Salva</string>
+
     <string-array name="support_types">
         <item>Soft rack</item>
         <item>Fascioni</item>
