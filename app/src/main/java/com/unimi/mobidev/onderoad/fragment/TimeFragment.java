@@ -20,6 +20,7 @@ import java.util.Locale;
 
 public class TimeFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
+    private final static int TIME_PICKER_INTERVAL = 5;
 
     public TimeFragment() {
         // Required empty public constructor

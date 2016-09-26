@@ -66,7 +66,9 @@
                 android:background="#FFB3B3B3"
                 android:elevation="5dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp">
+                android:layout_marginStart="10dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
                 <TextView
                     android:id="@+id/departureRegionLabel"
@@ -112,7 +114,9 @@
                     android:layout_column="1"
                     android:layout_marginStart="10dp"
                     android:gravity="start|center_vertical"
-                    android:layout_marginTop="10dp"/>
+                    android:layout_marginTop="10dp"
+                    android:nextFocusUp="@id/addressTextField"
+                    android:nextFocusLeft="@id/addressTextField"/>
 
                 <ImageView
                     android:id="@+id/dateIcon"

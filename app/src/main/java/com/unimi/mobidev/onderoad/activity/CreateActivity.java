@@ -4,15 +4,21 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.fragment.DateFragment;
 import com.unimi.mobidev.onderoad.fragment.TimeFragment;
+import com.unimi.mobidev.onderoad.other.CarInfo;
 import com.unimi.mobidev.onderoad.other.RegionProvinceDict;
 
 import java.util.ArrayList;
@@ -23,22 +29,28 @@ import java.util.Locale;
 public class CreateActivity extends AppCompatActivity {
     private Spinner regionDepartureSpinner;
     private Spinner provinceDepartureSpinner;
+    private EditText addressTextField;
+    private Button datePickerButton;
+    private Button timePickerButton;
 
     private Spinner regionDestinationSpinner;
     private Spinner provinceDestinationSpinner;
 
-    private Button datePickerButton;
-    private Button timePickerButton;
-
+    private TextView priceTextView;
     private Spinner passeggersSpinner;
+    private CheckBox outboundCheckBox;
     private Spinner surfboardNumberSpinner;
     private Spinner carSupportTypeSpinner;
+
+    private CarInfo newCar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         String todayText, nowText;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
+
+        newCar = new CarInfo();
 
         Calendar todayDate = Calendar.getInstance();
 
@@ -64,6 +76,8 @@ public class CreateActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 spinnerItemSelected(provinceDepartureSpinner,parentView,selectedItemView,position,id);
+
+                newCar.setRegionDeparture(parentView.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -72,11 +86,70 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
+        provinceDepartureSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                newCar.setProvinceDeparture(parentView.getItemAtPosition(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        addressTextField = (EditText) findViewById(R.id.addressTextField);
+        addressTextField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                newCar.setMeetingPoint(addressTextField.getText().toString());
+            }
+        });
+
         datePickerButton = (Button) findViewById(R.id.dateButton);
         datePickerButton.setText(todayText);
+        datePickerButton.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                newCar.setDepartureDate(datePickerButton.getText().toString());
+            }
+        });
 
         timePickerButton = (Button) findViewById(R.id.timeButton);
         timePickerButton.setText(nowText);
+        timePickerButton.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                newCar.setDepartureTime(timePickerButton.getText().toString());
+            }
+        });
 
         //Destination Info
 
@@ -94,11 +167,44 @@ public class CreateActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 spinnerItemSelected(provinceDestinationSpinner,parentView,selectedItemView,position,id);
+
+                newCar.setRegionDestination(parentView.getItemAtPosition(position).toString());
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        provinceDestinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                newCar.setProvinceDestination(parentView.getItemAtPosition(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        //Car Info
+
+        priceTextView = (TextView) findViewById(R.id.priceTextView);
+        priceTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                newCar.setPriceCarInfo(Integer.valueOf(priceTextView.getText().toString()));
             }
         });
 
@@ -108,8 +214,34 @@ public class CreateActivity extends AppCompatActivity {
         passeggersSpinner = (Spinner) findViewById(R.id.passengersSpinner);
         passeggersSpinner.setAdapter(adapter);
 
+        passeggersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                newCar.setPassengersNumberCarInfo(Integer.valueOf(parentView.getItemAtPosition(position).toString()));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        outboundCheckBox = (CheckBox) findViewById(R.id.outboundCheckBox);
+
         surfboardNumberSpinner = (Spinner) findViewById(R.id.surfboardNumberSpinner);
         surfboardNumberSpinner.setAdapter(adapter);
+
+        surfboardNumberSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                newCar.setSurfboardNumberCarInfo(Integer.valueOf(parentView.getItemAtPosition(position).toString()));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         //TODO: Bisognerebbe modificare il numero di tavole trasportabili in base al tipo di supporto ed il numero di passeggeri
         adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, Arrays.asList("Barre porta pacchi","Soft rack","Dentro l'auto"));
@@ -117,6 +249,18 @@ public class CreateActivity extends AppCompatActivity {
 
         carSupportTypeSpinner = (Spinner) findViewById(R.id.carSupportTypeSpinner);
         carSupportTypeSpinner.setAdapter(adapter);
+
+        carSupportTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                newCar.setSurfboardTypeCarInfo(parentView.getItemAtPosition(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
     }
 
@@ -146,6 +290,7 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     public void saveCarListener(View w){
-
+        newCar.setOutboundCarInfo(outboundCheckBox.isChecked());
+        System.out.println(newCar.toString());
     }
 }
