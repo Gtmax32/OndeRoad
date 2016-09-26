@@ -16,16 +16,23 @@ import com.unimi.mobidev.onderoad.fragment.TimeFragment;
 import com.unimi.mobidev.onderoad.other.RegionProvinceDict;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
 public class CreateActivity extends AppCompatActivity {
     private Spinner regionDepartureSpinner;
     private Spinner provinceDepartureSpinner;
+
     private Spinner regionDestinationSpinner;
     private Spinner provinceDestinationSpinner;
+
     private Button datePickerButton;
     private Button timePickerButton;
+
+    private Spinner passeggersSpinner;
+    private Spinner surfboardNumberSpinner;
+    private Spinner carSupportTypeSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +101,22 @@ public class CreateActivity extends AppCompatActivity {
 
             }
         });
+
+        adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, Arrays.asList("1","2","3","4","5"));
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        passeggersSpinner = (Spinner) findViewById(R.id.passengersSpinner);
+        passeggersSpinner.setAdapter(adapter);
+
+        surfboardNumberSpinner = (Spinner) findViewById(R.id.surfboardNumberSpinner);
+        surfboardNumberSpinner.setAdapter(adapter);
+
+        //TODO: Bisognerebbe modificare il numero di tavole trasportabili in base al tipo di supporto ed il numero di passeggeri
+        adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, Arrays.asList("Barre porta pacchi","Soft rack","Dentro l'auto"));
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        carSupportTypeSpinner = (Spinner) findViewById(R.id.carSupportTypeSpinner);
+        carSupportTypeSpinner.setAdapter(adapter);
 
     }
 
