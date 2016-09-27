@@ -1,6 +1,4 @@
-package com.unimi.mobidev.onderoad.other;
-
-import java.util.Calendar;
+package com.unimi.mobidev.onderoad.model;
 
 /**
  * Created by Giuseppe on 26/09/2016.

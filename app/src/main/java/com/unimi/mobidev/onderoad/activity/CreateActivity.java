@@ -1,11 +1,16 @@
 package com.unimi.mobidev.onderoad.activity;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,7 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,24 +30,22 @@ import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.fragment.DateFragment;
 import com.unimi.mobidev.onderoad.fragment.TimeFragment;
-import com.unimi.mobidev.onderoad.other.CarInfo;
+import com.unimi.mobidev.onderoad.model.CarInfo;
 import com.unimi.mobidev.onderoad.other.PlaceAutocompleteAdapter;
-import com.unimi.mobidev.onderoad.other.RegionProvinceDict;
+import com.unimi.mobidev.onderoad.model.RegionProvinceDict;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class CreateActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class CreateActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
     private Spinner regionDepartureSpinner;
     private Spinner provinceDepartureSpinner;
-    private EditText addressTextField;
     private Button datePickerButton;
     private Button timePickerButton;
 
@@ -64,37 +66,21 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
     private AutoCompleteTextView mAutocompleteView;
 
-    private TextView mPlaceDetailsText;
+    private LocationManager currentLocation;
 
-    private TextView mPlaceDetailsAttribution;
-
-    private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
-            new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
+    //TODO: Inserire, come bounds, la locazione attuale dell'utente
+    private LatLngBounds currentLocationBound = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         String todayText, nowText;
         super.onCreate(savedInstanceState);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, 0 /* clientId */, this)
-                .addApi(Places.GEO_DATA_API)
-                .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, 0 /* clientId */, this).addApi(Places.GEO_DATA_API).build();
 
         setContentView(R.layout.activity_create);
 
-        // Retrieve the AutoCompleteTextView that will display Place suggestions.
-        mAutocompleteView = (AutoCompleteTextView)
-                findViewById(R.id.autocomplete_places);
 
-        // Register a listener that receives callbacks when a suggestion has been selected
-        mAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
-
-        // Set up the adapter that will retrieve suggestions from the Places Geo Data API that cover
-        // the entire world.
-        mAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, BOUNDS_GREATER_SYDNEY,
-                null);
-        mAutocompleteView.setAdapter(mAdapter);
 
         newCar = new CarInfo();
 
@@ -144,22 +130,16 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        /*addressTextField = (EditText) findViewById(R.id.addressTextField);
-        addressTextField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+        // Retrieve the AutoCompleteTextView that will display Place suggestions.
+        mAutocompleteView = (AutoCompleteTextView) findViewById(R.id.autocomplete_places);
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+        // Register a listener that receives callbacks when a suggestion has been selected
+        mAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
 
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                newCar.setMeetingPoint(addressTextField.getText().toString());
-            }
-        });*/
+        // Set up the adapter that will retrieve suggestions from the Places Geo Data API that cover
+        // the entire world.
+        mAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, currentLocationBound,null);
+        mAutocompleteView.setAdapter(mAdapter);
 
         datePickerButton = (Button) findViewById(R.id.dateButton);
         datePickerButton.setText(todayText);
@@ -290,11 +270,11 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         });
 
         //TODO: Bisognerebbe modificare il numero di tavole trasportabili in base al tipo di supporto ed il numero di passeggeri
-        adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, Arrays.asList("Barre porta pacchi","Soft rack","Dentro l'auto"));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> supportAdapter = ArrayAdapter.createFromResource(this,R.array.support_types,android.R.layout.simple_spinner_item);
+        supportAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         carSupportTypeSpinner = (Spinner) findViewById(R.id.carSupportTypeSpinner);
-        carSupportTypeSpinner.setAdapter(adapter);
+        carSupportTypeSpinner.setAdapter(supportAdapter);
 
         carSupportTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -340,8 +320,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         System.out.println(newCar.toString());
     }
 
-    private AdapterView.OnItemClickListener mAutocompleteClickListener
-            = new AdapterView.OnItemClickListener() {
+    private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             /*
@@ -359,8 +338,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
              Issue a request to the Places Geo Data API to retrieve a Place object with additional
              details about the place.
               */
-            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                    .getPlaceById(mGoogleApiClient, placeId);
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
             placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
 
             Toast.makeText(getApplicationContext(), "Clicked: " + primaryText,
@@ -373,8 +351,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
      * Callback for results from a Places Geo Data API query that shows the first place result in
      * the details view on screen.
      */
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = new ResultCallback<PlaceBuffer>() {
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
         @Override
         public void onResult(PlaceBuffer places) {
             if (!places.getStatus().isSuccess()) {
@@ -411,4 +388,6 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
                 "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
                 Toast.LENGTH_SHORT).show();
     }
+
+
 }
