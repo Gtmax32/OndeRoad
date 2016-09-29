@@ -117,7 +117,6 @@ public class PlaceAutocompleteAdapter extends ArrayAdapter<AutocompletePredictio
         // styling based on the given CharacterStyle.
 
         AutocompletePrediction item = getItem(position);
-
         TextView textView1 = (TextView) row.findViewById(android.R.id.text1);
         TextView textView2 = (TextView) row.findViewById(android.R.id.text2);
         textView1.setText(item.getPrimaryText(STYLE_BOLD));
@@ -199,7 +198,6 @@ public class PlaceAutocompleteAdapter extends ArrayAdapter<AutocompletePredictio
      */
     private ArrayList<AutocompletePrediction> getAutocomplete(CharSequence constraint) {
         if (mGoogleApiClient.isConnected()) {
-            //Log.i(TAG, "Starting autocomplete query for: " + constraint);
 
             // Submit the query to the autocomplete API and retrieve a PendingResult that will
             // contain the results when the query completes.

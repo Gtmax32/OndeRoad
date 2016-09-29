@@ -1,13 +1,7 @@
 package com.unimi.mobidev.onderoad.activity;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -15,7 +9,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
@@ -35,9 +28,12 @@ import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.fragment.DateFragment;
 import com.unimi.mobidev.onderoad.fragment.TimeFragment;
 import com.unimi.mobidev.onderoad.model.CarInfo;
-import com.unimi.mobidev.onderoad.other.PlaceAutocompleteAdapter;
 import com.unimi.mobidev.onderoad.model.RegionProvinceDict;
+import com.unimi.mobidev.onderoad.other.LatLngManager;
+import com.unimi.mobidev.onderoad.other.PlaceAutocompleteAdapter;
+import com.unimi.mobidev.onderoad.other.StreetAutoCompleteTextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -46,6 +42,7 @@ import java.util.Locale;
 public class CreateActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
     private Spinner regionDepartureSpinner;
     private Spinner provinceDepartureSpinner;
+    private StreetAutoCompleteTextView streetDepartureAutocompleteView;
     private Button datePickerButton;
     private Button timePickerButton;
 
@@ -62,14 +59,11 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
     protected GoogleApiClient mGoogleApiClient;
 
-    private PlaceAutocompleteAdapter mAdapter;
+    private PlaceAutocompleteAdapter streetAdapter;
 
-    private AutoCompleteTextView mAutocompleteView;
+    private LatLngManager currentLocation;
 
-    private LocationManager currentLocation;
-
-    //TODO: Inserire, come bounds, la locazione attuale dell'utente
-    private LatLngBounds currentLocationBound = null;
+    private LatLngBounds currentLocationBound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +74,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         setContentView(R.layout.activity_create);
 
-
+        currentLocation = new LatLngManager(this.getApplicationContext());
 
         newCar = new CarInfo();
 
@@ -130,16 +124,19 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        // Retrieve the AutoCompleteTextView that will display Place suggestions.
-        mAutocompleteView = (AutoCompleteTextView) findViewById(R.id.autocomplete_places);
+        currentLocationBound = currentLocation.getLatLngBounds(10.0);
 
-        // Register a listener that receives callbacks when a suggestion has been selected
-        mAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
+        try {
+            System.out.println("Address: " + currentLocation.getAddressInfo().toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        // Set up the adapter that will retrieve suggestions from the Places Geo Data API that cover
-        // the entire world.
-        mAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, currentLocationBound,null);
-        mAutocompleteView.setAdapter(mAdapter);
+        streetDepartureAutocompleteView = (StreetAutoCompleteTextView) findViewById(R.id.autocomplete_places);
+        streetDepartureAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
+
+        streetAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, currentLocationBound,null);
+        streetDepartureAutocompleteView.setAdapter(streetAdapter);
 
         datePickerButton = (Button) findViewById(R.id.dateButton);
         datePickerButton.setText(todayText);
@@ -328,12 +325,9 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
              The adapter stores each Place suggestion in a AutocompletePrediction from which we
              read the place ID and title.
               */
-            final AutocompletePrediction item = mAdapter.getItem(position);
+            final AutocompletePrediction item = streetAdapter.getItem(position);
             final String placeId = item.getPlaceId();
             final CharSequence primaryText = item.getPrimaryText(null);
-
-            //Log.i(TAG, "Autocomplete item selected: " + primaryText);
-
             /*
              Issue a request to the Places Geo Data API to retrieve a Place object with additional
              details about the place.
@@ -341,9 +335,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
             placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
 
-            Toast.makeText(getApplicationContext(), "Clicked: " + primaryText,
-                    Toast.LENGTH_SHORT).show();
-            //Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
+            Toast.makeText(getApplicationContext(), "Clicked: " + primaryText, Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -380,14 +372,6 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
-        //Log.e(TAG, "onConnectionFailed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
-
-        // TODO(Developer): Check error code and notify the user of error state and resolution.
-        Toast.makeText(this,
-                "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),Toast.LENGTH_SHORT).show();
     }
-
-
 }

@@ -104,9 +104,9 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp" />
 
-                <AutoCompleteTextView
+                <com.unimi.mobidev.onderoad.other.StreetAutoCompleteTextView
                     android:id="@+id/autocomplete_places"
-                    android:layout_width="match_parent"
+                    android:layout_width="245dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:singleLine="true" />
@@ -323,40 +323,45 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp" />
 
-                <LinearLayout
-                    android:id="@+id/noteLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+            </GridLayout>
 
-                    <TextView
+            <LinearLayout
+                android:id="@+id/noteLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@+id/carInfoLayout"
+                android:background="#FFB3B3B3"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp">
+
+                <TextView
                     android:id="@+id/noteLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/note_label"
                     android:layout_margin="10dp"/>
 
-                    <EditText
-                        android:id="@+id/noteTextField"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:inputType="textMultiLine"
-                        android:lines="3"
-                        android:gravity="top|left"
-                        android:scrollbars="vertical"/>
+                <EditText
+                    android:id="@+id/noteTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:inputType="textMultiLine"
+                    android:lines="3"
+                    android:gravity="top|left"
+                    android:scrollbars="vertical"/>
 
-                </LinearLayout>
+            </LinearLayout>
 
-            </GridLayout>
 
             <Button
                 android:id="@+id/saveCarButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/carInfoLayout"
+                android:layout_below="@+id/noteLayout"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="10dp"
                 android:text="@string/save_car_button"
