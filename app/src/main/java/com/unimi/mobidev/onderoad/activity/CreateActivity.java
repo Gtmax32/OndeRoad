@@ -28,8 +28,11 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.fragment.DateFragment;
 import com.unimi.mobidev.onderoad.fragment.TimeFragment;
+import com.unimi.mobidev.onderoad.model.AddressInfo;
 import com.unimi.mobidev.onderoad.model.CarInfo;
 import com.unimi.mobidev.onderoad.model.RegionProvinceDict;
+import com.unimi.mobidev.onderoad.model.TravelInfo;
+import com.unimi.mobidev.onderoad.model.User;
 import com.unimi.mobidev.onderoad.other.LatLngManager;
 import com.unimi.mobidev.onderoad.other.PlaceAutocompleteAdapter;
 import com.unimi.mobidev.onderoad.other.StreetAutoCompleteTextView;
@@ -56,8 +59,6 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
     private Spinner surfboardNumberSpinner;
     private Spinner carSupportTypeSpinner;
 
-    private CarInfo newCar;
-
     protected GoogleApiClient mGoogleApiClient;
 
     private PlaceAutocompleteAdapter streetAdapter;
@@ -65,6 +66,14 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
     private LatLngManager currentLocation;
 
     private LatLngBounds currentLocationBounds;
+
+    private TravelInfo newTravel;
+
+    private CarInfo newCar;
+
+    private AddressInfo meetingPoint;
+
+    private User ownerTravel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +86,11 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         currentLocation = new LatLngManager(this.getApplicationContext());
 
+        newTravel = new TravelInfo();
+
         newCar = new CarInfo();
+
+        meetingPoint = new AddressInfo();
 
         Calendar todayDate = Calendar.getInstance();
 
@@ -112,7 +125,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void afterTextChanged(Editable s) {
-                newCar.setDepartureDate(datePickerButton.getText().toString());
+                newTravel.setDataDeparture(datePickerButton.getText().toString());
             }
         });
 
@@ -130,7 +143,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void afterTextChanged(Editable s) {
-                newCar.setDepartureTime(timePickerButton.getText().toString());
+                newTravel.setTimeDeparture(timePickerButton.getText().toString());
             }
         });
 
@@ -154,7 +167,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 spinnerItemSelected(provinceDestinationSpinner,parentView,selectedItemView,position,id);
 
-                newCar.setRegionDestination(parentView.getItemAtPosition(position).toString());
+                newTravel.setRegionDestination(parentView.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -166,7 +179,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         provinceDestinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                newCar.setProvinceDestination(parentView.getItemAtPosition(position).toString());
+                newTravel.setProvinceDestination(parentView.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -190,7 +203,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void afterTextChanged(Editable s) {
-                newCar.setPriceCarInfo(Integer.valueOf(priceTextView.getText().toString()));
+                newTravel.setPriceTravel(Integer.valueOf(priceTextView.getText().toString()));
             }
         });
 
@@ -203,7 +216,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         passeggersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                newCar.setPassengersNumberCarInfo(Integer.valueOf(parentView.getItemAtPosition(position).toString()));
+                newCar.setPassengersNumber(Integer.valueOf(parentView.getItemAtPosition(position).toString()));
             }
 
             @Override
@@ -220,7 +233,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         surfboardNumberSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                newCar.setSurfboardNumberCarInfo(Integer.valueOf(parentView.getItemAtPosition(position).toString()));
+                newCar.setSurfboardNumber(Integer.valueOf(parentView.getItemAtPosition(position).toString()));
             }
 
             @Override
@@ -239,7 +252,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         carSupportTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                newCar.setSurfboardTypeCarInfo(parentView.getItemAtPosition(position).toString());
+                newCar.setSurfboardType(parentView.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -276,7 +289,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     public void saveCarListener(View w){
-        newCar.setOutboundCarInfo(outboundCheckBox.isChecked());
+        newTravel.setOutbound(outboundCheckBox.isChecked());
         System.out.println(newCar.toString());
     }
 
@@ -300,12 +313,9 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
                 e.printStackTrace();
             }
 
-            System.out.println("Admin Area: " + selectedAddress.getSubAdminArea() +
-                                "\nCountry Code: " + selectedAddress.getCountryCode() +
-                                "\nCountry Name: " + selectedAddress.getCountryName() +
-                                "\nFeature Name: " + selectedAddress.getFeatureName() +
-                                "\nLocality: " + selectedAddress.getLocality() +
-                                "\nPostal Code: " + selectedAddress.getPostalCode());
+            meetingPoint.setStreetInfo(completeAddress);
+            meetingPoint.setLatitudeInfo(selectedAddress.getLatitude());
+            meetingPoint.setLongitudeInfo(selectedAddress.getLongitude());
 
             /*
              Issue a request to the Places Geo Data API to retrieve a Place object with additional
@@ -314,7 +324,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
             placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
 
-            Toast.makeText(getApplicationContext(), "Clicked: " + primaryText, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Clicked: " + primaryText, Toast.LENGTH_SHORT).show();
         }
     };
 

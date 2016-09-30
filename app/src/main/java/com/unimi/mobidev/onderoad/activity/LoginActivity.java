@@ -21,6 +21,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.unimi.mobidev.onderoad.R;
+import com.unimi.mobidev.onderoad.model.User;
 
 import java.util.Arrays;
 
@@ -29,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private Intent loginIntent;
     private CallbackManager cm = null;
 
+    private User currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +66,9 @@ public class LoginActivity extends AppCompatActivity {
                     String name = "";
 
                     System.out.println("In onSuccess...");
+
+                    //TODO: Inserire i dati nell'oggetto User, magari si potrebbe creare un modo per riempire i suoi campi mediante
+                    //TODO: l'oggetto Profile. Bisogna cercare il modo per passare l'oggetto User tra le varie activity
 
                     Profile user = Profile.getCurrentProfile();
                     if (user != null) {
