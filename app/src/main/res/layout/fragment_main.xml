@@ -7,17 +7,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
-
-    <android.support.design.widget.FloatingActionButton
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/addTrip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_plus_black_24dp"
-        app:background="@color/colorPrimary"
-        app:backgroundTint="@color/colorPrimaryDark"/>
+        android:layout_centerInParent="true"
+        android:text="@string/main_fragment"/>
 
 </FrameLayout>

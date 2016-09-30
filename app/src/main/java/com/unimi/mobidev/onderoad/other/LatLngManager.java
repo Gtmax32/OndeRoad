@@ -67,19 +67,21 @@ public class LatLngManager implements LocationListener {
             System.out.println("Current latitude: " + currentLatLng.latitude + "\nCurrent longitude: " + currentLatLng.longitude);
             LatLng southwest = SphericalUtil.computeOffset(currentLatLng, radius * Math.sqrt(2.0), 225);
             LatLng northeast = SphericalUtil.computeOffset(currentLatLng, radius * Math.sqrt(2.0), 45);
+            System.out.println("Southwest latitude" + southwest.latitude + "\nSouthwest longitude" + southwest.longitude);
+            System.out.println("Northeast latitude" + northeast.latitude + "\nNortheast longitude" + northeast.longitude);
             return new LatLngBounds(southwest, northeast);
         }
         else
             return null;
     }
 
-    public Address getAddressInfo() throws IOException {
+    public Address getAddressInfo(String address) throws IOException {
         Geocoder coder =  null;
         List<Address> addresses = null;
 
         if(currentLatLng != null){
             coder = new Geocoder(activityContext, Locale.getDefault());
-            addresses = coder.getFromLocation(currentLatLng.latitude,currentLatLng.longitude,1);
+            addresses = coder.getFromLocationName(address,1);
 
             if(addresses.size() > 0)
                 return addresses.get(0);

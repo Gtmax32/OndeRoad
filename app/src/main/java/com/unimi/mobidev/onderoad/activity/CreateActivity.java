@@ -1,5 +1,6 @@
 package com.unimi.mobidev.onderoad.activity;
 
+import android.location.Address;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -40,8 +41,8 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class CreateActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
-    private Spinner regionDepartureSpinner;
-    private Spinner provinceDepartureSpinner;
+    private static final double TEN_KM_RADIUS = 7071.00;
+
     private StreetAutoCompleteTextView streetDepartureAutocompleteView;
     private Button datePickerButton;
     private Button timePickerButton;
@@ -63,7 +64,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
     private LatLngManager currentLocation;
 
-    private LatLngBounds currentLocationBound;
+    private LatLngBounds currentLocationBounds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,53 +90,12 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         //Departure Info
 
-        regionDepartureSpinner = (Spinner) findViewById(R.id.departureRegionSpinner);
+        currentLocationBounds = currentLocation.getLatLngBounds(CreateActivity.TEN_KM_RADIUS);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, RegionProvinceDict.getKeys());
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        regionDepartureSpinner.setAdapter(adapter);
-
-        provinceDepartureSpinner = (Spinner) findViewById(R.id.departureProvinceSpinner);
-        provinceDepartureSpinner.setEnabled(false);
-
-        regionDepartureSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                spinnerItemSelected(provinceDepartureSpinner,parentView,selectedItemView,position,id);
-
-                newCar.setRegionDeparture(parentView.getItemAtPosition(position).toString());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        provinceDepartureSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                newCar.setProvinceDeparture(parentView.getItemAtPosition(position).toString());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        currentLocationBound = currentLocation.getLatLngBounds(10.0);
-
-        try {
-            System.out.println("Address: " + currentLocation.getAddressInfo().toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        streetDepartureAutocompleteView = (StreetAutoCompleteTextView) findViewById(R.id.autocomplete_places);
+        streetDepartureAutocompleteView = (StreetAutoCompleteTextView) findViewById(R.id.streetAutoCompleteTextField);
         streetDepartureAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
 
-        streetAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, currentLocationBound,null);
+        streetAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, currentLocationBounds,null);
         streetDepartureAutocompleteView.setAdapter(streetAdapter);
 
         datePickerButton = (Button) findViewById(R.id.dateButton);
@@ -175,6 +135,9 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         });
 
         //Destination Info
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, RegionProvinceDict.getKeys());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         regionDestinationSpinner = (Spinner) findViewById(R.id.destinationRegionSpinner);
 
@@ -328,6 +291,22 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             final AutocompletePrediction item = streetAdapter.getItem(position);
             final String placeId = item.getPlaceId();
             final CharSequence primaryText = item.getPrimaryText(null);
+
+            String completeAddress = item.getPrimaryText(null).toString() + item.getSecondaryText(null).toString();
+            Address selectedAddress = null;
+            try {
+                selectedAddress = currentLocation.getAddressInfo(completeAddress);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println("Admin Area: " + selectedAddress.getSubAdminArea() +
+                                "\nCountry Code: " + selectedAddress.getCountryCode() +
+                                "\nCountry Name: " + selectedAddress.getCountryName() +
+                                "\nFeature Name: " + selectedAddress.getFeatureName() +
+                                "\nLocality: " + selectedAddress.getLocality() +
+                                "\nPostal Code: " + selectedAddress.getPostalCode());
+
             /*
              Issue a request to the Places Geo Data API to retrieve a Place object with additional
              details about the place.
