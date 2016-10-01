@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.unimi.mobidev.onderoad.other;
+package com.unimi.mobidev.onderoad.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;

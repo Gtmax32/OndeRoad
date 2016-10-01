@@ -114,15 +114,15 @@ public class TravelInfo {
 
     public String toString(){
         return "TravelInfo: " +
-               "\nAddress info: " + this.addressDeparture.toString() +
+               "\n" + this.addressDeparture.toString() +
                "\nData: " + this.dataDeparture +
                "\nTime: " + this.timeDeparture +
                "\nRegion: " + this.regionDestination +
                "\nProvince: " + this.provinceDestination +
                "\nPrice: " + this.priceTravel +
-               "\nCar: " + this.carTravel.toString() +
+               "\n" + this.carTravel.toString() +
                "\nOutbound: " + this.isOutbound +
                "\nNote: " + this.noteTravel +
-               "\nUser: " + this.ownerTravel.toString();
+               "\n" + this.ownerTravel.toString();
     }
 }

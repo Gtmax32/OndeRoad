@@ -1,5 +1,6 @@
 package com.unimi.mobidev.onderoad.other;
 
+import android.app.Activity;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
@@ -7,6 +8,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -14,6 +16,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.SphericalUtil;
 import com.unimi.mobidev.onderoad.R;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;

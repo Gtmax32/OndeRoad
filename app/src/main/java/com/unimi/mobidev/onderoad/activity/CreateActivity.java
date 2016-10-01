@@ -1,5 +1,7 @@
 package com.unimi.mobidev.onderoad.activity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -8,10 +10,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +38,7 @@ import com.unimi.mobidev.onderoad.model.RegionProvinceDict;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
 import com.unimi.mobidev.onderoad.model.User;
 import com.unimi.mobidev.onderoad.other.LatLngManager;
-import com.unimi.mobidev.onderoad.other.PlaceAutocompleteAdapter;
+import com.unimi.mobidev.onderoad.adapter.PlaceAutocompleteAdapter;
 import com.unimi.mobidev.onderoad.other.StreetAutoCompleteTextView;
 
 import java.io.IOException;
@@ -58,6 +62,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
     private CheckBox outboundCheckBox;
     private Spinner surfboardNumberSpinner;
     private Spinner carSupportTypeSpinner;
+    private EditText noteText;
 
     protected GoogleApiClient mGoogleApiClient;
 
@@ -74,11 +79,18 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
     private AddressInfo meetingPoint;
 
     private User ownerTravel;
-
+    private SharedPreferences appData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         String todayText, nowText;
         super.onCreate(savedInstanceState);
+
+        String first_name = "", middle_name = "", last_name = "", ID = "", email = "";
+
+        appData = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+
+        ownerTravel = new User(appData.getString("First name", first_name) + appData.getString("Middle name", middle_name),appData.getString("Last name", last_name),appData.getString("ID", ID),appData.getString("Email", email));
+        System.out.println(ownerTravel.toString());
 
         mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, 0 /* clientId */, this).addApi(Places.GEO_DATA_API).build();
 
@@ -87,6 +99,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         currentLocation = new LatLngManager(this.getApplicationContext());
 
         newTravel = new TravelInfo();
+        newTravel.setOwnerTravel(ownerTravel);
 
         newCar = new CarInfo();
 
@@ -261,6 +274,8 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
+        noteText = (EditText) findViewById(R.id.noteTextField);
+
     }
 
     public void datePickerListener(View v){
@@ -289,8 +304,12 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     public void saveCarListener(View w){
+        newTravel.setAddressDeparture(meetingPoint);
         newTravel.setOutbound(outboundCheckBox.isChecked());
-        System.out.println(newCar.toString());
+        newTravel.setCarTravel(newCar);
+        newTravel.setNoteTravel(noteText.getText().toString());
+
+        System.out.println(newTravel.toString());
     }
 
     private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
@@ -305,7 +324,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             final String placeId = item.getPlaceId();
             final CharSequence primaryText = item.getPrimaryText(null);
 
-            String completeAddress = item.getPrimaryText(null).toString() + item.getSecondaryText(null).toString();
+            String completeAddress = item.getPrimaryText(null).toString() + " " + item.getSecondaryText(null).toString();
             Address selectedAddress = null;
             try {
                 selectedAddress = currentLocation.getAddressInfo(completeAddress);
@@ -323,6 +342,9 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
               */
             PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
             placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
             //Toast.makeText(getApplicationContext(), "Clicked: " + primaryText, Toast.LENGTH_SHORT).show();
         }
