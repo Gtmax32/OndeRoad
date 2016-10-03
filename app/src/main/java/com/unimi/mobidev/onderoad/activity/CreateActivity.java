@@ -35,6 +35,8 @@ import com.unimi.mobidev.onderoad.fragment.TimeFragment;
 import com.unimi.mobidev.onderoad.model.AddressInfo;
 import com.unimi.mobidev.onderoad.model.CarInfo;
 import com.unimi.mobidev.onderoad.model.RegionProvinceDict;
+import com.unimi.mobidev.onderoad.model.RegionSpotDict;
+import com.unimi.mobidev.onderoad.model.SpotInfo;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
 import com.unimi.mobidev.onderoad.model.User;
 import com.unimi.mobidev.onderoad.other.LatLngManager;
@@ -162,14 +164,10 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         //Destination Info
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, RegionProvinceDict.getKeys());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, RegionSpotDict.getKeys());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         regionDestinationSpinner = (Spinner) findViewById(R.id.destinationRegionSpinner);
-
-        // TODO: Inserire regioni e province degli spot
-        //adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, RegionProvinceDict.getKeys());
-        //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         regionDestinationSpinner.setAdapter(adapter);
 
         provinceDestinationSpinner = (Spinner) findViewById(R.id.destinationProvinceSpinner);
@@ -178,7 +176,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         regionDestinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                spinnerItemSelected(provinceDestinationSpinner,parentView,selectedItemView,position,id);
+                spinnerSpotItemSelected(provinceDestinationSpinner,parentView,selectedItemView,position,id);
 
                 newTravel.setRegionDestination(parentView.getItemAtPosition(position).toString());
             }
@@ -288,7 +286,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
-    private void spinnerItemSelected(Spinner provinceSpinner, AdapterView<?> parentView, View selectedItemView, int position, long id){
+    private void spinnerProvinceItemSelected(Spinner provinceSpinner, AdapterView<?> parentView, View selectedItemView, int position, long id){
         if (!provinceSpinner.isEnabled())
             provinceSpinner.setEnabled(true);
 
@@ -300,6 +298,21 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             provinceSpinner.setAdapter(adapter);
+        }
+    }
+
+    private void spinnerSpotItemSelected(Spinner spotSpinner, AdapterView<?> parentView, View selectedItemView, int position, long id){
+        if (!spotSpinner.isEnabled())
+            spotSpinner.setEnabled(true);
+
+        ArrayAdapter<SpotInfo> adapter = null;
+        ArrayList<SpotInfo> spotList = RegionSpotDict.getElemFromKey(parentView.getItemAtPosition(position).toString());
+
+        if(spotList != null) {
+            adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spotList);
+
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spotSpinner.setAdapter(adapter);
         }
     }
 

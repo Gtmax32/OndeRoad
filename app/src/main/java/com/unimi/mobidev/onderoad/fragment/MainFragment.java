@@ -24,7 +24,7 @@ public class MainFragment extends Fragment {
         System.out.println("In MainFragment...");
 
         this.travelsList = new ArrayList<>();
-        this.travelAdapter = new TravelInfoAdapter(this.getContext(),R.layout.travel_detail,this.travelsList);
+        //this.travelAdapter = new TravelInfoAdapter(this.getContext(),R.layout.travel_detail,this.travelsList);
     }
 
     @Override
