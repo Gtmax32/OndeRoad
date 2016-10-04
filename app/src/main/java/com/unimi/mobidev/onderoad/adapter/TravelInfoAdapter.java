@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.other.TravelDetail;
@@ -12,7 +13,7 @@ import com.unimi.mobidev.onderoad.other.TravelDetail;
 import java.util.ArrayList;
 
 /**
- * Created by Pc-Utente on 01/10/2016.
+ * Created by Giuseppe Fabio Trentadue on 01/10/2016.
  */
 
 public class TravelInfoAdapter extends ArrayAdapter<TravelDetail> {
@@ -44,6 +45,11 @@ public class TravelInfoAdapter extends ArrayAdapter<TravelDetail> {
         return listTravel.get(position);
     }
 
+    public void addItem(TravelDetail travel){
+        if(travel != null)
+            listTravel.add(travel);
+    }
+
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
         TravelDetail holder;
@@ -53,6 +59,13 @@ public class TravelInfoAdapter extends ArrayAdapter<TravelDetail> {
             v = inflater.inflate(R.layout.travel_detail, null);
 
             holder = new TravelDetail(this.context);
+            holder.setItineraryText((TextView) v.findViewById(R.id.itineraryTravel));
+            holder.setDateTimeText((TextView) v.findViewById(R.id.dateTimeTravel));
+            holder.setPriceText((TextView) v.findViewById(R.id.priceTravel));
+            holder.setTag(holder);
+        }
+        else{
+            holder = (TravelDetail) v.getTag();
         }
 
         return v;

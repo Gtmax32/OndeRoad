@@ -3,7 +3,7 @@ package com.unimi.mobidev.onderoad.model;
 import java.util.ArrayList;
 
 /**
- * Created by Pc-Utente on 30/09/2016.
+ * Created by Giuseppe Fabio Trentadue on 30/09/2016.
  */
 
 public class TravelInfo {

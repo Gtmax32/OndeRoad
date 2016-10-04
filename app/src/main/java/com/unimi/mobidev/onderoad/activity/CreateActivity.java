@@ -1,6 +1,7 @@
 package com.unimi.mobidev.onderoad.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.os.Bundle;
@@ -292,21 +293,6 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
-    private void spinnerProvinceItemSelected(Spinner provinceSpinner, AdapterView<?> parentView, View selectedItemView, int position, long id){
-        if (!provinceSpinner.isEnabled())
-            provinceSpinner.setEnabled(true);
-
-        ArrayAdapter<String> adapter = null;
-        ArrayList<String> provinceList = RegionProvinceDict.getElemFromKey(parentView.getItemAtPosition(position).toString());
-
-        if(provinceList != null) {
-            adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, provinceList);
-
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            provinceSpinner.setAdapter(adapter);
-        }
-    }
-
     private void spinnerSpotItemSelected(Spinner spotSpinner, AdapterView<?> parentView, View selectedItemView, int position, long id){
         if (!spotSpinner.isEnabled())
             spotSpinner.setEnabled(true);
@@ -330,6 +316,8 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         newTravel.setNoteTravel(noteText.getText().toString());
 
         System.out.println(newTravel.toString());
+
+        //Intent returnToMain = new Intent(MainActivity.class)
     }
 
     private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 /**
- * Created by Pc-Utente on 01/10/2016.
+ * Created by Giuseppe Fabio Trentadue on 01/10/2016.
  */
 
 public class RegionSpotDict {

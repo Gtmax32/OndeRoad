@@ -22,9 +22,6 @@ public class MainFragment extends Fragment {
 
     public MainFragment() {
         System.out.println("In MainFragment...");
-
-        this.travelsList = new ArrayList<>();
-        //this.travelAdapter = new TravelInfoAdapter(this.getContext(),R.layout.travel_detail,this.travelsList);
     }
 
     @Override
@@ -33,6 +30,10 @@ public class MainFragment extends Fragment {
 
         travelListView = (ListView) v.findViewById(R.id.travelListView);
         travelListView.setAdapter(this.travelAdapter);
+
+        this.travelsList = new ArrayList<>();
+        this.travelAdapter = new TravelInfoAdapter(this.getActivity().getApplicationContext(),R.layout.travel_detail,this.travelsList);
+
         return v;
     }
 }

@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.unimi.mobidev.onderoad.R;
 
 /**
- * Created by Pc-Utente on 01/10/2016.
+ * Created by Giuseppe Fabio Trentadue on 01/10/2016.
  */
 
 public class TravelDetail extends LinearLayout {
@@ -35,6 +35,30 @@ public class TravelDetail extends LinearLayout {
         itineraryText = (TextView) findViewById(R.id.itineraryTravel);
         dateTimeText = (TextView) findViewById(R.id.dateTimeTravel);
         priceText = (TextView) findViewById(R.id.priceTravel);
+    }
+
+    public TextView getItineraryText() {
+        return itineraryText;
+    }
+
+    public void setItineraryText(TextView itineraryText) {
+        this.itineraryText = itineraryText;
+    }
+
+    public TextView getDateTimeText() {
+        return dateTimeText;
+    }
+
+    public void setDateTimeText(TextView dateTimeText) {
+        this.dateTimeText = dateTimeText;
+    }
+
+    public TextView getPriceText() {
+        return priceText;
+    }
+
+    public void setPriceText(TextView priceText) {
+        this.priceText = priceText;
     }
 
     private void setItineraryText(String itinerary){
