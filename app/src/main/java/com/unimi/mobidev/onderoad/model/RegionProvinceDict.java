@@ -1,4 +1,4 @@
-package com.unimi.mobidev.onderoad.other;
+package com.unimi.mobidev.onderoad.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package com.unimi.mobidev.onderoad.other;
+package com.unimi.mobidev.onderoad.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

@@ -1,5 +1,8 @@
 package com.unimi.mobidev.onderoad.activity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.location.Address;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,43 +18,99 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.fragment.DateFragment;
 import com.unimi.mobidev.onderoad.fragment.TimeFragment;
-import com.unimi.mobidev.onderoad.other.CarInfo;
-import com.unimi.mobidev.onderoad.other.RegionProvinceDict;
+import com.unimi.mobidev.onderoad.model.AddressInfo;
+import com.unimi.mobidev.onderoad.model.CarInfo;
+import com.unimi.mobidev.onderoad.model.RegionProvinceDict;
+import com.unimi.mobidev.onderoad.model.RegionSpotDict;
+import com.unimi.mobidev.onderoad.model.SpotInfo;
+import com.unimi.mobidev.onderoad.model.TravelInfo;
+import com.unimi.mobidev.onderoad.model.User;
+import com.unimi.mobidev.onderoad.other.LatLngManager;
+import com.unimi.mobidev.onderoad.adapter.PlaceAutocompleteAdapter;
+import com.unimi.mobidev.onderoad.other.StreetAutoCompleteTextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class CreateActivity extends AppCompatActivity {
-    private Spinner regionDepartureSpinner;
-    private Spinner provinceDepartureSpinner;
-    private EditText addressTextField;
+public class CreateActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+    private static final double TEN_KM_RADIUS = 7071.00;
+
+    private StreetAutoCompleteTextView streetDepartureAutocompleteView;
     private Button datePickerButton;
     private Button timePickerButton;
 
     private Spinner regionDestinationSpinner;
-    private Spinner provinceDestinationSpinner;
+    private Spinner spotDestinationSpinner;
 
     private TextView priceTextView;
     private Spinner passeggersSpinner;
     private CheckBox outboundCheckBox;
     private Spinner surfboardNumberSpinner;
     private Spinner carSupportTypeSpinner;
+    private EditText noteText;
+
+    protected GoogleApiClient mGoogleApiClient;
+
+    private PlaceAutocompleteAdapter streetAdapter;
+
+    private LatLngManager currentLocation;
+
+    private LatLngBounds currentLocationBounds;
+
+    private TravelInfo newTravel;
 
     private CarInfo newCar;
+
+    private AddressInfo meetingPoint;
+
+    private User ownerTravel;
+    private SharedPreferences appData;
+
+    private ArrayList<SpotInfo> selectedRegionSpot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         String todayText, nowText;
         super.onCreate(savedInstanceState);
+
+        String first_name = "", middle_name = "", last_name = "", ID = "", email = "";
+
+        appData = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+
+        ownerTravel = new User(appData.getString("First name", first_name) + appData.getString("Middle name", middle_name),appData.getString("Last name", last_name),appData.getString("ID", ID),appData.getString("Email", email));
+        System.out.println(ownerTravel.toString());
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, 0 /* clientId */, this).addApi(Places.GEO_DATA_API).build();
+
         setContentView(R.layout.activity_create);
 
+        currentLocation = new LatLngManager(this.getApplicationContext());
+
+        newTravel = new TravelInfo();
+        newTravel.setOwnerTravel(ownerTravel);
+
         newCar = new CarInfo();
+
+        meetingPoint = new AddressInfo();
+
+        selectedRegionSpot = new ArrayList<>();
 
         Calendar todayDate = Calendar.getInstance();
 
@@ -63,57 +123,13 @@ public class CreateActivity extends AppCompatActivity {
 
         //Departure Info
 
-        regionDepartureSpinner = (Spinner) findViewById(R.id.departureRegionSpinner);
+        currentLocationBounds = currentLocation.getLatLngBounds(CreateActivity.TEN_KM_RADIUS);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, RegionProvinceDict.getKeys());
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        regionDepartureSpinner.setAdapter(adapter);
+        streetDepartureAutocompleteView = (StreetAutoCompleteTextView) findViewById(R.id.streetAutoCompleteTextField);
+        streetDepartureAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
 
-        provinceDepartureSpinner = (Spinner) findViewById(R.id.departureProvinceSpinner);
-        provinceDepartureSpinner.setEnabled(false);
-
-        regionDepartureSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                spinnerItemSelected(provinceDepartureSpinner,parentView,selectedItemView,position,id);
-
-                newCar.setRegionDeparture(parentView.getItemAtPosition(position).toString());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        provinceDepartureSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                newCar.setProvinceDeparture(parentView.getItemAtPosition(position).toString());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        addressTextField = (EditText) findViewById(R.id.addressTextField);
-        addressTextField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                newCar.setMeetingPoint(addressTextField.getText().toString());
-            }
-        });
+        streetAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, currentLocationBounds,null);
+        streetDepartureAutocompleteView.setAdapter(streetAdapter);
 
         datePickerButton = (Button) findViewById(R.id.dateButton);
         datePickerButton.setText(todayText);
@@ -129,7 +145,7 @@ public class CreateActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                newCar.setDepartureDate(datePickerButton.getText().toString());
+                newTravel.setDataDeparture(datePickerButton.getText().toString());
             }
         });
 
@@ -147,28 +163,27 @@ public class CreateActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                newCar.setDepartureTime(timePickerButton.getText().toString());
+                newTravel.setTimeDeparture(timePickerButton.getText().toString());
             }
         });
 
         //Destination Info
 
-        regionDestinationSpinner = (Spinner) findViewById(R.id.destinationRegionSpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, RegionSpotDict.getKeys());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        // TODO: Inserire regioni e province degli spot
-        //adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, RegionProvinceDict.getKeys());
-        //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        regionDestinationSpinner = (Spinner) findViewById(R.id.destinationRegionSpinner);
         regionDestinationSpinner.setAdapter(adapter);
 
-        provinceDestinationSpinner = (Spinner) findViewById(R.id.destinationProvinceSpinner);
-        provinceDestinationSpinner.setEnabled(false);
+        spotDestinationSpinner = (Spinner) findViewById(R.id.destinationProvinceSpinner);
+        spotDestinationSpinner.setEnabled(false);
 
         regionDestinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                spinnerItemSelected(provinceDestinationSpinner,parentView,selectedItemView,position,id);
+                spinnerSpotItemSelected(spotDestinationSpinner,parentView,selectedItemView,position,id);
 
-                newCar.setRegionDestination(parentView.getItemAtPosition(position).toString());
+                newTravel.setRegionDestination(parentView.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -177,10 +192,11 @@ public class CreateActivity extends AppCompatActivity {
             }
         });
 
-        provinceDestinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spotDestinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                newCar.setProvinceDestination(parentView.getItemAtPosition(position).toString());
+                if (selectedRegionSpot != null && selectedRegionSpot.size()>0)
+                    newTravel.setSpotDestination(selectedRegionSpot.get(position));
             }
 
             @Override
@@ -204,7 +220,7 @@ public class CreateActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                newCar.setPriceCarInfo(Integer.valueOf(priceTextView.getText().toString()));
+                newTravel.setPriceTravel(Integer.valueOf(priceTextView.getText().toString()));
             }
         });
 
@@ -217,7 +233,7 @@ public class CreateActivity extends AppCompatActivity {
         passeggersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                newCar.setPassengersNumberCarInfo(Integer.valueOf(parentView.getItemAtPosition(position).toString()));
+                newCar.setPassengersNumber(Integer.valueOf(parentView.getItemAtPosition(position).toString()));
             }
 
             @Override
@@ -234,7 +250,7 @@ public class CreateActivity extends AppCompatActivity {
         surfboardNumberSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                newCar.setSurfboardNumberCarInfo(Integer.valueOf(parentView.getItemAtPosition(position).toString()));
+                newCar.setSurfboardNumber(Integer.valueOf(parentView.getItemAtPosition(position).toString()));
             }
 
             @Override
@@ -244,16 +260,16 @@ public class CreateActivity extends AppCompatActivity {
         });
 
         //TODO: Bisognerebbe modificare il numero di tavole trasportabili in base al tipo di supporto ed il numero di passeggeri
-        adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, Arrays.asList("Barre porta pacchi","Soft rack","Dentro l'auto"));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> supportAdapter = ArrayAdapter.createFromResource(this,R.array.support_types,android.R.layout.simple_spinner_item);
+        supportAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         carSupportTypeSpinner = (Spinner) findViewById(R.id.carSupportTypeSpinner);
-        carSupportTypeSpinner.setAdapter(adapter);
+        carSupportTypeSpinner.setAdapter(supportAdapter);
 
         carSupportTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                newCar.setSurfboardTypeCarInfo(parentView.getItemAtPosition(position).toString());
+                newCar.setSurfboardType(parentView.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -261,6 +277,8 @@ public class CreateActivity extends AppCompatActivity {
 
             }
         });
+
+        noteText = (EditText) findViewById(R.id.noteTextField);
 
     }
 
@@ -274,7 +292,7 @@ public class CreateActivity extends AppCompatActivity {
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
-    private void spinnerItemSelected(Spinner provinceSpinner, AdapterView<?> parentView, View selectedItemView, int position, long id){
+    private void spinnerProvinceItemSelected(Spinner provinceSpinner, AdapterView<?> parentView, View selectedItemView, int position, long id){
         if (!provinceSpinner.isEnabled())
             provinceSpinner.setEnabled(true);
 
@@ -289,8 +307,102 @@ public class CreateActivity extends AppCompatActivity {
         }
     }
 
+    private void spinnerSpotItemSelected(Spinner spotSpinner, AdapterView<?> parentView, View selectedItemView, int position, long id){
+        if (!spotSpinner.isEnabled())
+            spotSpinner.setEnabled(true);
+
+        ArrayAdapter<String> adapter = null;
+        selectedRegionSpot = RegionSpotDict.getElemFromKey(parentView.getItemAtPosition(position).toString());
+        ArrayList<String> spotNameList = RegionSpotDict.getNameListFromKey(parentView.getItemAtPosition(position).toString());
+
+        if(spotNameList != null) {
+            adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spotNameList);
+
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spotSpinner.setAdapter(adapter);
+        }
+    }
+
     public void saveCarListener(View w){
-        newCar.setOutboundCarInfo(outboundCheckBox.isChecked());
-        System.out.println(newCar.toString());
+        newTravel.setAddressDeparture(meetingPoint);
+        newTravel.setOutbound(outboundCheckBox.isChecked());
+        newTravel.setCarTravel(newCar);
+        newTravel.setNoteTravel(noteText.getText().toString());
+
+        System.out.println(newTravel.toString());
+    }
+
+    private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            /*
+             Retrieve the place ID of the selected item from the Adapter.
+             The adapter stores each Place suggestion in a AutocompletePrediction from which we
+             read the place ID and title.
+              */
+            final AutocompletePrediction item = streetAdapter.getItem(position);
+            final String placeId = item.getPlaceId();
+            final CharSequence primaryText = item.getPrimaryText(null);
+
+            String completeAddress = item.getPrimaryText(null).toString() + " " + item.getSecondaryText(null).toString();
+            Address selectedAddress = null;
+            try {
+                selectedAddress = currentLocation.getAddressInfo(completeAddress);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            meetingPoint.setStreetInfo(completeAddress);
+            meetingPoint.setLatitudeInfo(selectedAddress.getLatitude());
+            meetingPoint.setLongitudeInfo(selectedAddress.getLongitude());
+
+            /*
+             Issue a request to the Places Geo Data API to retrieve a Place object with additional
+             details about the place.
+              */
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+            //Toast.makeText(getApplicationContext(), "Clicked: " + primaryText, Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    /**
+     * Callback for results from a Places Geo Data API query that shows the first place result in
+     * the details view on screen.
+     */
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(PlaceBuffer places) {
+            if (!places.getStatus().isSuccess()) {
+                // Request did not complete successfully
+                //Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
+                places.release();
+                return;
+            }
+            // Get the Place object from the buffer.
+            final Place place = places.get(0);
+
+            /*// Display the third party attributions if set.
+            final CharSequence thirdPartyAttribution = places.getAttributions();
+            if (thirdPartyAttribution == null) {
+                mPlaceDetailsAttribution.setVisibility(View.GONE);
+            } else {
+                mPlaceDetailsAttribution.setVisibility(View.VISIBLE);
+                mPlaceDetailsAttribution.setText(Html.fromHtml(thirdPartyAttribution.toString()));
+            }
+
+            //Log.i(TAG, "Place details received: " + place.getName());*/
+
+            places.release();
+        }
+    };
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Toast.makeText(this, "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),Toast.LENGTH_SHORT).show();
     }
 }

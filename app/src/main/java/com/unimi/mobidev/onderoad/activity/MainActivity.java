@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.unimi.mobidev.onderoad.R;
-import com.unimi.mobidev.onderoad.other.TabsAdapter;
+import com.unimi.mobidev.onderoad.adapter.TabsAdapter;
 
 import java.util.ArrayList;
 
@@ -19,20 +19,11 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Drawable> tabIcons;
     private ViewPager viewPager;
     private TabsAdapter adapter;
-    private TextView tempText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String facebook_data;
-
-        facebook_data = getIntent().getStringExtra("User_name");
-
-        System.out.println("Facebook data: "  + facebook_data);
-
-        tempText = (TextView) findViewById(R.id.tempText);
-        tempText.setText(facebook_data);
 
         initIconList();
 
