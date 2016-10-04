@@ -57,7 +57,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
     private Button timePickerButton;
 
     private Spinner regionDestinationSpinner;
-    private Spinner provinceDestinationSpinner;
+    private Spinner spotDestinationSpinner;
 
     private TextView priceTextView;
     private Spinner passeggersSpinner;
@@ -82,6 +82,9 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
     private User ownerTravel;
     private SharedPreferences appData;
+
+    private ArrayList<SpotInfo> selectedRegionSpot;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         String todayText, nowText;
@@ -106,6 +109,8 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         newCar = new CarInfo();
 
         meetingPoint = new AddressInfo();
+
+        selectedRegionSpot = new ArrayList<>();
 
         Calendar todayDate = Calendar.getInstance();
 
@@ -170,13 +175,13 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         regionDestinationSpinner = (Spinner) findViewById(R.id.destinationRegionSpinner);
         regionDestinationSpinner.setAdapter(adapter);
 
-        provinceDestinationSpinner = (Spinner) findViewById(R.id.destinationProvinceSpinner);
-        provinceDestinationSpinner.setEnabled(false);
+        spotDestinationSpinner = (Spinner) findViewById(R.id.destinationProvinceSpinner);
+        spotDestinationSpinner.setEnabled(false);
 
         regionDestinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                spinnerSpotItemSelected(provinceDestinationSpinner,parentView,selectedItemView,position,id);
+                spinnerSpotItemSelected(spotDestinationSpinner,parentView,selectedItemView,position,id);
 
                 newTravel.setRegionDestination(parentView.getItemAtPosition(position).toString());
             }
@@ -187,10 +192,11 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        provinceDestinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spotDestinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                newTravel.setProvinceDestination(parentView.getItemAtPosition(position).toString());
+                if (selectedRegionSpot != null && selectedRegionSpot.size()>0)
+                    newTravel.setSpotDestination(selectedRegionSpot.get(position));
             }
 
             @Override
@@ -305,11 +311,12 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         if (!spotSpinner.isEnabled())
             spotSpinner.setEnabled(true);
 
-        ArrayAdapter<SpotInfo> adapter = null;
-        ArrayList<SpotInfo> spotList = RegionSpotDict.getElemFromKey(parentView.getItemAtPosition(position).toString());
+        ArrayAdapter<String> adapter = null;
+        selectedRegionSpot = RegionSpotDict.getElemFromKey(parentView.getItemAtPosition(position).toString());
+        ArrayList<String> spotNameList = RegionSpotDict.getNameListFromKey(parentView.getItemAtPosition(position).toString());
 
-        if(spotList != null) {
-            adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spotList);
+        if(spotNameList != null) {
+            adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spotNameList);
 
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spotSpinner.setAdapter(adapter);

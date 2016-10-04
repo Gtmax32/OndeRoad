@@ -12,9 +12,7 @@ public class TravelInfo {
     private String dataDeparture;
     private String timeDeparture;
     private String regionDestination;
-    private String provinceDestination;
-    //TODO: Dopo aver inserito gli spot, sostituire la provincia con SpotInfo
-    //private SpotInfo spotDestination;
+    private SpotInfo spotDestination;
     private int priceTravel;
     private CarInfo carTravel;
     private boolean isOutbound;
@@ -56,12 +54,12 @@ public class TravelInfo {
         this.regionDestination = regionDestination;
     }
 
-    public String getProvinceDestination() {
-        return provinceDestination;
+    public SpotInfo getSpotDestination() {
+        return spotDestination;
     }
 
-    public void setProvinceDestination(String provinceDestination) {
-        this.provinceDestination = provinceDestination;
+    public void setSpotDestination(SpotInfo spotDestination) {
+        this.spotDestination = spotDestination;
     }
 
     public int getPriceTravel() {
@@ -118,7 +116,7 @@ public class TravelInfo {
                "\nData: " + this.dataDeparture +
                "\nTime: " + this.timeDeparture +
                "\nRegion: " + this.regionDestination +
-               "\nProvince: " + this.provinceDestination +
+               "\n" + this.spotDestination.toString() +
                "\nPrice: " + this.priceTravel +
                "\n" + this.carTravel.toString() +
                "\nOutbound: " + this.isOutbound +
