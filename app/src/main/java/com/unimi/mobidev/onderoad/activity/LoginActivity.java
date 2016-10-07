@@ -37,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private Bundle userInfo;
 
+    private AccessToken currentToken;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +74,9 @@ public class LoginActivity extends AppCompatActivity {
                     System.out.println("In onSuccess...");
                     appData = getSharedPreferences("UserData", Context.MODE_PRIVATE);
 
-                    GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), userCallBackInfo);
+                    currentToken = loginResult.getAccessToken();
+
+                    GraphRequest request = GraphRequest.newMeRequest(currentToken, userCallBackInfo);
                     Bundle parameters = new Bundle();
                     parameters.putString("fields", "first_name,middle_name,last_name,email,id");
                     request.setParameters(parameters);
@@ -93,6 +97,12 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         } else {
+            GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), userCallBackInfo);
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "first_name,middle_name,last_name,email,id");
+            request.setParameters(parameters);
+            request.executeAsync();
+
             loginIntent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(loginIntent);
         }

@@ -1,10 +1,12 @@
 package com.unimi.mobidev.onderoad.model;
 
+import java.io.Serializable;
+
 /**
- * Created by Pc-Utente on 30/09/2016.
+ * Created by Giuseppe Fabio Trentadue on 30/09/2016.
  */
 
-public class User {
+public class User implements Serializable{
 
     private String nameUser;
     private String surnameUser;

@@ -19,18 +19,18 @@ public class TravelDetail extends LinearLayout {
     private TextView dateTimeText;
     private TextView priceText;
 
-    public TravelDetail(Context context){
+    public TravelDetail(Context context) {
         super(context);
         init(context);
     }
 
-    public TravelDetail(Context context, AttributeSet attributeSet){
-        super(context,attributeSet);
+    public TravelDetail(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
         init(context);
     }
 
     private void init(Context context) {
-        rootView = inflate(context, R.layout.travel_detail,this);
+        rootView = inflate(context, R.layout.travel_detail, this);
 
         itineraryText = (TextView) findViewById(R.id.itineraryTravel);
         dateTimeText = (TextView) findViewById(R.id.dateTimeTravel);
@@ -61,15 +61,15 @@ public class TravelDetail extends LinearLayout {
         this.priceText = priceText;
     }
 
-    private void setItineraryText(String itinerary){
+    private void setItineraryText(String itinerary) {
         itineraryText.setText(itinerary);
     }
 
-    private void setdateTimeText(String dateTime){
+    private void setdateTimeText(String dateTime) {
         dateTimeText.setText(dateTime);
     }
 
-    private void setpriceText(String price){
+    private void setpriceText(String price) {
         priceText.setText(price);
     }
 }

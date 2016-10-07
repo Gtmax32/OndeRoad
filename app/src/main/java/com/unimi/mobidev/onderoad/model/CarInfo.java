@@ -1,10 +1,12 @@
 package com.unimi.mobidev.onderoad.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Giuseppe on 26/09/2016.
  */
 
-public class CarInfo {
+public class CarInfo implements Serializable{
 
     private int passengersNumber;
     private int surfboardNumber;

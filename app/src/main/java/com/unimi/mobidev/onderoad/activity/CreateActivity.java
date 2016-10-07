@@ -317,7 +317,12 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         System.out.println(newTravel.toString());
 
-        //Intent returnToMain = new Intent(MainActivity.class)
+        Intent intent = this.getIntent();
+        intent.putExtra("TravelInfo",newTravel);
+
+        this.setResult(RESULT_OK,intent);
+        Toast.makeText(this.getApplicationContext(),"Travel created!",Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {

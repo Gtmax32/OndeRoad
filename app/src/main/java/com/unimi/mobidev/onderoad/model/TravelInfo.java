@@ -1,12 +1,13 @@
 package com.unimi.mobidev.onderoad.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Giuseppe Fabio Trentadue on 30/09/2016.
  */
 
-public class TravelInfo {
+public class TravelInfo  implements Serializable {
 
     private AddressInfo addressDeparture;
     private String dataDeparture;

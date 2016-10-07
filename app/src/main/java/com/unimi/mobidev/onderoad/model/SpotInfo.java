@@ -2,11 +2,13 @@ package com.unimi.mobidev.onderoad.model;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
+
 /**
  * Created by Pc-Utente on 30/09/2016.
  */
 
-public class SpotInfo {
+public class SpotInfo implements Serializable{
 
     private String nameSpot;
     private LatLng latLngSpot;

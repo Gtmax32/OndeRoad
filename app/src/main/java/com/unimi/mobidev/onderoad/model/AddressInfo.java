@@ -1,10 +1,12 @@
 package com.unimi.mobidev.onderoad.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Pc-Utente on 30/09/2016.
  */
 
-public class AddressInfo {
+public class AddressInfo implements Serializable{
 
     private String streetInfo;
     private double latitudeInfo;
