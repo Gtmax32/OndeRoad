@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.unimi.mobidev.onderoad.R;
+import com.unimi.mobidev.onderoad.model.TravelInfo;
 import com.unimi.mobidev.onderoad.other.TravelDetail;
 
 import java.util.ArrayList;
@@ -16,19 +17,19 @@ import java.util.ArrayList;
  * Created by Giuseppe Fabio Trentadue on 01/10/2016.
  */
 
-public class TravelInfoAdapter extends ArrayAdapter<TravelDetail> {
-    private ArrayList<TravelDetail> listTravel;
+public class TravelInfoAdapter extends ArrayAdapter<TravelInfo> {
+    private ArrayList<TravelInfo> listTravel;
     private int resourceLayoutTravel;
     private Context context;
 
-    public TravelInfoAdapter(Context context, int resource, ArrayList<TravelDetail> list) {
+    public TravelInfoAdapter(Context context, int resource, ArrayList<TravelInfo> list) {
         super(context, resource);
         this.context = context;
         this.listTravel = list;
         this.resourceLayoutTravel = resource;
     }
 
-    public TravelInfoAdapter(Context context, int resource, int textViewResourceId, ArrayList<TravelDetail> list) {
+    public TravelInfoAdapter(Context context, int resource, int textViewResourceId, ArrayList<TravelInfo> list) {
         super(context, resource, textViewResourceId);
         this.context = context;
         this.listTravel = list;
@@ -41,11 +42,11 @@ public class TravelInfoAdapter extends ArrayAdapter<TravelDetail> {
     }
 
     @Override
-    public TravelDetail getItem(int position) {
+    public TravelInfo getItem(int position) {
         return listTravel.get(position);
     }
 
-    public void addItem(TravelDetail travel){
+    public void addItem(TravelInfo travel){
         if(travel != null)
             listTravel.add(travel);
     }

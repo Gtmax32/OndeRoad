@@ -8,16 +8,18 @@ import java.io.Serializable;
  * Created by Pc-Utente on 30/09/2016.
  */
 
-public class SpotInfo implements Serializable{
+public class SpotInfo implements Serializable {
 
     private String nameSpot;
-    private LatLng latLngSpot;
+    private double latitudeSpot;
+    private double longitudeSpot;
     private int ratingSpot;
     private String descriptionSpot;
 
-    public SpotInfo(String nameSpot, LatLng latLngSpot, int ratingSpot, String descriptionSpot) {
+    public SpotInfo(String nameSpot, double latitudeSpot, double longitudeSpot, int ratingSpot, String descriptionSpot) {
         this.nameSpot = nameSpot;
-        this.latLngSpot = latLngSpot;
+        this.latitudeSpot = latitudeSpot;
+        this.longitudeSpot = longitudeSpot;
         this.ratingSpot = ratingSpot;
         this.descriptionSpot = descriptionSpot;
     }
@@ -30,12 +32,20 @@ public class SpotInfo implements Serializable{
         this.nameSpot = nameSpot;
     }
 
-    public LatLng getLatLngSpot() {
-        return latLngSpot;
+    public LatLng getLatitudeSpot() {
+        return new LatLng(this.latitudeSpot,this.longitudeSpot);
     }
 
-    public void setLatLngSpot(LatLng latLngSpot) {
-        this.latLngSpot = latLngSpot;
+    public void setLatitudeSpot(double latitudeSpot) {
+        this.latitudeSpot = latitudeSpot;
+    }
+
+    public double getLongitudeSpot() {
+        return longitudeSpot;
+    }
+
+    public void setLongitudeSpot(double longitudeSpot) {
+        this.longitudeSpot = longitudeSpot;
     }
 
     public int getRatingSpot() {
@@ -53,4 +63,6 @@ public class SpotInfo implements Serializable{
     public void setDescriptionSpot(String descriptionSpot) {
         this.descriptionSpot = descriptionSpot;
     }
+
+
 }

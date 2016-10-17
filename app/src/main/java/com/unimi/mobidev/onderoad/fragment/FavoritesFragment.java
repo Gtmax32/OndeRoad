@@ -27,8 +27,8 @@ public class FavoritesFragment extends Fragment {
 
     private ListView travelListView;
 
-    private ArrayList<TravelDetail> travelsList;
-    private TravelDetail detail;
+    private ArrayList<TravelInfo> travelsList;
+    private TravelInfo detail;
     private TravelInfoAdapter travelAdapter;
 
     private FloatingActionButton addTrip;
@@ -44,8 +44,8 @@ public class FavoritesFragment extends Fragment {
         this.travelsList = new ArrayList<>();
         this.travelAdapter = new TravelInfoAdapter(this.getActivity().getApplicationContext(),R.layout.travel_detail,this.travelsList);
 
-        travelListView = (ListView) v.findViewById(R.id.travelListView);
-        //travelListView.setAdapter(this.travelAdapter);
+        travelListView = (ListView) v.findViewById(R.id.travelListViewFavorites);
+        travelListView.setAdapter(this.travelAdapter);
 
         addTrip = (FloatingActionButton) v.findViewById(R.id.addTrip);
         addTrip.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +67,7 @@ public class FavoritesFragment extends Fragment {
         super.onActivityResult(requestCode,resultCode,data);
         if( requestCode == CREATE_ACTIVITY_REQUEST ) {
             if(resultCode == RESULT_OK) {
-                travelsList.add((TravelDetail) data.getExtras().get("TravelInfo"));
+                travelsList.add((TravelInfo) data.getExtras().get("TravelInfo"));
                 travelAdapter.notifyDataSetChanged();
             }
         }

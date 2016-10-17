@@ -35,7 +35,8 @@
         android:text="Milano->Levanto"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/departureLabel"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:textColor="@color/colorText"/>
 
     <TextView
         android:id="@+id/departureLabel"
@@ -44,7 +45,8 @@
         android:text="Data/Ora Partenza"
         android:layout_centerVertical="true"
         android:layout_toStartOf="@+id/dateTimeTravel"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="10dp"
+        android:textColor="@color/colorText"/>
 
     <TextView
         android:id="@+id/dateTimeTravel"
@@ -53,7 +55,8 @@
         android:text="25/05/2016 07:00"
         android:layout_marginRight="10dp"
         android:layout_alignTop="@+id/departureLabel"
-        android:layout_alignParentEnd="false" />
+        android:layout_alignParentEnd="false"
+        android:textColor="@color/colorText"/>
 
     <TextView
         android:id="@+id/priceLabel"
@@ -62,7 +65,8 @@
         android:text="Prezzo"
         android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/departureLabel"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/colorText"/>
 
     <TextView
         android:id="@+id/priceTravel"
@@ -71,6 +75,7 @@
         android:text="20 €"
         android:layout_alignTop="@+id/priceLabel"
         android:layout_alignParentStart="@+id/priceLabel"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/colorText"/>
 
 </RelativeLayout>

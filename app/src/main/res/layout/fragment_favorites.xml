@@ -4,11 +4,11 @@
     android:layout_height="match_parent"
     tools:context=".fragment.FavoritesFragment">
 
-    <TextView
+    <ListView
+        android:id="@+id/travelListViewFavorites"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:text="@string/favorites_fragment" />
+        android:layout_margin="10dp"/>
 
     <android.support.design.widget.FloatingActionButton
         xmlns:app="http://schemas.android.com/apk/res-auto"

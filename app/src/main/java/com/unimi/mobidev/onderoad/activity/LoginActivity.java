@@ -97,6 +97,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         } else {
+            appData = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+
             GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), userCallBackInfo);
             Bundle parameters = new Bundle();
             parameters.putString("fields", "first_name,middle_name,last_name,email,id");

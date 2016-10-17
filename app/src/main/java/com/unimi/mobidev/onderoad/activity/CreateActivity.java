@@ -31,17 +31,16 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.unimi.mobidev.onderoad.R;
+import com.unimi.mobidev.onderoad.adapter.PlaceAutocompleteAdapter;
 import com.unimi.mobidev.onderoad.fragment.DateFragment;
 import com.unimi.mobidev.onderoad.fragment.TimeFragment;
 import com.unimi.mobidev.onderoad.model.AddressInfo;
 import com.unimi.mobidev.onderoad.model.CarInfo;
-import com.unimi.mobidev.onderoad.model.RegionProvinceDict;
 import com.unimi.mobidev.onderoad.model.RegionSpotDict;
 import com.unimi.mobidev.onderoad.model.SpotInfo;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
 import com.unimi.mobidev.onderoad.model.User;
 import com.unimi.mobidev.onderoad.other.LatLngManager;
-import com.unimi.mobidev.onderoad.adapter.PlaceAutocompleteAdapter;
 import com.unimi.mobidev.onderoad.other.StreetAutoCompleteTextView;
 
 import java.io.IOException;
@@ -98,7 +97,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         ownerTravel = new User(appData.getString("First name", first_name) + appData.getString("Middle name", middle_name),appData.getString("Last name", last_name),appData.getString("ID", ID),appData.getString("Email", email));
         System.out.println(ownerTravel.toString());
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, 0 /* clientId */, this).addApi(Places.GEO_DATA_API).build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, 0, this).addApi(Places.GEO_DATA_API).build();
 
         setContentView(R.layout.activity_create);
 

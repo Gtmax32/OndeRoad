@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.adapter.TravelInfoAdapter;
+import com.unimi.mobidev.onderoad.model.TravelInfo;
 import com.unimi.mobidev.onderoad.other.TravelDetail;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 public class MainFragment extends Fragment {
     private ListView travelListView;
 
-    private ArrayList<TravelDetail> travelsList;
+    private ArrayList<TravelInfo> travelsList;
     private TravelDetail detail;
     private TravelInfoAdapter travelAdapter;
 
@@ -28,11 +29,11 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
 
-        travelListView = (ListView) v.findViewById(R.id.travelListView);
-        travelListView.setAdapter(this.travelAdapter);
-
         this.travelsList = new ArrayList<>();
         this.travelAdapter = new TravelInfoAdapter(this.getActivity().getApplicationContext(),R.layout.travel_detail,this.travelsList);
+
+        travelListView = (ListView) v.findViewById(R.id.travelListViewMain);
+        travelListView.setAdapter(this.travelAdapter);
 
         return v;
     }
