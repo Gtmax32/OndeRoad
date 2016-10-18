@@ -17,19 +17,19 @@ import java.util.ArrayList;
  * Created by Giuseppe Fabio Trentadue on 01/10/2016.
  */
 
-public class TravelInfoAdapter extends ArrayAdapter<TravelInfo> {
-    private ArrayList<TravelInfo> listTravel;
+public class TravelInfoAdapter extends ArrayAdapter<TravelDetail> {
+    private ArrayList<TravelDetail> listTravel;
     private int resourceLayoutTravel;
     private Context context;
 
-    public TravelInfoAdapter(Context context, int resource, ArrayList<TravelInfo> list) {
+    public TravelInfoAdapter(Context context, int resource, ArrayList<TravelDetail> list) {
         super(context, resource);
         this.context = context;
         this.listTravel = list;
         this.resourceLayoutTravel = resource;
     }
 
-    public TravelInfoAdapter(Context context, int resource, int textViewResourceId, ArrayList<TravelInfo> list) {
+    public TravelInfoAdapter(Context context, int resource, int textViewResourceId, ArrayList<TravelDetail> list) {
         super(context, resource, textViewResourceId);
         this.context = context;
         this.listTravel = list;
@@ -42,11 +42,11 @@ public class TravelInfoAdapter extends ArrayAdapter<TravelInfo> {
     }
 
     @Override
-    public TravelInfo getItem(int position) {
+    public TravelDetail getItem(int position) {
         return listTravel.get(position);
     }
 
-    public void addItem(TravelInfo travel){
+    public void addItem(TravelDetail travel){
         if(travel != null)
             listTravel.add(travel);
     }

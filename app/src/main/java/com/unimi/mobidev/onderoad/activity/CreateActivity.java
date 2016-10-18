@@ -36,6 +36,7 @@ import com.unimi.mobidev.onderoad.fragment.DateFragment;
 import com.unimi.mobidev.onderoad.fragment.TimeFragment;
 import com.unimi.mobidev.onderoad.model.AddressInfo;
 import com.unimi.mobidev.onderoad.model.CarInfo;
+import com.unimi.mobidev.onderoad.model.RawProvinceDict;
 import com.unimi.mobidev.onderoad.model.RegionSpotDict;
 import com.unimi.mobidev.onderoad.model.SpotInfo;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
@@ -344,9 +345,16 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
                 e.printStackTrace();
             }
 
-            meetingPoint.setStreetInfo(completeAddress);
-            meetingPoint.setLatitudeInfo(selectedAddress.getLatitude());
-            meetingPoint.setLongitudeInfo(selectedAddress.getLongitude());
+            if(selectedAddress != null){
+                meetingPoint.setStreetInfo(completeAddress);
+                meetingPoint.setProvinceInfo(RawProvinceDict.getValue(selectedAddress.getSubAdminArea()));
+                meetingPoint.setLatitudeInfo(selectedAddress.getLatitude());
+                meetingPoint.setLongitudeInfo(selectedAddress.getLongitude());
+            }
+            else{
+                //TODO: Parametrizzare messaggi, d'errore e non.
+                Toast.makeText(getApplicationContext(), "Connection problem!\nCheck you internet connection." , Toast.LENGTH_SHORT).show();
+            }
 
             /*
              Issue a request to the Places Geo Data API to retrieve a Place object with additional

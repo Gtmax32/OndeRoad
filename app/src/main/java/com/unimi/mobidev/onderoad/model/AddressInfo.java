@@ -9,6 +9,7 @@ import java.io.Serializable;
 public class AddressInfo implements Serializable{
 
     private String streetInfo;
+    private String provinceInfo;
     private double latitudeInfo;
     private double longitudeInfo;
 
@@ -27,6 +28,14 @@ public class AddressInfo implements Serializable{
 
     public void setStreetInfo(String streetInfo) {
         this.streetInfo = streetInfo;
+    }
+
+    public String getProvinceInfo() {
+        return provinceInfo;
+    }
+
+    public void setProvinceInfo(String provinceInfo) {
+        this.provinceInfo = provinceInfo;
     }
 
     public double getLatitudeInfo() {

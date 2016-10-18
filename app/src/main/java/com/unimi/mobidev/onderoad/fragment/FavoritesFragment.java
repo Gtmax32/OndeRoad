@@ -26,9 +26,10 @@ public class FavoritesFragment extends Fragment {
     private static final int CREATE_ACTIVITY_REQUEST = 1;
 
     private ListView travelListView;
-
-    private ArrayList<TravelInfo> travelsList;
+    //TODO: Probabilmente questo arraylist non servirà più quando ci sarà il server
+    private ArrayList<TravelDetail> travelsList;
     private TravelInfo detail;
+    private TravelDetail detailToView;
     private TravelInfoAdapter travelAdapter;
 
     private FloatingActionButton addTrip;
@@ -39,8 +40,8 @@ public class FavoritesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_favorites, container, false);
-        System.out.println(v.toString());
-
+        this.detail = new TravelInfo();
+        this.detailToView = new TravelDetail(this.getActivity().getApplicationContext());
         this.travelsList = new ArrayList<>();
         this.travelAdapter = new TravelInfoAdapter(this.getActivity().getApplicationContext(),R.layout.travel_detail,this.travelsList);
 
@@ -67,7 +68,9 @@ public class FavoritesFragment extends Fragment {
         super.onActivityResult(requestCode,resultCode,data);
         if( requestCode == CREATE_ACTIVITY_REQUEST ) {
             if(resultCode == RESULT_OK) {
-                travelsList.add((TravelInfo) data.getExtras().get("TravelInfo"));
+                detail = (TravelInfo) data.getExtras().get("TravelInfo");
+                detailToView.setTravelInfo(detail);
+                travelsList.add(detailToView);
                 travelAdapter.notifyDataSetChanged();
             }
         }

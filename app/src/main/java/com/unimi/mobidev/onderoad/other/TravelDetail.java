@@ -7,12 +7,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.unimi.mobidev.onderoad.R;
+import com.unimi.mobidev.onderoad.model.TravelInfo;
 
 /**
  * Created by Giuseppe Fabio Trentadue on 01/10/2016.
  */
 
 public class TravelDetail extends LinearLayout {
+    private TravelInfo currentTravel;
+
     private View rootView;
 
     private TextView itineraryText;
@@ -71,5 +74,11 @@ public class TravelDetail extends LinearLayout {
 
     private void setpriceText(String price) {
         priceText.setText(price);
+    }
+
+    public TravelDetail setTravelInfo(TravelInfo travelInfo){
+        this.currentTravel = travelInfo;
+
+        return this;
     }
 }
