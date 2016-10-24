@@ -95,7 +95,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         appData = getSharedPreferences("UserData", Context.MODE_PRIVATE);
 
-        ownerTravel = new User(appData.getString("First name", first_name) + appData.getString("Middle name", middle_name),appData.getString("Last name", last_name),appData.getString("ID", ID),appData.getString("Email", email));
+        ownerTravel = new User(appData.getString("First name", first_name) + " " + appData.getString("Middle name", middle_name),appData.getString("Last name", last_name),appData.getString("ID", ID),appData.getString("Email", email));
         System.out.println(ownerTravel.toString());
 
         mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, 0, this).addApi(Places.GEO_DATA_API).build();
@@ -310,6 +310,12 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     public void saveCarListener(View w){
+        if(newTravel.getDataDeparture() == null || newTravel.getTimeDeparture() == null || newTravel.getPriceTravel() == 0) {
+            newTravel.setDataDeparture(datePickerButton.getText().toString());
+            newTravel.setTimeDeparture(timePickerButton.getText().toString());
+            newTravel.setPriceTravel(Integer.valueOf(priceTextView.getText().toString()));
+        }
+
         newTravel.setAddressDeparture(meetingPoint);
         newTravel.setOutbound(outboundCheckBox.isChecked());
         newTravel.setCarTravel(newCar);
@@ -347,6 +353,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
             if(selectedAddress != null){
                 meetingPoint.setStreetInfo(completeAddress);
+                System.out.println("Province selected: " + selectedAddress.getSubAdminArea());
                 meetingPoint.setProvinceInfo(RawProvinceDict.getValue(selectedAddress.getSubAdminArea()));
                 meetingPoint.setLatitudeInfo(selectedAddress.getLatitude());
                 meetingPoint.setLongitudeInfo(selectedAddress.getLongitude());

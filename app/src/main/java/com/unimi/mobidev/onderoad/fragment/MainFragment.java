@@ -30,7 +30,7 @@ public class MainFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
 
         this.travelsList = new ArrayList<>();
-        this.travelAdapter = new TravelInfoAdapter(this.getActivity().getApplicationContext(),R.layout.travel_detail,this.travelsList);
+        //this.travelAdapter = new TravelInfoAdapter(this.getActivity().getApplicationContext(),R.layout.travel_detail,this.travelsList);
 
         travelListView = (ListView) v.findViewById(R.id.travelListViewMain);
         travelListView.setAdapter(this.travelAdapter);

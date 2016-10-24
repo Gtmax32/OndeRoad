@@ -13,8 +13,9 @@ public class AddressInfo implements Serializable{
     private double latitudeInfo;
     private double longitudeInfo;
 
-    public AddressInfo(String streetInfo, double latitudeInfo, double longitudeInfo) {
+    public AddressInfo(String streetInfo, String provinceInfo, double latitudeInfo, double longitudeInfo) {
         this.streetInfo = streetInfo;
+        this.provinceInfo = provinceInfo;
         this.latitudeInfo = latitudeInfo;
         this.longitudeInfo = longitudeInfo;
     }
@@ -57,6 +58,7 @@ public class AddressInfo implements Serializable{
     public String toString(){
         return "AddressInfo:" +
                 "\nStreet: " + this.streetInfo +
+                "\nProvince: " + this.provinceInfo +
                 "\nLatitude: " + this.latitudeInfo +
                 "\nLongitude: " + this.longitudeInfo;
     }

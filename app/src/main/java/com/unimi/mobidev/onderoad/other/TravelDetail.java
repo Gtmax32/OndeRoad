@@ -18,67 +18,125 @@ public class TravelDetail extends LinearLayout {
 
     private View rootView;
 
-    private TextView itineraryText;
+    private TextView itineraryDepartureText;
+    private TextView itineraryDestinationText;
     private TextView dateTimeText;
     private TextView priceText;
 
-    public TravelDetail(Context context) {
+    public TravelDetail(Context context, TravelInfo travelInfo) {
         super(context);
-        init(context);
+        init(context, travelInfo);
     }
 
-    public TravelDetail(Context context, AttributeSet attributeSet) {
+    public TravelDetail(Context context, AttributeSet attributeSet, TravelInfo travelInfo) {
         super(context, attributeSet);
-        init(context);
+        init(context, travelInfo);
     }
 
-    private void init(Context context) {
-        rootView = inflate(context, R.layout.travel_detail, this);
+    private void init(Context context, TravelInfo travelInfo) {
+        String date, time, departure, destination;
+        int price;
 
-        itineraryText = (TextView) findViewById(R.id.itineraryTravel);
-        dateTimeText = (TextView) findViewById(R.id.dateTimeTravel);
-        priceText = (TextView) findViewById(R.id.priceTravel);
+        this.rootView = inflate(context, R.layout.travel_detail, this);
+
+        this.dateTimeText = (TextView) rootView.findViewById(R.id.dateTimeTravel);
+        this.itineraryDepartureText = (TextView) rootView.findViewById(R.id.itineraryTravelDeparture);
+        this.itineraryDestinationText = (TextView) rootView.findViewById(R.id.itineraryTravelDestination);
+        this.priceText = (TextView) rootView.findViewById(R.id.priceTravel);
+
+        this.currentTravel = travelInfo;
+
+        if (this.currentTravel != null) {
+            date = this.currentTravel.getDataDeparture();
+            time = this.currentTravel.getTimeDeparture();
+            departure = this.currentTravel.getAddressDeparture().getProvinceInfo();
+            destination = this.currentTravel.getSpotDestination().getNameSpot();
+            price = this.currentTravel.getPriceTravel();
+
+            this.dateTimeText.setText(date + " " + time);
+            this.itineraryDepartureText.setText(departure);
+            this.itineraryDestinationText.setText(destination);
+            this.priceText.setText(price + "");
+        }
     }
 
-    public TextView getItineraryText() {
-        return itineraryText;
+    public void setItineraryDepartureText(TextView itineraryDepartureText) {
+        this.itineraryDepartureText = itineraryDepartureText;
     }
 
-    public void setItineraryText(TextView itineraryText) {
-        this.itineraryText = itineraryText;
-    }
-
-    public TextView getDateTimeText() {
-        return dateTimeText;
+    public void setItineraryDestinationText(TextView itineraryDestinationText) {
+        this.itineraryDestinationText = itineraryDestinationText;
     }
 
     public void setDateTimeText(TextView dateTimeText) {
         this.dateTimeText = dateTimeText;
     }
 
-    public TextView getPriceText() {
-        return priceText;
-    }
-
     public void setPriceText(TextView priceText) {
         this.priceText = priceText;
     }
 
-    private void setItineraryText(String itinerary) {
-        itineraryText.setText(itinerary);
+    public String getItineraryDepartureText() {
+        return itineraryDepartureText.getText().toString();
     }
 
-    private void setdateTimeText(String dateTime) {
-        dateTimeText.setText(dateTime);
+    public void setItineraryDepartureText(String newText) {
+        this.itineraryDepartureText.setText(newText);
     }
 
-    private void setpriceText(String price) {
-        priceText.setText(price);
+    public String getItineraryDestinationText() {
+        return itineraryDestinationText.getText().toString();
     }
 
-    public TravelDetail setTravelInfo(TravelInfo travelInfo){
+    public void setItineraryDestinationText(String newText) {
+        this.itineraryDestinationText.setText(newText);
+    }
+
+    public String getDateTimeText() {
+        return dateTimeText.getText().toString();
+    }
+
+    public void setDateTimeText(String newText) {
+        this.dateTimeText.setText(newText);
+    }
+
+    public String getPriceText() {
+        return priceText.getText().toString();
+    }
+
+    public void setPriceText(String newText) {
+        this.priceText.setText(newText);
+    }
+
+    public void convertFromTravelInfo(TravelInfo travelInfo) {
+        String date, time, departure, destination;
+        int price;
+
         this.currentTravel = travelInfo;
 
-        return this;
+        if (this.currentTravel != null) {
+            date = this.currentTravel.getDataDeparture();
+            time = this.currentTravel.getTimeDeparture();
+            departure = this.currentTravel.getAddressDeparture().getProvinceInfo();
+            destination = this.currentTravel.getSpotDestination().getNameSpot();
+            price = this.currentTravel.getPriceTravel();
+
+            this.setDateTimeText(date + " " + time);
+            this.setItineraryDepartureText(departure);
+            this.setItineraryDestinationText(destination);
+            this.setPriceText(price + "");
+        }
+    }
+
+    public void updateView(){
+        this.rootView.invalidate();
+    }
+
+    public String toString(){
+        return "TravelDetail: " +
+                "\nDate&Time : " + this.getDateTimeText() +
+                "\nDeparture: " + this.getItineraryDepartureText() +
+                "\nDestination: " + this.getItineraryDestinationText() +
+                "\nPrice: " + this.getPriceText();
     }
 }

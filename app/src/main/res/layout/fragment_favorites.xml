@@ -8,7 +8,9 @@
         android:id="@+id/travelListViewFavorites"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"/>
+        android:divider="@color/colorAccent"
+        android:dividerHeight="10dp"
+        android:layout_margin="10dp" />
 
     <android.support.design.widget.FloatingActionButton
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -17,8 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_plus_black_24dp"
-        app:background="@color/colorPrimary"
-        app:backgroundTint="@color/colorPrimaryDark"/>
+        android:elevation="20dp"
+        android:src="@drawable/ic_add_black_24dp"
+        app:backgroundTint="@color/colorPrimary"/>
 
 </FrameLayout>

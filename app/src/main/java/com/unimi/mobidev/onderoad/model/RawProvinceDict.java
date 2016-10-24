@@ -99,7 +99,7 @@ public class RawProvinceDict {
         DICT.put("Reggio Emilia", "Reggio Emilia");
         DICT.put("Rieti", "Rieti");
         DICT.put("Rimini", "Rimini");
-        DICT.put("Città Metropolitana di Roma Capitale", "Roma");
+        DICT.put("Città Metropolitana di Roma", "Roma");
         DICT.put("Rovigo", "Rovigo");
         DICT.put("Salerno", "Salerno");
         DICT.put("Sassari", "Sassari");

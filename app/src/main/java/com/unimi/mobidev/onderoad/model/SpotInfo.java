@@ -5,7 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.io.Serializable;
 
 /**
- * Created by Pc-Utente on 30/09/2016.
+ * Created by Giuseppe Fabio Trentadue on 30/09/2016.
  */
 
 public class SpotInfo implements Serializable {
@@ -64,5 +64,12 @@ public class SpotInfo implements Serializable {
         this.descriptionSpot = descriptionSpot;
     }
 
-
+    public String toString(){
+        return "SpotInfo: " +
+                "\nSpot Name: " + this.nameSpot +
+                "\nLatitude: " + this.latitudeSpot +
+                "\nLongitude: " + this.longitudeSpot +
+                "\nRating: " + this.ratingSpot +
+                "\nDescription: " + this.descriptionSpot;
+    }
 }
