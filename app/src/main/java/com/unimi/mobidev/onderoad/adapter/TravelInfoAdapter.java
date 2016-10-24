@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.unimi.mobidev.onderoad.R;
-import com.unimi.mobidev.onderoad.model.TravelInfo;
 import com.unimi.mobidev.onderoad.other.TravelDetail;
 
 import java.util.ArrayList;
@@ -46,29 +46,55 @@ public class TravelInfoAdapter extends ArrayAdapter<TravelDetail> {
         return listTravel.get(position);
     }
 
-    public void addItem(TravelDetail travel){
-        if(travel != null)
+    public void addItem(TravelDetail travel) {
+        if (travel != null)
             listTravel.add(travel);
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
         TravelDetail holder;
+        String dateTime, departure, destination;
+        int price;
 
         if (v == null) {
             LayoutInflater inflater = LayoutInflater.from(this.context);
             v = inflater.inflate(R.layout.travel_detail, null);
 
-            holder = new TravelDetail(this.context);
-            holder.setItineraryText((TextView) v.findViewById(R.id.itineraryTravel));
+            /*holder = new TravelDetail(this.context);
+            holder.setItineraryDepartureText((TextView) v.findViewById(R.id.itineraryTravelDeparture));
+            holder.setItineraryDestinationText((TextView) v.findViewById(R.id.itineraryTravelDestination));
             holder.setDateTimeText((TextView) v.findViewById(R.id.dateTimeTravel));
             holder.setPriceText((TextView) v.findViewById(R.id.priceTravel));
-            holder.setTag(holder);
+            holder.setTag(holder);*/
         }
-        else{
-            holder = (TravelDetail) v.getTag();
-        }
+
+        holder = this.getItem(position);
+
+        TextView dateTimeText = (TextView) v.findViewById(R.id.dateTimeTravel);
+        TextView itineraryDepartureText = (TextView) v.findViewById(R.id.itineraryTravelDeparture);
+        TextView itineraryDestinationText = (TextView) v.findViewById(R.id.itineraryTravelDestination);
+        TextView priceText = (TextView) v.findViewById(R.id.priceTravel);
+
+        dateTime = holder.getDateTimeText();
+        departure = holder.getItineraryDepartureText();
+        destination = holder.getItineraryDestinationText();
+        price = Integer.parseInt(holder.getPriceText());
+
+        dateTimeText.setText(dateTime);
+        itineraryDepartureText.setText(departure);
+        itineraryDestinationText.setText(destination);
+        priceText.setText(price + "");
+
+        holder.setOnClickListener(travelBoxListener);
 
         return v;
     }
+
+    private View.OnClickListener travelBoxListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(context,"Travel Box Clicked!",Toast.LENGTH_LONG).show();
+        }
+    };
 }

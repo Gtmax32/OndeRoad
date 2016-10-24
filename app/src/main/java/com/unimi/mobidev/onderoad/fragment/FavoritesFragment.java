@@ -41,7 +41,6 @@ public class FavoritesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_favorites, container, false);
         this.detail = new TravelInfo();
-        this.detailToView = new TravelDetail(this.getActivity().getApplicationContext());
         this.travelsList = new ArrayList<>();
         this.travelAdapter = new TravelInfoAdapter(this.getActivity().getApplicationContext(),R.layout.travel_detail,this.travelsList);
 
@@ -69,9 +68,18 @@ public class FavoritesFragment extends Fragment {
         if( requestCode == CREATE_ACTIVITY_REQUEST ) {
             if(resultCode == RESULT_OK) {
                 detail = (TravelInfo) data.getExtras().get("TravelInfo");
-                detailToView.setTravelInfo(detail);
+                System.out.println(detail.toString());
+
+                this.detailToView = new TravelDetail(this.getActivity().getApplicationContext(), detail);
+                this.detailToView.updateView();
+
+                System.out.println(detailToView.toString());
+
                 travelsList.add(detailToView);
+                travelAdapter.getItem(0).updateView();
                 travelAdapter.notifyDataSetChanged();
+
+                this.detailToView.updateView();
             }
         }
     }

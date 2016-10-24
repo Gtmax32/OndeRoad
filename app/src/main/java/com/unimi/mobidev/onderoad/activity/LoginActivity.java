@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.nameToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.app_name);
-        getSupportActionBar().setIcon(getDrawable(R.drawable.ic_beach_access_black_24dp));
+        getSupportActionBar().setIcon(getDrawable(R.drawable.ic_beach_access_black_24px));
 
         cm = CallbackManager.Factory.create();
 

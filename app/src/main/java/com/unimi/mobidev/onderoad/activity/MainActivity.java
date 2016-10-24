@@ -29,27 +29,29 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         TabLayout.Tab list = tabLayout.newTab(), favorites = tabLayout.newTab(),
-                      spot = tabLayout.newTab(), settings = tabLayout.newTab();
+                spot = tabLayout.newTab(), settings = tabLayout.newTab();
 
-        View listView = getLayoutInflater().inflate(R.layout.tab_layout,null);
+        View listView = getLayoutInflater().inflate(R.layout.tab_layout, null);
         ImageView listIcon = (ImageView) listView.findViewById(R.id.imageView);
         TextView listLabel = (TextView) listView.findViewById(R.id.textView);
-        listIcon.setImageResource(R.drawable.ic_list_white_24dp);
+        //TODO: Ripristinare questo codice, inserendo inizialmente la tab selezionata a grigio
+        //listIcon.setImageResource(R.drawable.ic_list_white_24dp);
+        listIcon.setImageResource(R.drawable.ic_list_black_24dp);
         listLabel.setText("Tutti");
 
-        View favView = getLayoutInflater().inflate(R.layout.tab_layout,null);
+        View favView = getLayoutInflater().inflate(R.layout.tab_layout, null);
         ImageView favIcon = (ImageView) favView.findViewById(R.id.imageView);
         TextView favLabel = (TextView) favView.findViewById(R.id.textView);
-        favIcon.setImageResource(R.drawable.ic_grade_black_24dp);
+        favIcon.setImageResource(R.drawable.ic_star_black_24dp);
         favLabel.setText("Favorites");
 
-        View spotView = getLayoutInflater().inflate(R.layout.tab_layout,null);
+        View spotView = getLayoutInflater().inflate(R.layout.tab_layout, null);
         ImageView spotIcon = (ImageView) spotView.findViewById(R.id.imageView);
         TextView spotLabel = (TextView) spotView.findViewById(R.id.textView);
         spotIcon.setImageResource(R.drawable.ic_place_black_24dp);
         spotLabel.setText("Spot");
 
-        View settView = getLayoutInflater().inflate(R.layout.tab_layout,null);
+        View settView = getLayoutInflater().inflate(R.layout.tab_layout, null);
         ImageView settIcon = (ImageView) settView.findViewById(R.id.imageView);
         TextView settLabel = (TextView) settView.findViewById(R.id.textView);
         settIcon.setImageResource(R.drawable.ic_settings_black_24dp);
@@ -60,12 +62,12 @@ public class MainActivity extends AppCompatActivity {
         spot.setCustomView(spotView);
         settings.setCustomView(settView);
 
-        tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#FFFFFF"));
+        tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#000000"));
 
-        tabLayout.addTab(list,0);
-        tabLayout.addTab(favorites,1);
-        tabLayout.addTab(spot,2);
-        tabLayout.addTab(settings,3);
+        tabLayout.addTab(list, 0);
+        tabLayout.addTab(favorites, 1);
+        tabLayout.addTab(spot, 2);
+        tabLayout.addTab(settings, 3);
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
@@ -79,9 +81,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-
-                ImageView tabImage = (ImageView) tab.getCustomView().findViewById(R.id.imageView);
-                switch(tab.getPosition()){
+                //TODO: Quando avrò le icone grigie, dovrò riabilitare questo codice per modificare correttamente il colore
+                /*ImageView tabImage = (ImageView) tab.getCustomView().findViewById(R.id.imageView);
+                switch (tab.getPosition()) {
                     case 0:
                         tabImage.setImageDrawable(getIcon(tab.getPosition() + 1));
                         break;
@@ -94,14 +96,14 @@ public class MainActivity extends AppCompatActivity {
                     case 3:
                         tabImage.setImageDrawable(getIcon(tab.getPosition() + 4));
                         break;
-                }
+                }*/
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-
-                ImageView tabImage = (ImageView) tab.getCustomView().findViewById(R.id.imageView);
+                //TODO: Quando avrò le icone grigie, dovrò riabilitare questo codice per modificare correttamente il colore
+                /*ImageView tabImage = (ImageView) tab.getCustomView().findViewById(R.id.imageView);
                 switch(tab.getPosition()){
                     case 0:
                         tabImage.setImageDrawable(getIcon(tab.getPosition()));
@@ -115,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                     case 3:
                         tabImage.setImageDrawable(getIcon(tab.getPosition() + 3));
                         break;
-                }
+                }*/
             }
 
             @Override
@@ -132,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
         tabIcons.add(getDrawable(R.drawable.ic_list_black_24dp));
         tabIcons.add(getDrawable(R.drawable.ic_list_white_24dp));
-        tabIcons.add(getDrawable(R.drawable.ic_grade_black_24dp));
+        tabIcons.add(getDrawable(R.drawable.ic_star_black_24dp));
         tabIcons.add(getDrawable(R.drawable.ic_grade_white_24dp));
         tabIcons.add(getDrawable(R.drawable.ic_place_black_24dp));
         tabIcons.add(getDrawable(R.drawable.ic_place_white_24dp));
@@ -140,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         tabIcons.add(getDrawable(R.drawable.ic_settings_white_24dp));
     }
 
-    private Drawable getIcon(int index){
+    private Drawable getIcon(int index) {
         return tabIcons.get(index);
     }
 }

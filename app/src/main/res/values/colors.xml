@@ -2,6 +2,7 @@
 <resources>787878
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#787878</color>
-    <color name="colorAccent">#0040FF</color>
-    <color name="colorText">#000000</color>
+    <color name="colorAccent">#0B6AC1</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorMyTravel">#EEE031</color>
 </resources>
