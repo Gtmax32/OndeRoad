@@ -115,10 +115,10 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         Calendar todayDate = Calendar.getInstance();
 
-        todayText = todayDate.get(Calendar.DAY_OF_MONTH) + " " + todayDate.getDisplayName(Calendar.MONTH,Calendar.SHORT, Locale.ITALIAN);
-        nowText = todayDate.get(Calendar.HOUR_OF_DAY) + ":" + todayDate.get(Calendar.MINUTE);
+        todayText = String.format(Locale.ITALIAN,"%02d",todayDate.get(Calendar.DAY_OF_MONTH)) + " " + todayDate.getDisplayName(Calendar.MONTH,Calendar.LONG, Locale.ITALIAN);
+        nowText = String.format(Locale.ITALIAN,"%02d",todayDate.get(Calendar.HOUR_OF_DAY)) + ":" + String.format(Locale.ITALIAN,"%02d",todayDate.get(Calendar.MINUTE));
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.infoToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.createInfoToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.info_create);
 
@@ -353,7 +353,6 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
             if(selectedAddress != null){
                 meetingPoint.setStreetInfo(completeAddress);
-                System.out.println("Province selected: " + selectedAddress.getSubAdminArea());
                 meetingPoint.setProvinceInfo(RawProvinceDict.getValue(selectedAddress.getSubAdminArea()));
                 meetingPoint.setLatitudeInfo(selectedAddress.getLatitude());
                 meetingPoint.setLongitudeInfo(selectedAddress.getLongitude());

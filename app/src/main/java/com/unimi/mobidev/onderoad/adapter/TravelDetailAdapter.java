@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.other.TravelDetail;
@@ -17,19 +16,19 @@ import java.util.ArrayList;
  * Created by Giuseppe Fabio Trentadue on 01/10/2016.
  */
 
-public class TravelInfoAdapter extends ArrayAdapter<TravelDetail> {
+public class TravelDetailAdapter extends ArrayAdapter<TravelDetail> {
     private ArrayList<TravelDetail> listTravel;
     private int resourceLayoutTravel;
     private Context context;
 
-    public TravelInfoAdapter(Context context, int resource, ArrayList<TravelDetail> list) {
+    public TravelDetailAdapter(Context context, int resource, ArrayList<TravelDetail> list) {
         super(context, resource);
         this.context = context;
         this.listTravel = list;
         this.resourceLayoutTravel = resource;
     }
 
-    public TravelInfoAdapter(Context context, int resource, int textViewResourceId, ArrayList<TravelDetail> list) {
+    public TravelDetailAdapter(Context context, int resource, int textViewResourceId, ArrayList<TravelDetail> list) {
         super(context, resource, textViewResourceId);
         this.context = context;
         this.listTravel = list;
@@ -86,15 +85,8 @@ public class TravelInfoAdapter extends ArrayAdapter<TravelDetail> {
         itineraryDestinationText.setText(destination);
         priceText.setText(price + "");
 
-        holder.setOnClickListener(travelBoxListener);
-
         return v;
     }
 
-    private View.OnClickListener travelBoxListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Toast.makeText(context,"Travel Box Clicked!",Toast.LENGTH_LONG).show();
-        }
-    };
+
 }

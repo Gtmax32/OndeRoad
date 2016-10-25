@@ -38,7 +38,7 @@ public class DateFragment extends DialogFragment implements DatePickerDialog.OnD
         Calendar c = Calendar.getInstance();
         c.set(year,monthOfYear,dayOfMonth);
 
-        date = dayOfMonth + " " + c.getDisplayName(Calendar.MONTH,Calendar.SHORT,Locale.ITALIAN);
+        date = dayOfMonth + " " + c.getDisplayName(Calendar.MONTH,Calendar.LONG,Locale.ITALIAN);
         dateButton.setText(date);
     }
 }

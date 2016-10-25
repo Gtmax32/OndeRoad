@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.unimi.mobidev.onderoad.R;
-import com.unimi.mobidev.onderoad.adapter.TravelInfoAdapter;
+import com.unimi.mobidev.onderoad.adapter.TravelDetailAdapter;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
 import com.unimi.mobidev.onderoad.other.TravelDetail;
 
@@ -19,7 +19,7 @@ public class MainFragment extends Fragment {
 
     private ArrayList<TravelInfo> travelsList;
     private TravelDetail detail;
-    private TravelInfoAdapter travelAdapter;
+    private TravelDetailAdapter travelAdapter;
 
     public MainFragment() {
         System.out.println("In MainFragment...");
@@ -30,7 +30,7 @@ public class MainFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
 
         this.travelsList = new ArrayList<>();
-        //this.travelAdapter = new TravelInfoAdapter(this.getActivity().getApplicationContext(),R.layout.travel_detail,this.travelsList);
+        //this.travelAdapter = new TravelDetailAdapter(this.getActivity().getApplicationContext(),R.layout.travel_detail,this.travelsList);
 
         travelListView = (ListView) v.findViewById(R.id.travelListViewMain);
         travelListView.setAdapter(this.travelAdapter);

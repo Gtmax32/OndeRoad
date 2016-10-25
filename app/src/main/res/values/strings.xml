@@ -30,18 +30,20 @@
     <string name="date_label">Data:</string>
 
     <string name="price_label">Prezzo:</string>
-    
+
     <string name="passengers_label">Passeggeri:</string>
-    
+
     <string name="outbound_label">Solo andata?</string>
-    
+
     <string name="surfboard_number">Tavole trasportabili:</string>
-    
+
     <string name="car_table_support">Tipologia supporto:</string>
 
     <string name="note_label">Note</string>
 
     <string name="save_car_button">Salva</string>
+
+    <string name="info_travel">Dettagli Viaggio</string>
 
     <string-array name="support_types">
         <item>Soft rack</item>

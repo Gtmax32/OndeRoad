@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
@@ -108,28 +109,12 @@ public class TravelDetail extends LinearLayout {
         this.priceText.setText(newText);
     }
 
-    public void convertFromTravelInfo(TravelInfo travelInfo) {
-        String date, time, departure, destination;
-        int price;
-
-        this.currentTravel = travelInfo;
-
-        if (this.currentTravel != null) {
-            date = this.currentTravel.getDataDeparture();
-            time = this.currentTravel.getTimeDeparture();
-            departure = this.currentTravel.getAddressDeparture().getProvinceInfo();
-            destination = this.currentTravel.getSpotDestination().getNameSpot();
-            price = this.currentTravel.getPriceTravel();
-
-            this.setDateTimeText(date + " " + time);
-            this.setItineraryDepartureText(departure);
-            this.setItineraryDestinationText(destination);
-            this.setPriceText(price + "");
-        }
+    public TravelInfo getCurrentTravel() {
+        return currentTravel;
     }
 
-    public void updateView(){
-        this.rootView.invalidate();
+    public void setCurrentTravel(TravelInfo currentTravel) {
+        this.currentTravel = currentTravel;
     }
 
     public String toString(){

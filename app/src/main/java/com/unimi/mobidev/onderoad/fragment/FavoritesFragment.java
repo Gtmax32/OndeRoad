@@ -7,11 +7,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.activity.CreateActivity;
-import com.unimi.mobidev.onderoad.adapter.TravelInfoAdapter;
+import com.unimi.mobidev.onderoad.activity.TravelInfoActivity;
+import com.unimi.mobidev.onderoad.adapter.TravelDetailAdapter;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
 import com.unimi.mobidev.onderoad.other.TravelDetail;
 
@@ -30,7 +32,7 @@ public class FavoritesFragment extends Fragment {
     private ArrayList<TravelDetail> travelsList;
     private TravelInfo detail;
     private TravelDetail detailToView;
-    private TravelInfoAdapter travelAdapter;
+    private TravelDetailAdapter travelAdapter;
 
     private FloatingActionButton addTrip;
 
@@ -42,10 +44,11 @@ public class FavoritesFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_favorites, container, false);
         this.detail = new TravelInfo();
         this.travelsList = new ArrayList<>();
-        this.travelAdapter = new TravelInfoAdapter(this.getActivity().getApplicationContext(),R.layout.travel_detail,this.travelsList);
+        this.travelAdapter = new TravelDetailAdapter(this.getActivity().getApplicationContext(),R.layout.travel_detail,this.travelsList);
 
         travelListView = (ListView) v.findViewById(R.id.travelListViewFavorites);
         travelListView.setAdapter(this.travelAdapter);
+        travelListView.setOnItemClickListener(boxSelectedListener);
 
         addTrip = (FloatingActionButton) v.findViewById(R.id.addTrip);
         addTrip.setOnClickListener(new View.OnClickListener() {
@@ -68,20 +71,26 @@ public class FavoritesFragment extends Fragment {
         if( requestCode == CREATE_ACTIVITY_REQUEST ) {
             if(resultCode == RESULT_OK) {
                 detail = (TravelInfo) data.getExtras().get("TravelInfo");
-                System.out.println(detail.toString());
 
                 this.detailToView = new TravelDetail(this.getActivity().getApplicationContext(), detail);
-                this.detailToView.updateView();
 
-                System.out.println(detailToView.toString());
-
-                travelsList.add(detailToView);
-                travelAdapter.getItem(0).updateView();
+                travelAdapter.addItem(detailToView);
                 travelAdapter.notifyDataSetChanged();
-
-                this.detailToView.updateView();
             }
         }
     }
 
+    private AdapterView.OnItemClickListener boxSelectedListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            TravelDetail selectedBox = (TravelDetail) parent.getItemAtPosition(position);
+            TravelInfo selectedBoxInfo = selectedBox.getCurrentTravel();
+
+            System.out.println("Clicked item: " + selectedBox.toString());
+            System.out.println("Clicked travel: " + selectedBoxInfo.toString());
+
+            Intent infoIntent = new Intent(FavoritesFragment.this.getActivity(),TravelInfoActivity.class);
+            infoIntent.putExtra("TravelInfo",selectedBoxInfo);
+        }
+    };
 }

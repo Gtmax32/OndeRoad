@@ -133,13 +133,13 @@ public class PriceSelector extends LinearLayout {
     private void decrementValue(){
         int currentValue = this.getValue();
 
-        this.setValue(currentValue - 1);
+        this.setValue(currentValue - 5);
     }
 
     private void incrementValue(){
         int currentValue = this.getValue();
 
-        this.setValue(currentValue + 1);
+        this.setValue(currentValue + 5);
     }
 
     private class AutoIncrementer implements Runnable {

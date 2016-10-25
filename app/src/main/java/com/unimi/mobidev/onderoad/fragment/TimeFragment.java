@@ -42,7 +42,7 @@ public class TimeFragment extends DialogFragment implements TimePickerDialog.OnT
         Button timeButton = (Button) getActivity().findViewById(R.id.timeButton);
         String time;
 
-        time = hourOfDay + ":" + minute;
+        time = String.format(Locale.ITALIAN,"%02d",hourOfDay) + ":" + String.format(Locale.ITALIAN,"%02d",minute);
         timeButton.setText(time);
     }
 }
