@@ -91,6 +91,7 @@ public class FavoritesFragment extends Fragment {
 
             Intent infoIntent = new Intent(FavoritesFragment.this.getActivity(),TravelInfoActivity.class);
             infoIntent.putExtra("TravelInfo",selectedBoxInfo);
+            startActivity(infoIntent);
         }
     };
 }
