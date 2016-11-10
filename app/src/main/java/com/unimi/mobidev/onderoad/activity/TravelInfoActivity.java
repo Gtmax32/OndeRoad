@@ -21,5 +21,8 @@ public class TravelInfoActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.info_travel);
 
         travelDisplayed = (TravelInfo) this.getIntent().getSerializableExtra("TravelInfo");
+
+        //Ricordarsi che, per visualizzare i valori relative alle etichette, conviene prendere il testo dell'etichetta
+        //ed aggiungerli il valore modificato. Es. Passeggeri: + 1/5
     }
 }

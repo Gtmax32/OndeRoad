@@ -52,5 +52,9 @@
         <item>Fascioni</item>
     </string-array>
 
+    <string name="actual_price">Prezzo attuale:</string>
+
+    <string name="total_price">Prezzo totale:</string>
+
     <string name="no_provider_enabled">Impossibile localizzarti.\nAttiva la connessione dati o il GPS.</string>
 </resources>
