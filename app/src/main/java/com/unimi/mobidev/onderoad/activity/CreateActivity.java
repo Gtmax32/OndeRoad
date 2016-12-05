@@ -310,18 +310,21 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     public void saveCarListener(View w){
+        ArrayList<User> carAvailablePlace = new ArrayList<>(newCar.getPassengersNumber());
+
         if(newTravel.getDataDeparture() == null || newTravel.getTimeDeparture() == null || newTravel.getPriceTravel() == 0) {
             newTravel.setDataDeparture(datePickerButton.getText().toString());
             newTravel.setTimeDeparture(timePickerButton.getText().toString());
             newTravel.setPriceTravel(Integer.valueOf(priceTextView.getText().toString()));
         }
 
+        newTravel.setPassengersTravel(carAvailablePlace);
         newTravel.setAddressDeparture(meetingPoint);
         newTravel.setOutbound(outboundCheckBox.isChecked());
         newTravel.setCarTravel(newCar);
         newTravel.setNoteTravel(noteText.getText().toString());
 
-        System.out.println(newTravel.toString());
+        //System.out.println(newTravel.toString());
 
         Intent intent = this.getIntent();
         intent.putExtra("TravelInfo",newTravel);
@@ -370,7 +373,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
 
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 
             //Toast.makeText(getApplicationContext(), "Clicked: " + primaryText, Toast.LENGTH_SHORT).show();
         }

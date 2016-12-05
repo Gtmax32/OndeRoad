@@ -21,7 +21,8 @@ public class TravelInfo  implements Serializable {
     private User ownerTravel;
     private ArrayList<User> passengersTravel;
 
-    public TravelInfo() {}
+    public TravelInfo() {
+    }
 
     public AddressInfo getAddressDeparture() {
         return addressDeparture;

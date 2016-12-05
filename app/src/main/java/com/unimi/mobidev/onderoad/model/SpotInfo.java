@@ -32,8 +32,11 @@ public class SpotInfo implements Serializable {
         this.nameSpot = nameSpot;
     }
 
-    public LatLng getLatitudeSpot() {
+    public LatLng getLatLngSpot() {
         return new LatLng(this.latitudeSpot,this.longitudeSpot);
+    }
+    public double getLatitudeSpot() {
+        return latitudeSpot;
     }
 
     public void setLatitudeSpot(double latitudeSpot) {
