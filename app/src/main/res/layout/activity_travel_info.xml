@@ -15,171 +15,163 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:background="@color/colorAccent" />
 
-    <ScrollView
+    <!--Upper layout-->
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:layout_margin="10dp">
 
-        <!--Content layout-->
+        <ImageView
+            android:id="@+id/carImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_directions_car_black_24dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="center_vertical" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_toEndOf="@+id/carImage"
+            android:layout_toRightOf="@+id/carImage"
+            android:layout_alignTop="@+id/carImage"
+            android:layout_alignBottom="@+id/carImage">
 
-            <!--Upper layout-->
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.2"
-                android:layout_margin="10dp">
-
-                <ImageView
-                    android:id="@+id/carImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_directions_car_black_24dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginEnd="10dp"
-                    android:layout_gravity="center_vertical" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/carImage"
-                    android:layout_toRightOf="@+id/carImage"
-                    android:layout_alignTop="@+id/carImage"
-                    android:layout_alignBottom="@+id/carImage">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical" >
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/passengersFractionText"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:text="@string/passengers_label"/>
-
-                            <TextView
-                                android:id="@+id/actualPriceText"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:text="@string/actual_price"/>
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/surfboardFractionText"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:text="@string/surfboard_number"
-                            android:layout_weight="1"/>
-
-                    </LinearLayout>
-
-                </RelativeLayout>
-
-            </RelativeLayout>
-
-            <!--Middle layout-->
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_margin="10dp">
-
-                <TextView
-                    android:id="@+id/actualDateTravel"
-                    android:layout_width="match_parent"
-                    android:layout_height="20sp"/>
-
-                <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/actualTravelMap"
-                    android:name="com.google.android.gms.maps.MapFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_below="@+id/actualDateTravel"
-                    android:layout_above="@+id/belowInfo" />
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
 
                 <LinearLayout
-                    android:id="@+id/belowInfo"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="bottom"
-                    android:layout_alignParentBottom="true">
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/totalPriceInfo"
+                        android:id="@+id/passengersFractionText"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="@string/total_price"/>
+                        android:text="@string/passengers_label"/>
 
                     <TextView
-                        android:id="@+id/carSupportInfo"
+                        android:id="@+id/actualPriceText"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="@string/car_table_support"/>
-
+                        android:text="@string/actual_price"/>
                 </LinearLayout>
 
-            </RelativeLayout>
-
-            <!--Lower layout-->
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.5"
-                android:layout_margin="10dp">
-
                 <TextView
-                    android:id="@+id/actualNoteLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20sp"
-                    android:text="@string/note_label"/>
-
-                <EditText
-                    android:id="@+id/actualNoteText"
+                    android:id="@+id/surfboardFractionText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/actualNoteLabel"
-                    android:layout_marginTop="10dp"
-                    android:inputType="none"
-                    android:lines="3"
-                    android:gravity="top|left"
-                    android:scrollbars="vertical"/>
+                    android:layout_height="0dp"
+                    android:text="@string/surfboard_number"
+                    android:layout_weight="1"/>
 
-            </RelativeLayout>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <!--Middle layout-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:id="@+id/actualDateTravel"
+            android:layout_width="match_parent"
+            android:layout_height="20sp"/>
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/actualTravelMap"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@+id/actualDateTravel"
+            android:layout_above="@+id/belowInfo" />
+
+        <LinearLayout
+            android:id="@+id/belowInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="bottom"
+            android:layout_alignParentBottom="true">
+
+            <TextView
+                android:id="@+id/totalPriceInfo"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/total_price"/>
+
+            <TextView
+                android:id="@+id/carSupportInfo"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/car_table_support"/>
+
         </LinearLayout>
 
-    </ScrollView>
+    </RelativeLayout>
 
+    <!--Lower layout-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
 
-    <android.support.design.widget.FloatingActionButton
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/actualTravelSetting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:elevation="20dp"
-        android:src="@drawable/ic_settings_black_24dp"
-        app:backgroundTint="@color/colorPrimary"/>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8">
+
+            <TextView
+                android:id="@+id/actualNoteLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="20sp"
+                android:text="@string/note_label"/>
+
+            <EditText
+                android:id="@+id/actualNoteText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/actualNoteLabel"
+                android:layout_marginTop="10dp"
+                android:inputType="none"
+                android:lines="3"
+                android:gravity="top|left"
+                android:scrollbars="vertical"/>
+
+        </RelativeLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/actualTravelSetting"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:layout_margin="@dimen/fab_margin"
+            android:elevation="20dp"
+            android:src="@drawable/ic_settings_black_24dp"
+            app:backgroundTint="@color/colorPrimary"/>
+
+    </LinearLayout>
+
 
 </LinearLayout>

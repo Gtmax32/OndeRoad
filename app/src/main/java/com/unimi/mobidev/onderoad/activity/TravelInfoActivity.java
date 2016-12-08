@@ -1,5 +1,6 @@
 package com.unimi.mobidev.onderoad.activity;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -28,6 +29,8 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     private TextView carSupportActualInfo;
 
     private EditText noteActualText;
+
+    private FloatingActionButton travelSettings;
 
 
     @Override
@@ -85,6 +88,7 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
 
         carSupportActualInfo.setText(temp);
 
+        travelSettings = (FloatingActionButton) findViewById(R.id.actualTravelSetting);
 
     }
 
