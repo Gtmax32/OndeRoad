@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
+import com.unimi.mobidev.onderoad.other.MultipleFloatingActionButton;
 
 public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -29,9 +30,6 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     private TextView carSupportActualInfo;
 
     private EditText noteActualText;
-
-    private FloatingActionButton travelSettings;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +85,6 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         temp = carSupportActualInfo.getText().toString() + " " + travelDisplayed.getCarTravel().getSurfboardType();
 
         carSupportActualInfo.setText(temp);
-
-        travelSettings = (FloatingActionButton) findViewById(R.id.actualTravelSetting);
 
     }
 
