@@ -50,10 +50,10 @@ public class MultipleFloatingActionButton extends LinearLayout{
         shareFab = (FloatingActionButton) rootview.findViewById(R.id.shareFab);
         mailFab = (FloatingActionButton) rootview.findViewById(R.id.mailFab);
 
-        fab_open = AnimationUtils.loadAnimation(context,R.anim.fab_open);
-        fab_close = AnimationUtils.loadAnimation(context, R.anim.fab_close);
-        rotate_backward = AnimationUtils.loadAnimation(context, R.anim.rotate_backward);
-        rotate_forward = AnimationUtils.loadAnimation(context,R.anim.rotate_forward);
+        //fab_open = AnimationUtils.loadAnimation(context,R.anim.fab_open);
+        //fab_close = AnimationUtils.loadAnimation(context, R.anim.fab_close);
+        //rotate_backward = AnimationUtils.loadAnimation(context, R.anim.rotate_backward);
+        //rotate_forward = AnimationUtils.loadAnimation(context,R.anim.rotate_forward);
 
         mainFab.setOnClickListener(new View.OnClickListener() {
             @Override
