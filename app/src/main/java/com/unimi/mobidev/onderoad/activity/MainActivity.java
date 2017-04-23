@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -131,15 +132,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void initIconList() {
         tabIcons = new ArrayList<>();
-
-        tabIcons.add(getDrawable(R.drawable.ic_list_black_24dp));
-        tabIcons.add(getDrawable(R.drawable.ic_list_white_24dp));
-        tabIcons.add(getDrawable(R.drawable.ic_star_black_24dp));
-        tabIcons.add(getDrawable(R.drawable.ic_grade_white_24dp));
-        tabIcons.add(getDrawable(R.drawable.ic_place_black_24dp));
-        tabIcons.add(getDrawable(R.drawable.ic_place_white_24dp));
-        tabIcons.add(getDrawable(R.drawable.ic_settings_black_24dp));
-        tabIcons.add(getDrawable(R.drawable.ic_settings_white_24dp));
+        //ResourcesCompat.getDrawable(getResources(), R.drawable.ic_list_black_24dp),null)
+        tabIcons.add(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_list_black_24dp,null));
+        tabIcons.add(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_list_white_24dp,null));
+        tabIcons.add(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_star_black_24dp,null));
+        tabIcons.add(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_grade_white_24dp,null));
+        tabIcons.add(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_place_black_24dp,null));
+        tabIcons.add(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_place_white_24dp,null));
+        tabIcons.add(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_settings_black_24dp,null));
+        tabIcons.add(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_settings_white_24dp,null));
     }
 
     private Drawable getIcon(int index) {

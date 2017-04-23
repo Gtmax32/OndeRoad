@@ -21,13 +21,6 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCGksU7GecNKQMkO7CZEREWcfwWqEr0VCM" />
-
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.CreateActivity" />
         <activity
@@ -36,7 +29,19 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             tools:replace="android:theme" />
-        <activity android:name=".activity.TravelInfoActivity"></activity>
+        <activity
+            android:name=".activity.TravelInfoActivity"
+            android:label="TravelInfo Activity"
+            android:parentActivityName=".activity.CreateActivity"
+        />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCGksU7GecNKQMkO7CZEREWcfwWqEr0VCM" />
+
     </application>
 
 </manifest>

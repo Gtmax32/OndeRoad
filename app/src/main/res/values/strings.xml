@@ -57,4 +57,15 @@
     <string name="total_price">Prezzo totale:</string>
 
     <string name="no_provider_enabled">Impossibile localizzarti.\nAttiva la connessione dati o il GPS.</string>
+
+    <string name="modify_settings">Modifica</string>
+
+    <string name="navigation_settings">Avvia navigazione</string>
+
+    <string name="delete_settings">Elimina</string>
+
+    <string name="share_settings">Condividi</string>
+
+    <string name="mail_settings">Contatta</string>
+    <string name="share_text">Condividi con...</string>
 </resources>

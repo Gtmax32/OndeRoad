@@ -15,6 +15,7 @@ import com.unimi.mobidev.onderoad.activity.CreateActivity;
 import com.unimi.mobidev.onderoad.activity.TravelInfoActivity;
 import com.unimi.mobidev.onderoad.adapter.TravelDetailAdapter;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
+import com.unimi.mobidev.onderoad.model.User;
 import com.unimi.mobidev.onderoad.other.TravelDetail;
 
 import java.util.ArrayList;
@@ -36,7 +37,13 @@ public class FavoritesFragment extends Fragment {
 
     private FloatingActionButton addTrip;
 
-    public FavoritesFragment() { System.out.println("In Favorites Fragment..."); }
+    //TODO: Esempio di viaggio, da eliminare
+    private TravelInfo temp = new TravelInfo(new ArrayList<User>(4));
+
+
+    public FavoritesFragment() {
+        System.out.println("In Favorites Fragment...");
+    }
 
 
     @Override
@@ -44,7 +51,10 @@ public class FavoritesFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_favorites, container, false);
         this.detail = new TravelInfo();
         this.travelsList = new ArrayList<>();
-        this.travelAdapter = new TravelDetailAdapter(this.getActivity().getApplicationContext(),R.layout.travel_detail,this.travelsList);
+        this.travelAdapter = new TravelDetailAdapter(this.getActivity().getApplicationContext(), R.layout.travel_detail, this.travelsList);
+
+        //TODO: Esempio da eliminare
+        this.travelAdapter.addItem(new TravelDetail(this.getActivity().getApplicationContext(), temp));
 
         travelListView = (ListView) v.findViewById(R.id.travelListViewFavorites);
         travelListView.setAdapter(this.travelAdapter);
@@ -55,9 +65,9 @@ public class FavoritesFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                final Intent create = new Intent(FavoritesFragment.this.getActivity(),CreateActivity.class);
+                final Intent create = new Intent(FavoritesFragment.this.getActivity(), CreateActivity.class);
 
-                startActivityForResult(create,CREATE_ACTIVITY_REQUEST);
+                startActivityForResult(create, CREATE_ACTIVITY_REQUEST);
             }
         });
 
@@ -67,9 +77,9 @@ public class FavoritesFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
-        if( requestCode == CREATE_ACTIVITY_REQUEST ) {
-            if(resultCode == RESULT_OK) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CREATE_ACTIVITY_REQUEST) {
+            if (resultCode == RESULT_OK) {
                 detail = (TravelInfo) data.getExtras().get("TravelInfo");
 
                 this.detailToView = new TravelDetail(this.getActivity().getApplicationContext(), detail);
@@ -89,8 +99,8 @@ public class FavoritesFragment extends Fragment {
             System.out.println("Clicked item: " + selectedBox.toString());
             System.out.println("Clicked travel: " + selectedBoxInfo.toString());
 
-            Intent infoIntent = new Intent(FavoritesFragment.this.getActivity(),TravelInfoActivity.class);
-            infoIntent.putExtra("TravelInfo",selectedBoxInfo);
+            Intent infoIntent = new Intent(FavoritesFragment.this.getActivity(), TravelInfoActivity.class);
+            infoIntent.putExtra("TravelInfo", selectedBoxInfo);
             startActivity(infoIntent);
         }
     };

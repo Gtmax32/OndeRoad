@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/modifySubMenu"
+          android:title="@string/modify_settings"
+          app:showAsAction="never"/>
+
+    <item android:id="@+id/navigationSubMenu"
+        android:title="@string/navigation_settings"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/deleteSubMenu"
+        android:title="@string/delete_settings"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/shareSubMenu"
+        android:title="@string/share_settings"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/mailSubMenu"
+        android:title="@string/mail_settings"
+        app:showAsAction="never"/>
+    
+</menu>
