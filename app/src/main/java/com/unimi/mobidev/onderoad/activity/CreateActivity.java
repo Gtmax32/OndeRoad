@@ -122,6 +122,9 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.info_create);
 
+        //Serve per inserire la freccia per tornare indietro
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         //Departure Info
 
         currentLocationBounds = currentLocation.getLatLngBounds(CreateActivity.TEN_KM_RADIUS);

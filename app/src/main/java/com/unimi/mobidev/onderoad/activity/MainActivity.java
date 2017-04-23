@@ -35,28 +35,29 @@ public class MainActivity extends AppCompatActivity {
         View listView = getLayoutInflater().inflate(R.layout.tab_layout, null);
         ImageView listIcon = (ImageView) listView.findViewById(R.id.imageView);
         TextView listLabel = (TextView) listView.findViewById(R.id.textView);
+
         //TODO: Ripristinare questo codice, inserendo inizialmente la tab selezionata a grigio
         //listIcon.setImageResource(R.drawable.ic_list_white_24dp);
-        listIcon.setImageResource(R.drawable.ic_list_black_24dp);
-        listLabel.setText("Tutti");
+        listIcon.setImageResource(R.drawable.ic_action_home);
+        listLabel.setText(R.string.main_fragment);
 
         View favView = getLayoutInflater().inflate(R.layout.tab_layout, null);
         ImageView favIcon = (ImageView) favView.findViewById(R.id.imageView);
         TextView favLabel = (TextView) favView.findViewById(R.id.textView);
-        favIcon.setImageResource(R.drawable.ic_star_black_24dp);
-        favLabel.setText("Favorites");
+        favIcon.setImageResource(R.drawable.ic_action_favorites);
+        favLabel.setText(R.string.favorites_fragment);
 
         View spotView = getLayoutInflater().inflate(R.layout.tab_layout, null);
         ImageView spotIcon = (ImageView) spotView.findViewById(R.id.imageView);
         TextView spotLabel = (TextView) spotView.findViewById(R.id.textView);
-        spotIcon.setImageResource(R.drawable.ic_place_black_24dp);
-        spotLabel.setText("Spot");
+        spotIcon.setImageResource(R.drawable.ic_action_spot);
+        spotLabel.setText(R.string.spot_fragment);
 
         View settView = getLayoutInflater().inflate(R.layout.tab_layout, null);
         ImageView settIcon = (ImageView) settView.findViewById(R.id.imageView);
         TextView settLabel = (TextView) settView.findViewById(R.id.textView);
-        settIcon.setImageResource(R.drawable.ic_settings_black_24dp);
-        settLabel.setText("Settings");
+        settIcon.setImageResource(R.drawable.ic_action_settings);
+        settLabel.setText(R.string.settings_fragment);
 
         list.setCustomView(listView);
         favorites.setCustomView(favView);

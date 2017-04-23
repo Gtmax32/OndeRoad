@@ -3,9 +3,9 @@
 
     <string name="facebook_app_id">1262194670479172</string>
 
-    <string name="main_fragment">Main</string>
+    <string name="main_fragment">Home</string>
 
-    <string name="favorites_fragment">Favorites</string>
+    <string name="favorites_fragment">My Travel</string>
 
     <string name="spot_fragment">Spot</string>
 

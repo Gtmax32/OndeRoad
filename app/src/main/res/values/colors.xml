@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>787878
-    <color name="colorPrimary">#FFFFFF</color>
-    <color name="colorPrimaryDark">#787878</color>
-    <color name="colorAccent">#0B6AC1</color>
+    <color name="colorPrimary">#66cbff</color>
+    <color name="colorPrimaryDark">#209acc</color>
+    <color name="colorPrimaryLight">#9efeff</color>
+    <color name="colorWhite">#ffffff</color>
     <color name="colorBlack">#000000</color>
     <color name="colorMyTravel">#EEE031</color>
 </resources>

@@ -12,7 +12,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:background="@color/colorAccent" />
+        android:background="@color/colorPrimaryLight" />
 
     <ScrollView
         android:layout_width="wrap_content"
