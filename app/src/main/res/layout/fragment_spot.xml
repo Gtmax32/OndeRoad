@@ -4,17 +4,9 @@
     android:layout_height="match_parent"
     tools:context=".fragment.SpotFragment">
 
-    <!-- TODO: Update blank com.unimi.mobidev.onderoad.fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/spot_fragment" />
-
-    <TextView
-        android:id="@+id/tempTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal|center"
-        android:layout_alignParentStart="true" />
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

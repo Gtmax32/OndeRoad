@@ -3,9 +3,9 @@ package com.unimi.mobidev.onderoad.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Address;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,10 +18,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -35,25 +33,20 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.adapter.PlaceAutocompleteAdapter;
-import com.unimi.mobidev.onderoad.fragment.DatePickerCreation;
-import com.unimi.mobidev.onderoad.fragment.TimePickerCreation;
+import com.unimi.mobidev.onderoad.fragment.DatePickerModification;
+import com.unimi.mobidev.onderoad.fragment.TimePickerModification;
 import com.unimi.mobidev.onderoad.model.AddressInfo;
-import com.unimi.mobidev.onderoad.model.CarInfo;
 import com.unimi.mobidev.onderoad.model.RawProvinceDict;
 import com.unimi.mobidev.onderoad.model.RegionSpotDict;
 import com.unimi.mobidev.onderoad.model.SpotInfo;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
-import com.unimi.mobidev.onderoad.model.User;
 import com.unimi.mobidev.onderoad.other.LatLngManager;
 import com.unimi.mobidev.onderoad.other.StreetAutoCompleteTextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Locale;
 
-public class CreateActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class ModifyActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private static final double TEN_KM_RADIUS = 7071.00;
 
     private StreetAutoCompleteTextView streetDepartureAutocompleteView;
@@ -63,11 +56,6 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
     private Spinner regionDestinationSpinner;
     private Spinner spotDestinationSpinner;
 
-    private TextView priceTextView;
-    private Spinner passeggersSpinner;
-    private CheckBox outboundCheckBox;
-    private Spinner surfboardNumberSpinner;
-    private Spinner carSupportTypeSpinner;
     private EditText noteText;
 
     protected GoogleApiClient mGoogleApiClient;
@@ -78,74 +66,45 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
     private LatLngBounds currentLocationBounds;
 
-    private TravelInfo newTravel;
-
-    private Calendar todayDate;
-
-    private CarInfo newCar;
+    private TravelInfo toModifyTravel;
 
     private AddressInfo meetingPoint;
 
-    private User ownerTravel;
-    private SharedPreferences appData;
-
     private ArrayList<SpotInfo> selectedRegionSpot;
 
-    private int checkMod = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create);
+        setContentView(R.layout.activity_modify);
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.createInfoToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.modifyToolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.info_create);
-
-        //Serve per inserire la freccia per tornare indietro
+        getSupportActionBar().setTitle(R.string.modify_activity);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String todayText, nowText;
-        String first_name = "", middle_name = "", last_name = "", ID = "", email = "";
+        toModifyTravel = (TravelInfo) this.getIntent().getSerializableExtra("TravelInfo");
 
-        appData = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+        System.out.println("In ModifyActivity: " + toModifyTravel.toString());
 
-        ownerTravel = new User(appData.getString("First name", first_name) + " " + appData.getString("Middle name", middle_name),appData.getString("Last name", last_name),appData.getString("ID", ID),appData.getString("Email", email));
-        System.out.println(ownerTravel.toString());
+        meetingPoint = new AddressInfo();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, 0, this).addApi(Places.GEO_DATA_API).build();
 
         currentLocation = new LatLngManager(this.getApplicationContext());
 
-        newTravel = new TravelInfo();
-        newTravel.setOwnerTravel(ownerTravel);
+        currentLocationBounds = currentLocation.getLatLngBounds(ModifyActivity.TEN_KM_RADIUS);
 
-        newCar = new CarInfo();
-
-        meetingPoint = new AddressInfo();
-
-        selectedRegionSpot = new ArrayList<>();
-
-        todayDate = Calendar.getInstance();
-
-        newTravel.setDateTimeDeparture(todayDate);
-
-        todayText = String.format(Locale.ITALIAN,"%02d",todayDate.get(Calendar.DAY_OF_MONTH) + 1) + " " + todayDate.getDisplayName(Calendar.MONTH,Calendar.LONG, Locale.ITALIAN);
-        nowText = String.format(Locale.ITALIAN,"%02d",todayDate.get(Calendar.HOUR_OF_DAY)) + ":" + String.format(Locale.ITALIAN,"%02d",todayDate.get(Calendar.MINUTE));
-
-        //Departure Info
-
-        currentLocationBounds = currentLocation.getLatLngBounds(CreateActivity.TEN_KM_RADIUS);
-
-        streetDepartureAutocompleteView = (StreetAutoCompleteTextView) findViewById(R.id.streetAutoCompleteTextField);
+        streetDepartureAutocompleteView = (StreetAutoCompleteTextView) findViewById(R.id.modifyStreetAutoCompleteTextField);
+        streetDepartureAutocompleteView.setText(toModifyTravel.getAddressDeparture().getStreetInfo());
         streetDepartureAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
 
-        streetAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, currentLocationBounds,null);
+        streetAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, currentLocationBounds, null);
         streetDepartureAutocompleteView.setAdapter(streetAdapter);
 
-        datePickerButton = (Button) findViewById(R.id.dateButton);
-        datePickerButton.setText(todayText);
+        datePickerButton = (Button) findViewById(R.id.modifyDateButton);
+        datePickerButton.setText(toModifyTravel.getDataDeparture());
         datePickerButton.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -158,13 +117,12 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void afterTextChanged(Editable s) {
-                newTravel.setDataDeparture(datePickerButton.getText().toString());
-                checkMod ++;
+                toModifyTravel.setDataDeparture(datePickerButton.getText().toString());
             }
         });
 
-        timePickerButton = (Button) findViewById(R.id.timeButton);
-        timePickerButton.setText(nowText);
+        timePickerButton = (Button) findViewById(R.id.modifyTimeButton);
+        timePickerButton.setText(toModifyTravel.getTimeDeparture());
         timePickerButton.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -177,28 +135,30 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void afterTextChanged(Editable s) {
-                newTravel.setTimeDeparture(timePickerButton.getText().toString());
-                checkMod ++;
+                toModifyTravel.setTimeDeparture(timePickerButton.getText().toString());
             }
         });
 
-        //Destination Info
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, RegionSpotDict.getKeys());
+        selectedRegionSpot = new ArrayList<>();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, RegionSpotDict.getKeys());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        regionDestinationSpinner = (Spinner) findViewById(R.id.destinationRegionSpinner);
+        regionDestinationSpinner = (Spinner) findViewById(R.id.modifyDestinationRegionSpinner);
         regionDestinationSpinner.setAdapter(adapter);
+        int position = adapter.getPosition(toModifyTravel.getSpotDestination().getRegionSpot());
+        regionDestinationSpinner.setSelection(position);
 
-        spotDestinationSpinner = (Spinner) findViewById(R.id.destinationProvinceSpinner);
+        spotDestinationSpinner = (Spinner) findViewById(R.id.modifyDestinationProvinceSpinner);
         spotDestinationSpinner.setEnabled(false);
 
         regionDestinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                spinnerSpotItemSelected(spotDestinationSpinner,parentView,selectedItemView,position,id);
+                spinnerSpotItemSelected(spotDestinationSpinner, parentView, selectedItemView, position, id);
 
-                newTravel.setRegionDestination(parentView.getItemAtPosition(position).toString());
+                toModifyTravel.setRegionDestination(parentView.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -210,8 +170,8 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         spotDestinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if (selectedRegionSpot != null && selectedRegionSpot.size()>0)
-                    newTravel.setSpotDestination(selectedRegionSpot.get(position));
+                if (selectedRegionSpot != null && selectedRegionSpot.size() > 0)
+                    toModifyTravel.setSpotDestination(selectedRegionSpot.get(position));
             }
 
             @Override
@@ -220,80 +180,9 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        //Car Info
+        noteText = (EditText) findViewById(R.id.modifyNoteTextField);
+        noteText.setText(toModifyTravel.getNoteTravel());
 
-        priceTextView = (TextView) findViewById(R.id.priceTextView);
-        priceTextView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                newTravel.setPriceTravel(Integer.valueOf(priceTextView.getText().toString()));
-            }
-        });
-
-        adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, Arrays.asList("1","2","3","4","5"));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        passeggersSpinner = (Spinner) findViewById(R.id.passengersSpinner);
-        passeggersSpinner.setAdapter(adapter);
-
-        passeggersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                newCar.setPassengersNumber(Integer.valueOf(parentView.getItemAtPosition(position).toString()));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        outboundCheckBox = (CheckBox) findViewById(R.id.outboundCheckBox);
-
-        surfboardNumberSpinner = (Spinner) findViewById(R.id.surfboardNumberSpinner);
-        surfboardNumberSpinner.setAdapter(adapter);
-
-        surfboardNumberSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                newCar.setSurfboardNumber(Integer.valueOf(parentView.getItemAtPosition(position).toString()));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        //TODO: Bisognerebbe modificare il numero di tavole trasportabili in base al tipo di supporto ed il numero di passeggeri
-        ArrayAdapter<CharSequence> supportAdapter = ArrayAdapter.createFromResource(this,R.array.support_types,android.R.layout.simple_spinner_item);
-        supportAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        carSupportTypeSpinner = (Spinner) findViewById(R.id.carSupportTypeSpinner);
-        carSupportTypeSpinner.setAdapter(supportAdapter);
-
-        carSupportTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                newCar.setSurfboardType(parentView.getItemAtPosition(position).toString());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        noteText = (EditText) findViewById(R.id.noteTextField);
         noteText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -306,23 +195,22 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void afterTextChanged(Editable s) {
-                newTravel.setNoteTravel(noteText.getText().toString());
+                toModifyTravel.setNoteTravel(noteText.getText().toString());
             }
         });
-
     }
 
-    public void datePickerListener(View v){
-        DialogFragment newFragment = new DatePickerCreation();
-        newFragment.show(getSupportFragmentManager(), "datePickerCreation");
+    public void datePickerListener(View v) {
+        DialogFragment newFragment = new DatePickerModification();
+        newFragment.show(getSupportFragmentManager(), "datePickerModification");
     }
 
-    public void timePickerListener(View v){
-        DialogFragment newFragment = new TimePickerCreation();
-        newFragment.show(getSupportFragmentManager(), "timePickerCreation");
+    public void timePickerListener(View v) {
+        DialogFragment newFragment = new TimePickerModification();
+        newFragment.show(getSupportFragmentManager(), "timePickerModification");
     }
 
-    private void spinnerSpotItemSelected(Spinner spotSpinner, AdapterView<?> parentView, View selectedItemView, int position, long id){
+    private void spinnerSpotItemSelected(Spinner spotSpinner, AdapterView<?> parentView, View selectedItemView, int position, long id) {
         if (!spotSpinner.isEnabled())
             spotSpinner.setEnabled(true);
 
@@ -330,45 +218,25 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         selectedRegionSpot = RegionSpotDict.getElemFromKey(parentView.getItemAtPosition(position).toString());
         ArrayList<String> spotNameList = RegionSpotDict.getNameListFromKey(parentView.getItemAtPosition(position).toString());
 
-        if(spotNameList != null) {
+        if (spotNameList != null) {
             adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spotNameList);
 
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spotSpinner.setAdapter(adapter);
+            int spotPosition = adapter.getPosition(toModifyTravel.getSpotDestination().getNameSpot());
+            spotSpinner.setSelection(spotPosition);
         }
     }
 
-    public void saveCarListener(View w){
-        ArrayList<User> carAvailablePlace = new ArrayList<>(newCar.getPassengersNumber());
+    public void modifyCarListener(View w) {
+        System.out.println("I'm editing the travel..." + toModifyTravel.toString());
 
-        if(checkMod == 3) {
-            newTravel.setPassengersTravel(carAvailablePlace);
-            newTravel.setAddressDeparture(meetingPoint);
-            newTravel.setPriceTravel(Integer.valueOf(priceTextView.getText().toString()));
-            newTravel.setOutbound(outboundCheckBox.isChecked());
-            newTravel.setCarTravel(newCar);
-            newTravel.setNoteTravel(noteText.getText().toString());
+        Intent intent = this.getIntent();
+        intent.putExtra("TravelInfo", toModifyTravel);
 
-            Intent intent = this.getIntent();
-            intent.putExtra("TravelInfo",newTravel);
-
-            this.setResult(RESULT_OK,intent);
-            Toast.makeText(this.getApplicationContext(),R.string.toast_travel_creation,Toast.LENGTH_SHORT).show();
-            finish();
-        }
-        else{
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.not_complete_travel_alert_message)
-                    .setCancelable(false)
-                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-        }
-
+        this.setResult(RESULT_OK, intent);
+        Toast.makeText(this.getApplicationContext(), "Travel modified!", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
@@ -391,16 +259,15 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
                 e.printStackTrace();
             }
 
-            if(selectedAddress != null){
+            if (selectedAddress != null) {
                 meetingPoint.setStreetInfo(completeAddress);
                 meetingPoint.setProvinceInfo(RawProvinceDict.getValue(selectedAddress.getSubAdminArea()));
                 meetingPoint.setLatitudeInfo(selectedAddress.getLatitude());
                 meetingPoint.setLongitudeInfo(selectedAddress.getLongitude());
-                checkMod++;
-            }
-            else{
+                toModifyTravel.setAddressDeparture(meetingPoint);
+            } else {
                 //TODO: Parametrizzare messaggi, d'errore e non.
-                Toast.makeText(getApplicationContext(), "Connection problem!\nCheck you internet connection." , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Connection problem!\nCheck you internet connection.", Toast.LENGTH_SHORT).show();
             }
 
             /*
@@ -410,7 +277,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
             placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
 
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 
             //Toast.makeText(getApplicationContext(), "Clicked: " + primaryText, Toast.LENGTH_SHORT).show();
@@ -449,8 +316,8 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
     };
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Toast.makeText(this, "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),Toast.LENGTH_SHORT).show();
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Toast.makeText(this, "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -462,11 +329,11 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.hard_back_alert_message)
+        builder.setMessage(R.string.incomplete_modify_alert_message)
                 .setCancelable(false)
                 .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        CreateActivity.this.finish();
+                        ModifyActivity.this.finish();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {

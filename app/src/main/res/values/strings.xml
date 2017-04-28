@@ -41,7 +41,7 @@
 
     <string name="note_label">Note</string>
 
-    <string name="save_car_button">Salva</string>
+    <string name="save_car_button">Parti!</string>
 
     <string name="info_travel">Dettagli Viaggio</string>
 
@@ -68,4 +68,12 @@
 
     <string name="mail_settings">Contatta</string>
     <string name="share_text">Condividi con...</string>
+    <string name="title_activity_modify">ModifyActivity</string>
+    <string name="modify_activity">Modifica il tuo viaggio</string>
+    <string name="modify_car_button">Salva</string>
+    <string name="toast_travel_creation">Viaggio creato!</string>
+    <string name="hard_back_alert_message">Sicuro di voler tornare indietro?\nIl viaggio che stai creando non verrà salvato.</string>
+    <string name="not_complete_travel_alert_message">Attenzione!\nMancano alcuni dati necessari per la creazione del viaggio!</string>
+    <string name="incomplete_modify_alert_message">Sicuro di voler tornare indietro?\nPerderai eventuali modifiche fatte.</string>
+    <string name="title_activity_spot">SpotActivity</string>
 </resources>

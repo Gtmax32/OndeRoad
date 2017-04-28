@@ -2,6 +2,7 @@ package com.unimi.mobidev.onderoad.activity;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +23,7 @@ import com.unimi.mobidev.onderoad.model.TravelInfo;
 
 public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private static final int CREATE_ACTIVITY_REQUEST = 2;
     private TravelInfo travelDisplayed;
 
     private TextView passengersActualInfo;
@@ -91,6 +93,8 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         temp = carSupportActualInfo.getText().toString() + " " + travelDisplayed.getCarTravel().getSurfboardType();
 
         carSupportActualInfo.setText(temp);
+
+        noteActualText.setText(travelDisplayed.getNoteTravel());
     }
 
     @Override
@@ -119,12 +123,13 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.modifySubMenu:
-                // User chose the "Settings" item, show the app settings UI...
+                System.out.println("Opening modification menu...");
+                modifyTravel();
                 return true;
 
             case R.id.navigationSubMenu:
                 System.out.println("Opening navigation menu...");
-                showMap(Uri.parse("geo:0,0?q= " + travelDisplayed.getSpotDestination().getLatitudeSpot() + "," + travelDisplayed.getSpotDestination().getLongitudeSpot() + "(Spot)"));
+                showMap();
                 return true;
 
             case R.id.deleteSubMenu:
@@ -148,9 +153,10 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    private void showMap(Uri geoLocation) {
+    private void showMap() {
+        String toParse = "geo:0,0?q= " + travelDisplayed.getSpotDestination().getLatitudeSpot() + "," + travelDisplayed.getSpotDestination().getLongitudeSpot() + "(Spot)";
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(geoLocation);
+        intent.setData(Uri.parse(toParse));
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
@@ -162,5 +168,36 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
+    }
+
+    private void modifyTravel(){
+        Intent modifyIntent = new Intent(this.getApplication(),ModifyActivity.class);
+        modifyIntent.putExtra("TravelInfo", travelDisplayed);
+        startActivityForResult(modifyIntent,CREATE_ACTIVITY_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CREATE_ACTIVITY_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                travelDisplayed = (TravelInfo) data.getExtras().get("TravelInfo");
+                System.out.println("Receiving data from ModifyActivity..." + travelDisplayed.toString());
+
+                //reloadActivity();
+                finish();
+                this.getIntent().putExtra("TravelInfo", travelDisplayed);
+                startActivity(this.getIntent());
+
+            }
+        }
+    }
+
+    private void reloadActivity() {
+        String temp = travelDisplayed.getDataDeparture() + " - " + travelDisplayed.getTimeDeparture();
+
+        dateTimeActualInfo.setText(temp);
+
+        noteActualText.setText(travelDisplayed.getNoteTravel());
     }
 }

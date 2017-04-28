@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.unimi.mobidev.onderoad.activity.ModifyActivity"
+    android:background="@color/colorBackground">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/modifyToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:theme="@style/ToolBarStyle"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
+    <!--Departure Info-->
+    <LinearLayout
+        android:id="@+id/modifyDepartureLabelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/modifyToolbar"
+        android:background="@color/colorMenuTitle"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:elevation="5dp">
+
+        <TextView
+            android:id="@+id/modifyDepartureLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/departure_label"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"/>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#FF000000"/>
+
+    </LinearLayout>
+
+    <GridLayout
+        android:id="@+id/modifyDepartureLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/modifyDepartureLabelLayout"
+        android:useDefaultMargins="false"
+        android:rowCount="3"
+        android:columnCount="2"
+        android:background="@color/colorWhite"
+        android:elevation="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp">
+
+        <TextView
+            android:id="@+id/modifyMeetingLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/meeting_label"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"/>
+
+        <com.unimi.mobidev.onderoad.other.StreetAutoCompleteTextView
+            android:id="@+id/modifyStreetAutoCompleteTextField"
+            android:layout_width="245dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:inputType="textCapSentences" />
+
+        <ImageView
+            android:id="@+id/dateIcon"
+            android:src="@drawable/ic_event_black_24dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/modifyDateButton"
+            android:background="@color/colorBackground"
+            android:layout_marginTop="8dp"
+            android:textAllCaps="false"
+            android:onClick="datePickerListener"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+
+        <ImageView
+            android:id="@+id/timeIcon"
+            android:src="@drawable/ic_alarm_on_black_24dp"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal" />
+
+        <Button
+            android:id="@+id/modifyTimeButton"
+            android:background="@color/colorBackground"
+            android:layout_marginTop="8dp"
+            android:textAllCaps="false"
+            android:onClick="timePickerListener"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="10dp" />
+
+    </GridLayout>
+
+    <!--Destination Info-->
+
+    <LinearLayout
+        android:id="@+id/modifyDestinationLabelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorMenuTitle"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:layout_below="@id/modifyDepartureLayout"
+        android:elevation="5dp">
+
+        <TextView
+            android:id="@+id/modifyDestinationLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/destination_label"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"/>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#FF000000"/>
+
+    </LinearLayout>
+
+    <GridLayout
+        android:id="@+id/modifyDestinationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="false"
+        android:layout_below="@id/modifyDestinationLabelLayout"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:background="@color/colorWhite"
+        android:columnCount="2"
+        android:elevation="5dp"
+        android:rowCount="2"
+        android:useDefaultMargins="false">
+
+        <TextView
+            android:id="@+id/modifyDestinationRegionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/region_label" />
+
+        <Spinner
+            android:id="@+id/modifyDestinationRegionSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:id="@+id/modifyDestinationProvinceLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/province_label" />
+
+        <Spinner
+            android:id="@+id/modifyDestinationProvinceSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp" />
+
+    </GridLayout>
+
+    <LinearLayout
+        android:id="@+id/modifyNoteLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/modifyDestinationLayout"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorMenuTitle"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/modifyNoteLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/note_label" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#FF000000" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/modifyNoteTextField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/modifyNoteLayout"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:gravity="top|start"
+        android:inputType="textCapSentences|textMultiLine"
+        android:lines="3"
+        android:scrollbars="vertical"
+        android:background="@color/colorWhite"/>
+
+    <Button
+        android:id="@+id/modifyCarButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/modifyNoteTextField"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:text="@string/modify_car_button"
+        android:onClick="modifyCarListener"
+        android:elevation="5dp"/>
+
+</RelativeLayout>

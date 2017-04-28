@@ -6,17 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.unimi.mobidev.onderoad.activity.TravelInfoActivity"
-    android:background="@color/colorMyTravel"
+    android:background="@color/colorBackground"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/createInfoToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryLight"
         android:clickable="true"
         android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:theme="@style/ToolBarStyle"
         app:popupTheme="@style/PopupMenuStyle"
         />
 

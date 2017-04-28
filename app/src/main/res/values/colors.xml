@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>787878
-    <color name="colorPrimary">#66cbff</color>
-    <color name="colorPrimaryDark">#209acc</color>
-    <color name="colorPrimaryLight">#9efeff</color>
-    <color name="colorWhite">#ffffff</color>
+    <color name="colorPrimary">#66CBFF</color>
+    <color name="colorPrimaryDark">#209ACC</color>
+    <color name="colorPrimaryLight">#9EFEFF</color>
+    <color name="colorMenuTitle">#FFD9D9D9</color>
+    <color name="colorBackground">#F2F2F2</color>
     <color name="colorBlack">#000000</color>
-    <color name="colorMyTravel">#EEE031</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorMyTravel">#FFF28E</color>
+    <color name="colorYourTravel">#C9E897</color>
 </resources>

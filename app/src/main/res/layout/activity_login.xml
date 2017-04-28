@@ -4,20 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.LoginActivity"
-    android:background="@color/colorWhite">
+    android:background="@color/colorBackground">
 
     <android.support.v7.widget.Toolbar
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/nameToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:theme="@style/ToolBarStyle"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="@color/colorPrimary"
-        app:titleTextColor="@color/colorBlack"
-        app:titleTextAppearance="@color/colorBlack"
-        />
+        android:layout_alignParentTop="true" />
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/loginButton"

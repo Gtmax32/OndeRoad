@@ -11,13 +11,15 @@ import java.io.Serializable;
 public class SpotInfo implements Serializable {
 
     private String nameSpot;
+    private String regionSpot;
     private double latitudeSpot;
     private double longitudeSpot;
     private int ratingSpot;
     private String descriptionSpot;
 
-    public SpotInfo(String nameSpot, double latitudeSpot, double longitudeSpot, int ratingSpot, String descriptionSpot) {
+    public SpotInfo(String nameSpot, String regionSpot, double latitudeSpot, double longitudeSpot, int ratingSpot, String descriptionSpot) {
         this.nameSpot = nameSpot;
+        this.regionSpot = regionSpot;
         this.latitudeSpot = latitudeSpot;
         this.longitudeSpot = longitudeSpot;
         this.ratingSpot = ratingSpot;
@@ -32,9 +34,18 @@ public class SpotInfo implements Serializable {
         this.nameSpot = nameSpot;
     }
 
-    public LatLng getLatLngSpot() {
-        return new LatLng(this.latitudeSpot,this.longitudeSpot);
+    public String getRegionSpot() {
+        return regionSpot;
     }
+
+    public void setRegionSpot(String regionSpot) {
+        this.regionSpot = regionSpot;
+    }
+
+    public LatLng getLatLngSpot() {
+        return new LatLng(this.latitudeSpot, this.longitudeSpot);
+    }
+
     public double getLatitudeSpot() {
         return latitudeSpot;
     }
@@ -67,7 +78,7 @@ public class SpotInfo implements Serializable {
         this.descriptionSpot = descriptionSpot;
     }
 
-    public String toString(){
+    public String toString() {
         return "SpotInfo: " +
                 "\nSpot Name: " + this.nameSpot +
                 "\nLatitude: " + this.latitudeSpot +

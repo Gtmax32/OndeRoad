@@ -3,16 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.unimi.mobidev.onderoad.activity.CreateActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.unimi.mobidev.onderoad.activity.CreateActivity"
+    android:background="@color/colorBackground">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/createInfoToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:theme="@style/ToolBarStyle"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="@color/colorPrimaryLight" />
+        android:layout_alignParentTop="true" />
 
     <ScrollView
         android:layout_width="wrap_content"
@@ -35,7 +36,7 @@
                 android:id="@+id/departureLabelLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFD9D9D9"
+                android:background="@color/colorMenuTitle"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
@@ -43,7 +44,7 @@
                 android:elevation="5dp">
 
                 <TextView
-                    android:id="@+id/departureLayoutLabel"
+                    android:id="@+id/departureLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/departure_label"
@@ -65,7 +66,7 @@
                 android:useDefaultMargins="false"
                 android:rowCount="3"
                 android:columnCount="2"
-                android:background="#FFB3B3B3"
+                android:background="@color/colorWhite"
                 android:elevation="5dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp">
@@ -83,10 +84,7 @@
                     android:layout_width="245dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:nextFocusUp="@id/streetAutoCompleteTextField"
-                    android:nextFocusLeft="@id/streetAutoCompleteTextField"
-                    android:nextFocusRight="@id/streetAutoCompleteTextField"
-                    android:singleLine="true" />
+                    android:inputType="textCapSentences" />
 
                 <ImageView
                     android:id="@+id/dateIcon"
@@ -97,7 +95,7 @@
 
                 <Button
                     android:id="@+id/dateButton"
-                    android:background="#FFB3B3B3"
+                    android:background="@color/colorBackground"
                     android:layout_marginTop="8dp"
                     android:textAllCaps="false"
                     android:onClick="datePickerListener"
@@ -112,7 +110,7 @@
 
                 <Button
                     android:id="@+id/timeButton"
-                    android:background="#FFB3B3B3"
+                    android:background="@color/colorBackground"
                     android:layout_marginTop="8dp"
                     android:textAllCaps="false"
                     android:onClick="timePickerListener"
@@ -128,7 +126,7 @@
                 android:id="@+id/destinationLabelLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFD9D9D9"
+                android:background="@color/colorMenuTitle"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
@@ -137,7 +135,7 @@
                 android:elevation="5dp">
 
                 <TextView
-                    android:id="@+id/destinationLayoutLabel"
+                    android:id="@+id/destinationLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/destination_label"
@@ -158,7 +156,7 @@
                 android:useDefaultMargins="false"
                 android:rowCount="2"
                 android:columnCount="2"
-                android:background="#FFB3B3B3"
+                android:background="@color/colorWhite"
                 android:elevation="5dp"
                 android:layout_alignParentBottom="false"
                 android:layout_below="@id/destinationLabelLayout"
@@ -200,7 +198,7 @@
                 android:id="@+id/carInfoLabelLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFD9D9D9"
+                android:background="@color/colorMenuTitle"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
@@ -230,7 +228,7 @@
                 android:useDefaultMargins="false"
                 android:rowCount="5"
                 android:columnCount="2"
-                android:background="#FFB3B3B3"
+                android:background="@color/colorWhite"
                 android:elevation="5dp"
                 android:layout_alignParentBottom="false"
                 android:layout_below="@id/carInfoLabelLayout"
@@ -306,44 +304,53 @@
                 android:id="@+id/noteLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_below="@+id/carInfoLayout"
-                android:background="#FFB3B3B3"
-                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:elevation="5dp">
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorMenuTitle"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/noteLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/note_label"
-                    android:layout_margin="10dp"/>
-
-                <EditText
-                    android:id="@+id/noteTextField"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:inputType="textMultiLine"
-                    android:lines="3"
-                    android:gravity="top|left"
-                    android:scrollbars="vertical"/>
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/note_label" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="#FF000000" />
 
             </LinearLayout>
 
+            <EditText
+                android:id="@+id/noteTextField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/noteLayout"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:inputType="textCapSentences|textMultiLine"
+                android:lines="3"
+                android:gravity="top|start"
+                android:scrollbars="vertical"
+                android:background="@color/colorWhite"/>
 
             <Button
                 android:id="@+id/saveCarButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/noteLayout"
+                android:layout_below="@+id/noteTextField"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="10dp"
                 android:text="@string/save_car_button"
-                android:onClick="saveCarListener"/>
+                android:onClick="saveCarListener"
+                android:elevation="5dp"/>
 
         </RelativeLayout>
 

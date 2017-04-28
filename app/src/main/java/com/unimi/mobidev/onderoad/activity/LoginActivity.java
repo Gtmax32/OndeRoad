@@ -31,6 +31,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity {
+
     private LoginButton loginButton;
     private Intent loginIntent;
     private CallbackManager cm = null;
