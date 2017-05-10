@@ -58,7 +58,7 @@ public class TravelDetailAdapter extends ArrayAdapter<TravelDetail> {
 
         if (v == null) {
             LayoutInflater inflater = LayoutInflater.from(this.context);
-            v = inflater.inflate(R.layout.travel_detail, null);
+            v = inflater.inflate(R.layout.travel_detail_layout, null);
 
             /*holder = new TravelDetail(this.context);
             holder.setItineraryDepartureText((TextView) v.findViewById(R.id.itineraryTravelDeparture));

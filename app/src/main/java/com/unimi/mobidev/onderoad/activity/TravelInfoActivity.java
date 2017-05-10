@@ -2,7 +2,6 @@ package com.unimi.mobidev.onderoad.activity;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +16,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
@@ -41,7 +41,7 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_info);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.createInfoToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.travelInfoToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.info_travel);
 
@@ -99,23 +99,29 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        double departureLongitude = travelDisplayed.getAddressDeparture().getLongitudeInfo();
         double departureLatitude= travelDisplayed.getAddressDeparture().getLatitudeInfo();
+        double departureLongitude = travelDisplayed.getAddressDeparture().getLongitudeInfo();
 
-        double destinationLongitude = travelDisplayed.getSpotDestination().getLongitudeSpot();
         double destinationLatitude = travelDisplayed.getSpotDestination().getLatitudeSpot();
+        double destinationLongitude = travelDisplayed.getSpotDestination().getLongitudeSpot();
 
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(departureLatitude, departureLongitude)).title("Partenza"));
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(destinationLatitude, destinationLongitude)).title("Arrivo"));
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(new LatLng(departureLatitude,departureLongitude));
+        builder.include(new LatLng(destinationLatitude,destinationLongitude));
+        LatLngBounds bounds = builder.build();
 
-        googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(departureLatitude,departureLongitude) , 7.0f) );
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(departureLatitude, departureLongitude)).title("Punto d'incontro"));
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(destinationLatitude, destinationLongitude)).title("Spot"));
+
+        //googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 20));
+        googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(destinationLatitude,destinationLongitude) , 7.0f) );
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater inflater=getMenuInflater();
-        inflater.inflate(R.menu.settings_menu,menu);
+        inflater.inflate(R.menu.travel_info_settings_menu,menu);
         return true;
     }
 
@@ -184,7 +190,6 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
                 travelDisplayed = (TravelInfo) data.getExtras().get("TravelInfo");
                 System.out.println("Receiving data from ModifyActivity..." + travelDisplayed.toString());
 
-                //reloadActivity();
                 finish();
                 this.getIntent().putExtra("TravelInfo", travelDisplayed);
                 startActivity(this.getIntent());
@@ -193,11 +198,14 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    private void reloadActivity() {
-        String temp = travelDisplayed.getDataDeparture() + " - " + travelDisplayed.getTimeDeparture();
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
-        dateTimeActualInfo.setText(temp);
-
-        noteActualText.setText(travelDisplayed.getNoteTravel());
+    @Override
+    public void onBackPressed(){
+        finish();
     }
 }

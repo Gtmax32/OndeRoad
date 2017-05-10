@@ -1,6 +1,7 @@
 package com.unimi.mobidev.onderoad.model;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
 
 import java.io.Serializable;
 
@@ -8,30 +9,28 @@ import java.io.Serializable;
  * Created by Giuseppe Fabio Trentadue on 30/09/2016.
  */
 
-public class SpotInfo implements Serializable {
+public class SpotInfo implements Serializable, ClusterItem {
 
-    private String nameSpot;
     private String regionSpot;
+    private String provinceSpot;
+    private String citySpot;
+    private String nameSpot;
     private double latitudeSpot;
     private double longitudeSpot;
     private int ratingSpot;
     private String descriptionSpot;
+    private SpotInfoTable tableSpot;
 
-    public SpotInfo(String nameSpot, String regionSpot, double latitudeSpot, double longitudeSpot, int ratingSpot, String descriptionSpot) {
-        this.nameSpot = nameSpot;
+    public SpotInfo(String regionSpot, String provinceSpot, String citySpot, String nameSpot, double latitudeSpot, double longitudeSpot, int ratingSpot, String descriptionSpot, SpotInfoTable table) {
         this.regionSpot = regionSpot;
+        this.provinceSpot = provinceSpot;
+        this.citySpot = citySpot;
+        this.nameSpot = nameSpot;
         this.latitudeSpot = latitudeSpot;
         this.longitudeSpot = longitudeSpot;
         this.ratingSpot = ratingSpot;
         this.descriptionSpot = descriptionSpot;
-    }
-
-    public String getNameSpot() {
-        return nameSpot;
-    }
-
-    public void setNameSpot(String nameSpot) {
-        this.nameSpot = nameSpot;
+        this.tableSpot = table;
     }
 
     public String getRegionSpot() {
@@ -40,6 +39,30 @@ public class SpotInfo implements Serializable {
 
     public void setRegionSpot(String regionSpot) {
         this.regionSpot = regionSpot;
+    }
+
+    public String getProvinceSpot() {
+        return provinceSpot;
+    }
+
+    public void setProvinceSpot(String provinceSpot) {
+        this.provinceSpot = provinceSpot;
+    }
+
+    public String getCitySpot() {
+        return citySpot;
+    }
+
+    public void setCitySpot(String citySpot) {
+        this.citySpot = citySpot;
+    }
+
+    public String getNameSpot() {
+        return nameSpot;
+    }
+
+    public void setNameSpot(String nameSpot) {
+        this.nameSpot = nameSpot;
     }
 
     public LatLng getLatLngSpot() {
@@ -78,12 +101,39 @@ public class SpotInfo implements Serializable {
         this.descriptionSpot = descriptionSpot;
     }
 
+    public SpotInfoTable getTableSpot() {
+        return tableSpot;
+    }
+
+    public void setTableSpot(SpotInfoTable tableSpot) {
+        this.tableSpot = tableSpot;
+    }
+
     public String toString() {
         return "SpotInfo: " +
+                "\nSpot Region: " + this.regionSpot +
+                "\nSpot Province: " + this.provinceSpot +
+                "\nSpot City: " + this.citySpot +
                 "\nSpot Name: " + this.nameSpot +
                 "\nLatitude: " + this.latitudeSpot +
                 "\nLongitude: " + this.longitudeSpot +
                 "\nRating: " + this.ratingSpot +
-                "\nDescription: " + this.descriptionSpot;
+                "\nDescription: " + this.descriptionSpot +
+                "\n" + this.tableSpot.toString();
+    }
+
+    @Override
+    public LatLng getPosition() {
+        return new LatLng(this.latitudeSpot, this.longitudeSpot);
+    }
+
+    @Override
+    public String getTitle() {
+        return this.nameSpot;
+    }
+
+    @Override
+    public String getSnippet() {
+        return this.descriptionSpot;
     }
 }

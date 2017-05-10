@@ -1,8 +1,5 @@
 package com.unimi.mobidev.onderoad.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.TreeMap;
 
 /**
@@ -124,8 +121,6 @@ public class RawProvinceDict {
         DICT.put("Vibo Valentia", "Vibo Valentia");
         DICT.put("Vicenza", "Vicenza");
         DICT.put("Viterbo", "Viterbo");
-
-
     }
 
     public static String getValue(String key){

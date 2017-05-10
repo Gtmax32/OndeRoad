@@ -99,7 +99,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.createInfoToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.travelInfoToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.info_create);
 

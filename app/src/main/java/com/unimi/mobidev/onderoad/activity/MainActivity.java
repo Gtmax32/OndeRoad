@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO: Ripristinare questo codice, inserendo inizialmente la tab selezionata a grigio
         //listIcon.setImageResource(R.drawable.ic_list_white_24dp);
-        listIcon.setImageResource(R.drawable.ic_action_home);
+        listIcon.setImageResource(R.drawable.ic_action_home );
         listLabel.setText(R.string.main_fragment);
 
         View favView = getLayoutInflater().inflate(R.layout.tab_layout, null);

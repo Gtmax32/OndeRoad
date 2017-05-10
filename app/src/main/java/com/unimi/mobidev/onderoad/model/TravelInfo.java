@@ -5,8 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 /**
@@ -31,7 +29,7 @@ public class TravelInfo implements Serializable {
 
     public TravelInfo(ArrayList<User> list) {
         AddressInfo exampleAddress = new AddressInfo("Via Ugo Betti Milano, MI, Italia", "Milano", 45.492888, 9.1102608);
-        SpotInfo exampleSpot = new SpotInfo("Bari", "Puglia", 41.1171432, 16.871871499999997, 0, null);
+        SpotInfo exampleSpot = new SpotInfo("Puglia", "Bari", "Bari", "Molo Sant'Antonio", 41.1282799,16.8761491, 0, "Fuffa", new SpotInfoTable("DX-SX", "S-O (MODERATO)", "SO", "SABBIA"));
         CarInfo exampleCar = new CarInfo(4, 3, "Dentro l'auto");
         User exampleUser = new User("Giuseppe Fabio", "Trentadue", "10210465210216889", "gtmax_32@hotmail.it");
         this.addressDeparture = exampleAddress;

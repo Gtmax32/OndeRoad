@@ -35,7 +35,7 @@ public class FavoritesFragment extends Fragment {
     private TravelDetail detailToView;
     private TravelDetailAdapter travelAdapter;
 
-    private FloatingActionButton addTrip;
+    private FloatingActionButton addTravel;
 
     //TODO: Esempio di viaggio, da eliminare
     private TravelInfo temp = new TravelInfo(new ArrayList<User>(4));
@@ -51,7 +51,7 @@ public class FavoritesFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_favorites, container, false);
         this.detail = new TravelInfo();
         this.travelsList = new ArrayList<>();
-        this.travelAdapter = new TravelDetailAdapter(this.getActivity().getApplicationContext(), R.layout.travel_detail, this.travelsList);
+        this.travelAdapter = new TravelDetailAdapter(this.getActivity().getApplicationContext(), R.layout.travel_detail_layout, this.travelsList);
 
         //TODO: Esempio da eliminare
         this.travelAdapter.addItem(new TravelDetail(this.getActivity().getApplicationContext(), temp));
@@ -60,8 +60,8 @@ public class FavoritesFragment extends Fragment {
         travelListView.setAdapter(this.travelAdapter);
         travelListView.setOnItemClickListener(boxSelectedListener);
 
-        addTrip = (FloatingActionButton) v.findViewById(R.id.addTrip);
-        addTrip.setOnClickListener(new View.OnClickListener() {
+        addTravel = (FloatingActionButton) v.findViewById(R.id.addTravel);
+        addTravel.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {

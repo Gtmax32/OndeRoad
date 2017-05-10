@@ -4,7 +4,7 @@
     android:layout_height="130dp"
     android:orientation="horizontal"
     android:elevation="5dp"
-    android:background="@color/colorMyTravel">
+    android:background="@color/colorTravelDetail">
 
     <!--Left part-->
 
@@ -28,7 +28,7 @@
             android:id="@+id/divider"
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@android:color/black"
+            android:background="@color/colorBlack"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp" />
 
@@ -47,7 +47,7 @@
             android:id="@+id/priceTravel"
             android:layout_width="65dp"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ic_euro_symbol_black_24px"
+            android:drawableEnd="@drawable/ic_action_euro"
             android:textColor="@color/colorBlack"
             android:gravity="center_vertical"
             android:layout_alignParentTop="true"

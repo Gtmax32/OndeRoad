@@ -37,7 +37,7 @@ public class TravelDetail extends LinearLayout {
         String date, time, departure, destination;
         int price;
 
-        this.rootView = inflate(context, R.layout.travel_detail, this);
+        this.rootView = inflate(context, R.layout.travel_detail_layout, this);
 
         this.dateTimeText = (TextView) rootView.findViewById(R.id.dateTimeTravel);
         this.itineraryDepartureText = (TextView) rootView.findViewById(R.id.itineraryTravelDeparture);
