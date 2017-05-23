@@ -9,7 +9,7 @@
         android:id="@+id/spotMap"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
+    <!--
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/searchTravel"
         android:layout_width="wrap_content"
@@ -21,6 +21,6 @@
         android:elevation="20dp"
         android:src="@drawable/ic_action_search"
         app:backgroundTint="@color/colorPrimary"
-        app:elevation="10dp" />
+        app:elevation="10dp" /> -->
 
 </RelativeLayout>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_spot_info"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.unimi.mobidev.onderoad.activity.SpotInfoActivity"
     android:background="@color/colorBackground"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.unimi.mobidev.onderoad.activity.SpotInfoActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/spotInfoToolbar"
@@ -16,20 +16,30 @@
         android:clickable="true"
         android:elevation="4dp"
         android:theme="@style/ToolBarStyle"
-        app:popupTheme="@style/PopupMenuStyle"
-        />
+        app:popupTheme="@style/PopupMenuStyle" />
 
-    <!--Spot Location layout-->
+    <!--Spot Info layout-->
+
+    <fragment
+        android:id="@+id/spotMap"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp" />
 
     <LinearLayout
         android:id="@+id/spotLocationLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/spotInfoToolbar"
+        android:layout_height="0dp"
+        android:layout_weight="2.5"
         android:layout_marginBottom="5dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:orientation="vertical">
 
         <!--First Line layout-->
@@ -38,21 +48,54 @@
             android:layout_height="0dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
-            <TextView
-                android:id="@+id/regionLabelSpotInfo"
+            <!--Region Label Layout-->
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/region_label_spot"/>
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/provinceLabelSpotInfo"
+                <TextView
+                    android:id="@+id/regionLabelSpotInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/region_label_spot"
+                    android:textColor="@color/colorBlack" />
+
+                <TextView
+                    android:id="@+id/regionDataSpotInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <!--Wave Label Layout-->
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/province_label_spot"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/waveLabelSpotInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/wave_spot_label"
+                    android:textColor="@color/colorBlack" />
+
+                <TextView
+                    android:id="@+id/waveDataSpotInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -60,166 +103,195 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
-            <TextView
-                android:id="@+id/cityLabelSpotInfo"
+            <!--Province Label Layout-->
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/city_label_spot" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/nameLabelSpotInfo"
+                <TextView
+                    android:id="@+id/provinceLabelSpotInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/province_label_spot"
+                    android:textColor="@color/colorBlack" />
+
+                <TextView
+                    android:id="@+id/provinceDataSpotInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <!--Wind Label Layout-->
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/name_label_spot" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/windLabelSpotInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/wind_spot_label"
+                    android:textColor="@color/colorBlack" />
+
+                <TextView
+                    android:id="@+id/windDataSpotInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
-
-    <!--Spot Type Layout-->
-    <LinearLayout
-        android:id="@+id/spotTypeLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/spotLocationLayout"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:orientation="vertical">
-
-        <!--Column name Layout-->
+        <!--Third Line Layout-->
         <LinearLayout
-            android:id="@+id/spotTypeColumnName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorMenuTitle"
-            android:orientation="horizontal">
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
-            <TextView
+            <!--City Label Layout-->
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/wave_spot_label"
-                android:textAlignment="center"/>
-
-            <View
-                android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/colorBlack" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/wind_spot_label"
-                android:textAlignment="center" />
+                android:orientation="horizontal">
 
-            <View
-                android:layout_width="1dp"
+                <TextView
+                    android:id="@+id/cityLabelSpotInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/city_label_spot"
+                    android:textColor="@color/colorBlack" />
+
+                <TextView
+                    android:id="@+id/cityDataSpotInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <!--Swell Label Layout-->
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@color/colorBlack" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/swell_spot_label"
-                android:textAlignment="center" />
+                android:orientation="horizontal">
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/colorBlack" />
+                <TextView
+                    android:id="@+id/swellLabelSpotInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/swell_spot_label"
+                    android:textColor="@color/colorBlack" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/seabed_spot_label"
-                android:textAlignment="center" />
+                <TextView
+                    android:id="@+id/swellDataSpotInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorBlack" />
-
-        <!--Value Layout-->
+        <!-- Fourth Line Layout-->
         <LinearLayout
-            android:id="@+id/spotTypeValueLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorWhite"
-            android:orientation="horizontal">
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
-            <TextView
-                android:id="@+id/spotTypeWaveValue"
+            <!--NameSpot Label Layout-->
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <View
-                android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/colorBlack" />
+                android:layout_weight="1"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/spotTypeWindValue"
+                <TextView
+                    android:id="@+id/nameLabelSpotInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/name_label_spot"
+                    android:textColor="@color/colorBlack" />
+
+                <TextView
+                    android:id="@+id/nameDataSpotInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <!--Seabed Label Layout-->
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <View
-                android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/colorBlack" />
+                android:layout_weight="1"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/spotTypeSwellValue"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                <TextView
+                    android:id="@+id/seabedLabelSpotInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/seabed_spot_label"
+                    android:textColor="@color/colorBlack"/>
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/colorBlack" />
+                <TextView
+                    android:id="@+id/seabedDataSpotInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
 
-            <TextView
-                android:id="@+id/spotTypeSeabedValue"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/spotNote"
+        android:id="@+id/spotNoteLabel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/spotTypeLayout"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="10dp"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp" />
+        android:layout_marginEnd="10dp"
+        android:text="@string/note_spot_label"
+        android:textColor="@color/colorBlack"/>
 
-    <fragment
-        android:id="@+id/spotMap"
-        android:name="com.google.android.gms.maps.MapFragment"
+    <TextView
+        android:id="@+id/spotNoteData"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/spotNote"
-        android:layout_marginBottom="5dp"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_marginBottom="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp" />
+        android:layout_marginStart="10dp" />
 
-
-</RelativeLayout>
+</LinearLayout>
