@@ -49,36 +49,32 @@ public class SpotInfoActivity extends AppCompatActivity implements OnMapReadyCal
 
         String temp;
 
-        regionSpotValue = (TextView) findViewById(R.id.regionLabelSpotInfo);
-        temp = regionSpotValue.getText().toString();
-        regionSpotValue.setText(temp + " " + spotToDisplay.getRegionSpot());
+        regionSpotValue = (TextView) findViewById(R.id.regionDataSpotInfo);
+        regionSpotValue.setText(spotToDisplay.getRegionSpot());
 
-        provinceSpotValue = (TextView) findViewById(R.id.provinceLabelSpotInfo);
-        temp = provinceSpotValue.getText().toString();
-        provinceSpotValue.setText(temp + " " + spotToDisplay.getProvinceSpot());
+        provinceSpotValue = (TextView) findViewById(R.id.provinceDataSpotInfo);
+        provinceSpotValue.setText(spotToDisplay.getProvinceSpot());
 
-        citySpotValue = (TextView) findViewById(R.id.cityLabelSpotInfo);
-        temp = citySpotValue.getText().toString();
-        citySpotValue.setText(temp + " " + spotToDisplay.getCitySpot());
+        citySpotValue = (TextView) findViewById(R.id.cityDataSpotInfo);
+        citySpotValue.setText(spotToDisplay.getCitySpot());
 
-        nameSpotValue = (TextView) findViewById(R.id.nameLabelSpotInfo);
-        temp = nameSpotValue.getText().toString();
-        nameSpotValue.setText(temp + " " + spotToDisplay.getNameSpot());
+        nameSpotValue = (TextView) findViewById(R.id.nameDataSpotInfo);
+        nameSpotValue.setText(spotToDisplay.getNameSpot());
 
-        spotWaveValue = (TextView) findViewById(R.id.spotTypeWaveValue);
+        spotWaveValue = (TextView) findViewById(R.id.waveDataSpotInfo);
         spotWaveValue.setText(spotToDisplay.getTableSpot().getWaveSpot());
 
-        spotWindValue = (TextView) findViewById(R.id.spotTypeWindValue);
+        spotWindValue = (TextView) findViewById(R.id.windDataSpotInfo);
         spotWindValue.setText(spotToDisplay.getTableSpot().getWindSpot());
 
-        spotSwellValue = (TextView) findViewById(R.id.spotTypeSwellValue);
+        spotSwellValue = (TextView) findViewById(R.id.swellDataSpotInfo);
         spotSwellValue.setText(spotToDisplay.getTableSpot().getSwellSpot());
 
-        spotSeabedValue = (TextView) findViewById(R.id.spotTypeSeabedValue);
+        spotSeabedValue = (TextView) findViewById(R.id.seabedDataSpotInfo);
         spotSeabedValue.setText(spotToDisplay.getTableSpot().getSeabedSpot());
 
-        noteSpotValue = (TextView) findViewById(R.id.spotNote);
-        temp = "Note: \n" + spotToDisplay.getDescriptionSpot();
+        noteSpotValue = (TextView) findViewById(R.id.spotNoteData);
+        temp = spotToDisplay.getDescriptionSpot();
         noteSpotValue.setText(temp);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.spotMap);

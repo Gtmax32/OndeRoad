@@ -49,14 +49,14 @@ public class SpotFragment extends Fragment implements OnMapReadyCallback, Google
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_spot, container, false);
 
-        searchTravel = (FloatingActionButton) root.findViewById(R.id.searchTravel);
+        /*searchTravel = (FloatingActionButton) root.findViewById(R.id.searchTravel);
         searchTravel.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 Toast.makeText(SpotFragment.this.getContext(),"SearchTravel button clicked!",Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
         spotMap = (MapView) root.findViewById(R.id.spotMap);
 

@@ -6,7 +6,8 @@
     <color name="colorMenuTitle">#FFD9D9D9</color>
     <color name="colorBackground">#F2F2F2</color>
     <color name="colorBlack">#000000</color>
-    <color name="colorWhite">#ffffff</color>
+    <color name="colorGray">#808080</color>
+    <color name="colorWhite">#FFFFFF</color>
     <color name="colorTravelDetail">#C9E897</color>
     <color name="colorAlternativeTravelDetail">#FFF28E</color>
 </resources>

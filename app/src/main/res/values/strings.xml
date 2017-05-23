@@ -91,13 +91,14 @@
     <string name="create_settings">Crea un viaggio qui</string>
     <string name="info_spot">Dettagli Spot</string>
     <string name="title_activity_travel_info">TravelInfo Activity</string>
-    <string name="region_label_spot">Regione: </string>
-    <string name="province_label_spot">Provincia: </string>
-    <string name="city_label_spot">Comune: </string>
-    <string name="name_label_spot">Nome: </string>
+    <string name="region_label_spot">Regione</string>
+    <string name="province_label_spot">Provincia</string>
+    <string name="city_label_spot">Comune</string>
+    <string name="name_label_spot">Nome Spot</string>
     <string name="wave_spot_label">Onda</string>
     <string name="wind_spot_label">Vento</string>
     <string name="swell_spot_label">Mareggiata</string>
     <string name="seabed_spot_label">Fondale</string>
+    <string name="note_spot_label">Note</string>
 
 </resources>
