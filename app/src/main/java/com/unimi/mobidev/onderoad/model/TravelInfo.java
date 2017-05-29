@@ -29,7 +29,7 @@ public class TravelInfo implements Serializable {
 
     public TravelInfo(ArrayList<User> list) {
         AddressInfo exampleAddress = new AddressInfo("Via Ugo Betti Milano, MI, Italia", "Milano", 45.492888, 9.1102608);
-        SpotInfo exampleSpot = new SpotInfo("Puglia", "Bari", "Bari", "Molo Sant'Antonio", 41.1282799,16.8761491, 0, "Fuffa", new SpotInfoTable("DX-SX", "S-O (MODERATO)", "SO", "SABBIA"));
+        SpotInfo exampleSpot = new SpotInfo("Toscana", "Ms", "Cinquale", "Il trabucco", 43.9828071, 10.153797199999985, 0, "AFFIANCO AL RISTORANTE TRABUCCO. LO SPOT PRINCIPALE E' ACCANTO AL MOLETTO DI MASSI", new SpotInfoTable("DX", "S-O (MODERATO)", "SO", "SABBIA"));
         CarInfo exampleCar = new CarInfo(4, 3, "Dentro l'auto");
         User exampleUser = new User("Giuseppe Fabio", "Trentadue", "10210465210216889", "gtmax_32@hotmail.it");
         this.addressDeparture = exampleAddress;

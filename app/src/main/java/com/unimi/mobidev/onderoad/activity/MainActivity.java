@@ -1,11 +1,14 @@
 package com.unimi.mobidev.onderoad.activity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -127,8 +130,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     private void initIconList() {
@@ -146,6 +147,28 @@ public class MainActivity extends AppCompatActivity {
 
     private Drawable getIcon(int index) {
         return tabIcons.get(index);
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.exit_alert_message)
+                .setCancelable(false)
+                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        final Intent exitIntent = new Intent(Intent.ACTION_MAIN);
+                        exitIntent.addCategory(Intent.CATEGORY_HOME);
+                        exitIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(exitIntent);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }
 

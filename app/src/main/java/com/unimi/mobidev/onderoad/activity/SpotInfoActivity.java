@@ -9,12 +9,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.model.SpotInfo;
@@ -89,16 +91,16 @@ public class SpotInfoActivity extends AppCompatActivity implements OnMapReadyCal
 
         String spotName = this.spotToDisplay.getNameSpot();
 
-        googleMap.addMarker(new MarkerOptions().position(spotCoordinate).title(spotName));
+        Marker spot = googleMap.addMarker(new MarkerOptions().position(spotCoordinate).title(spotName));
+        spot.showInfoWindow();
 
-        googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(spotCoordinate , 10.0f) );
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(spotCoordinate, 10.0f));
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        MenuInflater inflater=getMenuInflater();
-        inflater.inflate(R.menu.spot_info_settings_menu,menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.spot_info_settings_menu, menu);
         return true;
     }
 
@@ -106,34 +108,39 @@ public class SpotInfoActivity extends AppCompatActivity implements OnMapReadyCal
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.reviewSubMenu:
-                System.out.println("Opening review menu...");
+                Toast.makeText(this.getApplicationContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.navigationSubMenu:
                 System.out.println("Opening navigation menu...");
-                //showMap();
+                showMap();
                 return true;
 
             case R.id.createSubMenu:
                 System.out.println("Opening create menu...");
+                createTravel();
                 return true;
 
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
 
         }
     }
 
     private void showMap() {
-        //String toParse = "geo:0,0?q= " + travelDisplayed.getSpotDestination().getLatitudeSpot() + "," + travelDisplayed.getSpotDestination().getLongitudeSpot() + "(Spot)";
-        String toParse = "ciao";
+        String spotInfo = spotToDisplay.getNameSpot() + ", " + spotToDisplay.getCitySpot();
+        String toParse = "geo:0,0?q= " + spotToDisplay.getLatitudeSpot() + "," + spotToDisplay.getLongitudeSpot() + "(" + spotInfo + ")";
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(toParse));
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
+    }
+
+    private void createTravel() {
+        Intent createSpotIntent = new Intent(SpotInfoActivity.this, CreateActivity.class);
+        createSpotIntent.putExtra("SpotData", spotToDisplay);
+        startActivity(createSpotIntent);
     }
 
     @Override
@@ -143,7 +150,7 @@ public class SpotInfoActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         finish();
     }
 }

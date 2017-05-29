@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -223,6 +224,7 @@ public class ModifyActivity extends AppCompatActivity implements GoogleApiClient
 
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spotSpinner.setAdapter(adapter);
+
             int spotPosition = adapter.getPosition(toModifyTravel.getSpotDestination().getNameSpot());
             spotSpinner.setSelection(spotPosition);
         }
