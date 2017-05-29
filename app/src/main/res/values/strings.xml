@@ -105,6 +105,14 @@
     <string name="search_hint">Cerca uno spot...</string>
     <string name="search_title">Cerca uno spot</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="notification_label">Notifiche</string>
+    <string name="first_setting_label">Impostazione 1</string>
+    <string name="second_setting_label">Impostazione 2</string>
+    <string name="third_setting_label">Impostazione 3</string>
+    <string name="user_data_label">Le tue informazioni</string>
+    <string name="name_label">Nome</string>
+    <string name="surname_label">Cognome</string>
+    <string name="mail_label">E-mail</string>
 
 
 </resources>
