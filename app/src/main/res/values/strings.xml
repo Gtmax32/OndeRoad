@@ -29,15 +29,15 @@
 
     <string name="date_label">Data:</string>
 
-    <string name="price_label">Prezzo:</string>
+    <string name="price_label">Prezzo</string>
 
-    <string name="passengers_label">Passeggeri:</string>
+    <string name="passengers_label">Passeggeri</string>
 
     <string name="outbound_label">Solo andata?</string>
 
-    <string name="surfboard_number">Tavole trasportabili:</string>
+    <string name="surfboard_number">Tavole trasportabili</string>
 
-    <string name="car_table_support">Supporto:</string>
+    <string name="car_table_support">Supporto</string>
 
     <string name="note_label">Note</string>
 
@@ -52,9 +52,9 @@
         <item>Fascioni</item>
     </string-array>
 
-    <string name="actual_price">Prezzo attuale:</string>
+    <string name="actual_price">Prezzo att.</string>
 
-    <string name="total_price">Prezzo totale:</string>
+    <string name="total_price">Prezzo totale</string>
 
     <string name="no_provider_enabled">Impossibile localizzarti.\nAttiva la connessione dati o il GPS.</string>
 
@@ -78,11 +78,13 @@
 
     <string name="toast_travel_creation">Viaggio creato!</string>
 
-    <string name="hard_back_alert_message">Sicuro di voler tornare indietro?\nIl viaggio che stai creando non verrà salvato.</string>
+    <string name="creation_not_complete_alert_message">Sicuro di voler tornare indietro?\nIl viaggio che stai creando non verrà salvato.</string>
 
     <string name="not_complete_travel_alert_message">Attenzione!\nMancano alcuni dati necessari per la creazione del viaggio!</string>
 
     <string name="incomplete_modify_alert_message">Sicuro di voler tornare indietro?\nPerderai eventuali modifiche fatte.</string>
+
+    <string name="exit_alert_message">Sicuro di voler uscire?\n</string>
 
     <string name="title_activity_spot_info">SpotInfoActivity</string>
 
@@ -100,5 +102,17 @@
     <string name="swell_spot_label">Mareggiata</string>
     <string name="seabed_spot_label">Fondale</string>
     <string name="note_spot_label">Note</string>
+    <string name="search_hint">Cerca uno spot...</string>
+    <string name="search_title">Cerca uno spot</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="notification_label">Notifiche</string>
+    <string name="first_setting_label">Impostazione 1</string>
+    <string name="second_setting_label">Impostazione 2</string>
+    <string name="third_setting_label">Impostazione 3</string>
+    <string name="user_data_label">Le tue informazioni</string>
+    <string name="name_label">Nome</string>
+    <string name="surname_label">Cognome</string>
+    <string name="mail_label">E-mail</string>
+
 
 </resources>

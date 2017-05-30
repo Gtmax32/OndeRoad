@@ -20,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.MainActivity"/>
         <activity
             android:name=".activity.CreateActivity"
             android:parentActivityName=".activity.MainActivity" />
@@ -33,7 +33,13 @@
         <activity
             android:name=".activity.TravelInfoActivity"
             android:label="@string/title_activity_travel_info"
-            android:parentActivityName=".activity.MainActivity"/>
+            android:parentActivityName=".activity.MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
+                <data android:scheme="mailto" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.ModifyActivity"
             android:label="@string/title_activity_modify"
@@ -56,6 +62,20 @@
             android:label="@string/title_activity_spot_info"
             android:parentActivityName=".activity.MainActivity"
             android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.unimi.mobidev.onderoad.activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activity.SearchActivity"
+            android:label="@string/title_activity_search"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/search_bar_info"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.unimi.mobidev.onderoad.activity.MainActivity" />

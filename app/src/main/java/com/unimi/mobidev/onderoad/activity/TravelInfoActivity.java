@@ -2,21 +2,22 @@ package com.unimi.mobidev.onderoad.activity;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
@@ -55,73 +56,57 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.actualTravelMap);
         mapFragment.getMapAsync(this);
 
-        //Ricordarsi che, per visualizzare i valori relative alle etichette, conviene prendere il testo dell'etichetta
-        //ed aggiungerli il valore modificato. Es. Passeggeri: + 1/5
-
         float actualPrice = travelDisplayed.getPriceTravel() / (travelDisplayed.getPassengersTravel().size() + 1);
         String temp = travelDisplayed.getDataDeparture() + " - " + travelDisplayed.getTimeDeparture();
 
-        passengersActualInfo = (TextView) findViewById(R.id.passengersFractionText);
-        priceActualInfo = (TextView) findViewById(R.id.actualPriceText);
-        surfboardActualInfo = (TextView) findViewById(R.id.surfboardFractionText);
+        passengersActualInfo = (TextView) findViewById(R.id.passengersFractionDataText);
+        priceActualInfo = (TextView) findViewById(R.id.actualPriceDataText);
+        surfboardActualInfo = (TextView) findViewById(R.id.surfboardFractionData);
 
         dateTimeActualInfo = (TextView) findViewById(R.id.actualDateTravel);
         dateTimeActualInfo.setText(temp);
 
-        priceTotalInfo = (TextView) findViewById(R.id.totalPriceInfo);
-        carSupportActualInfo = (TextView) findViewById(R.id.carSupportInfo);
+        priceTotalInfo = (TextView) findViewById(R.id.totalPriceDataInfo);
+        carSupportActualInfo = (TextView) findViewById(R.id.carSupportDataInfo);
 
         noteActualText = (EditText) findViewById(R.id.actualNoteText);
         noteActualText.setKeyListener(null);
 
-        temp = passengersActualInfo.getText().toString() + " " + travelDisplayed.getPassengersTravel().size() + "/" + travelDisplayed.getCarTravel().getPassengersNumber();
+        passengersActualInfo.setText(travelDisplayed.getPassengersTravel().size() + "/" + travelDisplayed.getCarTravel().getPassengersNumber());
 
-        passengersActualInfo.setText(temp);
-
-        temp = priceActualInfo.getText().toString() + " " + actualPrice + " €";
+        temp = actualPrice + " €";
 
         priceActualInfo.setText(temp);
 
-        temp = surfboardActualInfo.getText().toString() + " " + travelDisplayed.getCarTravel().getSurfboardNumber();
+        temp = travelDisplayed.getCarTravel().getSurfboardNumber() + "";
 
         surfboardActualInfo.setText(temp);
 
-        temp = priceTotalInfo.getText().toString() + " " + travelDisplayed.getPriceTravel() + " €";
+        temp = travelDisplayed.getPriceTravel() + " €";
 
         priceTotalInfo.setText(temp);
 
-        temp = carSupportActualInfo.getText().toString() + " " + travelDisplayed.getCarTravel().getSurfboardType();
-
-        carSupportActualInfo.setText(temp);
+        carSupportActualInfo.setText(travelDisplayed.getCarTravel().getSurfboardType());
 
         noteActualText.setText(travelDisplayed.getNoteTravel());
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        double departureLatitude= travelDisplayed.getAddressDeparture().getLatitudeInfo();
-        double departureLongitude = travelDisplayed.getAddressDeparture().getLongitudeInfo();
-
         double destinationLatitude = travelDisplayed.getSpotDestination().getLatitudeSpot();
         double destinationLongitude = travelDisplayed.getSpotDestination().getLongitudeSpot();
 
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        builder.include(new LatLng(departureLatitude,departureLongitude));
-        builder.include(new LatLng(destinationLatitude,destinationLongitude));
-        LatLngBounds bounds = builder.build();
+        Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(destinationLatitude, destinationLongitude)).title(travelDisplayed.getSpotDestination().getNameSpot()));
+        marker.showInfoWindow();
 
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(departureLatitude, departureLongitude)).title("Punto d'incontro"));
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(destinationLatitude, destinationLongitude)).title("Spot"));
-
-        //googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 20));
-        googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(destinationLatitude,destinationLongitude) , 7.0f) );
+        //TODO: Controllare il valore dello zoom
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(destinationLatitude, destinationLongitude), 14.0f));
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        MenuInflater inflater=getMenuInflater();
-        inflater.inflate(R.menu.travel_info_settings_menu,menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.travel_info_settings_menu, menu);
         return true;
     }
 
@@ -139,7 +124,7 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
                 return true;
 
             case R.id.deleteSubMenu:
-                // User chose the "Settings" item, show the app settings UI...
+                Toast.makeText(this.getApplicationContext(),"Cancello il viaggio!",Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.shareSubMenu:
@@ -148,19 +133,17 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
                 return true;
 
             case R.id.mailSubMenu:
-                // User chose the "Settings" item, show the app settings UI...
+                composeEmail();
                 return true;
 
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
 
         }
     }
 
     private void showMap() {
-        String toParse = "geo:0,0?q= " + travelDisplayed.getSpotDestination().getLatitudeSpot() + "," + travelDisplayed.getSpotDestination().getLongitudeSpot() + "(Spot)";
+        String toParse = "geo:0,0?q= " + travelDisplayed.getSpotDestination().getLatitudeSpot() + "," + travelDisplayed.getSpotDestination().getLongitudeSpot() + "(" + travelDisplayed.getSpotDestination().getNameSpot() + ")";
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(toParse));
         if (intent.resolveActivity(getPackageManager()) != null) {
@@ -168,7 +151,7 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    private void shareTravel(){
+    private void shareTravel() {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
@@ -176,10 +159,23 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         startActivity(sendIntent);
     }
 
-    private void modifyTravel(){
-        Intent modifyIntent = new Intent(this.getApplication(),ModifyActivity.class);
+    private void modifyTravel() {
+        Intent modifyIntent = new Intent(this.getApplication(), ModifyActivity.class);
         modifyIntent.putExtra("TravelInfo", travelDisplayed);
-        startActivityForResult(modifyIntent,CREATE_ACTIVITY_REQUEST);
+        startActivityForResult(modifyIntent, CREATE_ACTIVITY_REQUEST);
+    }
+
+    public void composeEmail() {
+        String[] addresses = new String[2];
+        addresses[0]="gtmax_32@hotmail.it";
+        addresses[1]="gf.trentadue@gmail.com";
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Comunicazione");
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -205,7 +201,7 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         finish();
     }
 }

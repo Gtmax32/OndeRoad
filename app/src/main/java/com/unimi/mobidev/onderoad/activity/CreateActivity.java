@@ -91,6 +91,8 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
     private ArrayList<SpotInfo> selectedRegionSpot;
 
+    private SpotInfo spotDetail;
+
     private int checkMod = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +107,8 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         //Serve per inserire la freccia per tornare indietro
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        spotDetail = (SpotInfo) this.getIntent().getSerializableExtra("SpotData");
 
         String todayText, nowText;
         String first_name = "", middle_name = "", last_name = "", ID = "", email = "";
@@ -184,11 +188,18 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         //Destination Info
 
+        int position = 0;
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, RegionSpotDict.getKeys());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         regionDestinationSpinner = (Spinner) findViewById(R.id.destinationRegionSpinner);
         regionDestinationSpinner.setAdapter(adapter);
+
+        if(spotDetail != null) {
+            position = adapter.getPosition(spotDetail.getRegionSpot());
+            regionDestinationSpinner.setSelection(position);
+        }
 
         spotDestinationSpinner = (Spinner) findViewById(R.id.destinationProvinceSpinner);
         spotDestinationSpinner.setEnabled(false);
@@ -335,6 +346,11 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spotSpinner.setAdapter(adapter);
+
+            if(spotDetail != null) {
+                int pos = adapter.getPosition(spotDetail.getNameSpot());
+                spotSpinner.setSelection(pos);
+            }
         }
     }
 
@@ -462,7 +478,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.hard_back_alert_message)
+        builder.setMessage(R.string.creation_not_complete_alert_message)
                 .setCancelable(false)
                 .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
