@@ -6,8 +6,8 @@
           android:title="@string/modify_settings"
           app:showAsAction="never"/>
 
-    <item android:id="@+id/navigationSubMenu"
-        android:title="@string/navigation_settings"
+    <item android:id="@+id/spotMapSubMenu"
+        android:title="@string/driver_navigation_settings"
         app:showAsAction="never"/>
 
     <item android:id="@+id/deleteSubMenu"
@@ -18,8 +18,8 @@
         android:title="@string/share_settings"
         app:showAsAction="never"/>
 
-    <item android:id="@+id/mailSubMenu"
-        android:title="@string/mail_settings"
+    <item android:id="@+id/passContactSubMenu"
+        android:title="@string/driver_mail_settings"
         app:showAsAction="never"/>
     
 </menu>

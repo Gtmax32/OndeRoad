@@ -1,14 +1,17 @@
 package com.unimi.mobidev.onderoad.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,13 +22,25 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
+import com.unimi.mobidev.onderoad.model.User;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int CREATE_ACTIVITY_REQUEST = 2;
     private TravelInfo travelDisplayed;
+    private String travelDisplayedKey;
+
+    private ImageView passengerDriverImage;
 
     private TextView passengersActualInfo;
     private TextView priceActualInfo;
@@ -37,6 +52,9 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
 
     private EditText noteActualText;
 
+    private boolean isOwner;
+
+    private boolean alreadyPassenger;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,14 +68,31 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         travelDisplayed = (TravelInfo) this.getIntent().getSerializableExtra("TravelInfo");
+        travelDisplayedKey = (String) this.getIntent().getSerializableExtra("TravelKey");
 
         System.out.println("In TravelInfoActivity: " + travelDisplayed.toString());
+
+        isOwner = FirebaseAuth.getInstance().getCurrentUser().getUid().equals(travelDisplayed.getOwnerTravel().getIdUser());
+
+        passengerDriverImage = (ImageView) findViewById(R.id.carInfoImage);
+
+        if (isOwner)
+            passengerDriverImage.setImageResource(R.drawable.ic_action_driver);
+        else
+            passengerDriverImage.setImageResource(R.drawable.ic_action_passenger);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.actualTravelMap);
         mapFragment.getMapAsync(this);
 
-        float actualPrice = travelDisplayed.getPriceTravel() / (travelDisplayed.getPassengersTravel().size() + 1);
-        String temp = travelDisplayed.getDataDeparture() + " - " + travelDisplayed.getTimeDeparture();
+        int passengersNumber;
+
+        if (travelDisplayed.getPassengersTravel() == null)
+            passengersNumber = 0;
+        else
+            passengersNumber = travelDisplayed.getPassengersTravel().size();
+
+        float actualPrice = travelDisplayed.getPriceTravel() / (passengersNumber + 1);
+        String temp = travelDisplayed.formatDataDeparture() + " - " + travelDisplayed.formatTimeDeparture();
 
         passengersActualInfo = (TextView) findViewById(R.id.passengersFractionDataText);
         priceActualInfo = (TextView) findViewById(R.id.actualPriceDataText);
@@ -72,7 +107,7 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         noteActualText = (EditText) findViewById(R.id.actualNoteText);
         noteActualText.setKeyListener(null);
 
-        passengersActualInfo.setText(travelDisplayed.getPassengersTravel().size() + "/" + travelDisplayed.getCarTravel().getPassengersNumber());
+        passengersActualInfo.setText(passengersNumber + "/" + travelDisplayed.getCarTravel().getPassengersNumber());
 
         temp = actualPrice + " €";
 
@@ -96,7 +131,7 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         double destinationLatitude = travelDisplayed.getSpotDestination().getLatitudeSpot();
         double destinationLongitude = travelDisplayed.getSpotDestination().getLongitudeSpot();
 
-        Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(destinationLatitude, destinationLongitude)).title(travelDisplayed.getSpotDestination().getNameSpot()));
+        Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(destinationLatitude, destinationLongitude)).title(travelDisplayed.getSpotDestination().getTitle()));
         marker.showInfoWindow();
 
         //TODO: Controllare il valore dello zoom
@@ -106,7 +141,16 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.travel_info_settings_menu, menu);
+        if (isOwner)
+            inflater.inflate(R.menu.travel_info_driver_menu, menu);
+        else {
+            String key = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            boolean condition = !(travelDisplayed.isPassenger(key) && travelDisplayed.isFull());
+            inflater.inflate(R.menu.travel_info_passenger_menu, menu);
+            menu.findItem(R.id.addSubMenu).setEnabled(condition);
+            menu.findItem(R.id.addSubMenu).setVisible(condition);
+        }
+
         return true;
     }
 
@@ -115,16 +159,34 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         switch (item.getItemId()) {
             case R.id.modifySubMenu:
                 System.out.println("Opening modification menu...");
-                modifyTravel();
+                Toast.makeText(this.getApplicationContext(), "Cooming soon!", Toast.LENGTH_SHORT).show();
+                //modifyTravel();
                 return true;
 
-            case R.id.navigationSubMenu:
+            case R.id.spotMapSubMenu:
                 System.out.println("Opening navigation menu...");
-                showMap();
+                showSpotMap(travelDisplayed.getSpotDestination().getLatitudeSpot(), travelDisplayed.getSpotDestination().getLongitudeSpot(), travelDisplayed.getSpotDestination().getTitle());
                 return true;
 
             case R.id.deleteSubMenu:
-                Toast.makeText(this.getApplicationContext(),"Cancello il viaggio!",Toast.LENGTH_SHORT).show();
+                System.out.println("Deleting current travel...");
+
+                AlertDialog.Builder builderDelete = new AlertDialog.Builder(this);
+                builderDelete.setMessage(R.string.deleting_travel_message)
+                        .setCancelable(false)
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                deleteTravel();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alertDelete = builderDelete.create();
+                alertDelete.show();
+
                 return true;
 
             case R.id.shareSubMenu:
@@ -132,8 +194,37 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
                 shareTravel();
                 return true;
 
-            case R.id.mailSubMenu:
-                composeEmail();
+            case R.id.passContactSubMenu:
+                sendPassengersEmail(travelDisplayed.getPassengersTravel());
+                return true;
+
+            case R.id.addSubMenu:
+                System.out.println("Adding a passengers...");
+
+                AlertDialog.Builder builderAdd = new AlertDialog.Builder(this);
+                builderAdd.setMessage(R.string.adding_like_passenger_message)
+                        .setCancelable(false)
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                addPassenger();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alertAdd = builderAdd.create();
+                alertAdd.show();
+
+                return true;
+
+            case R.id.startMapSubMenu:
+                showSpotMap(travelDisplayed.getAddressDeparture().getLatitudeInfo(), travelDisplayed.getAddressDeparture().getLongitudeInfo(), travelDisplayed.getAddressDeparture().getStreetInfo());
+                return true;
+
+            case R.id.driverContactSubMenu:
+                sendDriverEmail();
                 return true;
 
             default:
@@ -142,13 +233,21 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    private void showMap() {
-        String toParse = "geo:0,0?q= " + travelDisplayed.getSpotDestination().getLatitudeSpot() + "," + travelDisplayed.getSpotDestination().getLongitudeSpot() + "(" + travelDisplayed.getSpotDestination().getNameSpot() + ")";
+    private void showSpotMap(double latitude, double longitude, String text) {
+        String toParse = "geo:0,0?q= " + latitude + "," + longitude + "(" + text + ")";
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(toParse));
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
+    }
+
+    private void deleteTravel() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("travels").child(travelDisplayedKey);
+        ref.removeValue();
+
+        Toast.makeText(getApplicationContext(),"Il viaggio verso " + travelDisplayed.getSpotDestination().getTitle() + " è stato cancellato.",Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     private void shareTravel() {
@@ -165,16 +264,62 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         startActivityForResult(modifyIntent, CREATE_ACTIVITY_REQUEST);
     }
 
-    public void composeEmail() {
-        String[] addresses = new String[2];
-        addresses[0]="gtmax_32@hotmail.it";
-        addresses[1]="gf.trentadue@gmail.com";
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Comunicazione");
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
+    public void sendPassengersEmail(ArrayList<User> userList) {
+        if (userList == null)
+            Toast.makeText(getApplicationContext(), R.string.mail_error_message, Toast.LENGTH_SHORT).show();
+        else{
+            int passengersNumber = userList.size();
+            int i = 0;
+
+            String[] addresses = new String[passengersNumber];
+
+            for (User u : userList){
+                addresses[i] = u.getEmailUser();
+                i++;
+            }
+
+            Intent mailIntent = new Intent(Intent.ACTION_SENDTO);
+            mailIntent.setData(Uri.parse("mailto:"));
+            mailIntent.putExtra(Intent.EXTRA_EMAIL, addresses);
+            mailIntent.putExtra(Intent.EXTRA_SUBJECT, "Comunicazione");
+            if (mailIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(mailIntent);
+            }
+        }
+    }
+
+    private void addPassenger() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        User passenger = new User(currentUser.getUid(), currentUser.getDisplayName(), currentUser.getEmail());
+
+        if(travelDisplayed.getPassengersTravel() == null){
+            ArrayList<User> passengerList = new ArrayList<>();
+            passengerList.add(passenger);
+            this.travelDisplayed.setPassengersTravel(passengerList);
+        }else{
+
+            this.travelDisplayed.getPassengersTravel().add(passenger);
+        }
+
+        Map<String,Object> dataToUpdate = new HashMap<>();
+        dataToUpdate.put(this.travelDisplayedKey,this.travelDisplayed);
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("travels");
+        ref.updateChildren(dataToUpdate);
+
+        Toast.makeText(getApplicationContext(),getString(R.string.passengers_added_perfectly_message) + " " + travelDisplayed.getSpotDestination().getTitle() + ".",Toast.LENGTH_SHORT).show();
+
+        invalidateOptionsMenu();
+    }
+
+    private void sendDriverEmail() {
+        User owner = this.travelDisplayed.getOwnerTravel();
+
+        Intent mailIntent = new Intent(Intent.ACTION_SENDTO);
+        mailIntent.setData(Uri.parse("mailto:" + owner.getEmailUser()));
+        mailIntent.putExtra(Intent.EXTRA_SUBJECT, "Comunicazione");
+        if (mailIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(mailIntent);
         }
     }
 

@@ -7,7 +7,7 @@
         app:showAsAction="never"/>
 
     <item android:id="@+id/navigationSubMenu"
-        android:title="@string/navigation_settings"
+        android:title="@string/driver_navigation_settings"
         app:showAsAction="never"/>
 
     <item android:id="@+id/createSubMenu"

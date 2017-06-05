@@ -1,6 +1,5 @@
 package com.unimi.mobidev.onderoad.other;
 
-import android.app.Activity;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
@@ -8,7 +7,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -16,8 +14,6 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.SphericalUtil;
 import com.unimi.mobidev.onderoad.R;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -41,8 +37,22 @@ public class LatLngManager implements LocationListener {
 
     }
 
-    public LatLngBounds getLatLngBounds(double radius){
-        if(this.locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+    public LatLngBounds getLatLngBounds(double radius) throws SecurityException{
+        List<String> providers = this.locationManager.getProviders(true);
+
+        for(String provider: providers){
+            this.locationManager.requestLocationUpdates(provider, 2000, 10, this);
+            if (this.locationManager != null) {
+                this.currentLocation = this.locationManager.getLastKnownLocation(provider);
+
+                if (this.currentLocation != null) {
+                    this.currentLatLng = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
+                }
+            }
+        }
+
+
+        /*if(this.locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, this);
             if (this.locationManager != null) {
                 this.currentLocation = this.locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -52,7 +62,8 @@ public class LatLngManager implements LocationListener {
                 }
             }
         }
-        else if (this.locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+
+        if (this.locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || this.currentLocation == null){
             this.locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 10, this);
 
             if(this.locationManager != null){
@@ -65,7 +76,7 @@ public class LatLngManager implements LocationListener {
         }
         else{
             Toast.makeText(this.activityContext, R.string.no_provider_enabled,Toast.LENGTH_LONG).show();
-        }
+        }*/
 
         if(currentLatLng != null){
             System.out.println("Current latitude: " + currentLatLng.latitude + "\nCurrent longitude: " + currentLatLng.longitude);
@@ -76,6 +87,7 @@ public class LatLngManager implements LocationListener {
             return new LatLngBounds(southwest, northeast);
         }
         else
+            Toast.makeText(this.activityContext, R.string.no_provider_enabled,Toast.LENGTH_LONG).show();
             return null;
     }
 

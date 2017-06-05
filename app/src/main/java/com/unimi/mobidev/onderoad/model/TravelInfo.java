@@ -5,17 +5,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
  * Created by Giuseppe Fabio Trentadue on 30/09/2016.
  */
 
-public class TravelInfo implements Serializable {
+public class TravelInfo extends Object implements Serializable {
 
     private AddressInfo addressDeparture;
-    private Calendar dateTimeDeparture;
-    private String regionDestination;
+    private Long dateTimeDeparture;
     private SpotInfo spotDestination;
     private int priceTravel;
     private CarInfo carTravel;
@@ -27,15 +29,13 @@ public class TravelInfo implements Serializable {
     public TravelInfo() {
     }
 
-    public TravelInfo(ArrayList<User> list) {
+    /*public TravelInfo(ArrayList<User> list) {
         AddressInfo exampleAddress = new AddressInfo("Via Ugo Betti Milano, MI, Italia", "Milano", 45.492888, 9.1102608);
         SpotInfo exampleSpot = new SpotInfo("Toscana", "Ms", "Cinquale", "Il trabucco", 43.9828071, 10.153797199999985, 0, "AFFIANCO AL RISTORANTE TRABUCCO. LO SPOT PRINCIPALE E' ACCANTO AL MOLETTO DI MASSI", new SpotInfoTable("DX", "S-O (MODERATO)", "SO", "SABBIA"));
         CarInfo exampleCar = new CarInfo(4, 3, "Dentro l'auto");
-        User exampleUser = new User("Giuseppe Fabio", "Trentadue", "10210465210216889", "gtmax_32@hotmail.it");
+        User exampleUser = new User("AaCVWDmIx8NQnPV4KLP7LFYwEbM2","Giuseppe Fabio Trentadue", "gtmax_32@hotmail.it");
         this.addressDeparture = exampleAddress;
-        this.dateTimeDeparture = Calendar.getInstance();
-        this.dateTimeDeparture.set(2017,4,1,10,0);
-        this.regionDestination = "Puglia";
+        this.dateTimeDeparture = new GregorianCalendar(2017,5,4,10,0);
         this.spotDestination = exampleSpot;
         this.priceTravel = 40;
         this.carTravel = exampleCar;
@@ -43,7 +43,7 @@ public class TravelInfo implements Serializable {
         this.noteTravel = "fuffa";
         this.ownerTravel = exampleUser;
         this.passengersTravel = list;
-    }
+    }*/
 
     public AddressInfo getAddressDeparture() {
         return addressDeparture;
@@ -53,20 +53,64 @@ public class TravelInfo implements Serializable {
         this.addressDeparture = addressDeparture;
     }
 
-    public Calendar getDateTimeDeparture() {
+    public Long getDateTimeDeparture() {
         return dateTimeDeparture;
     }
 
-    public void setDateTimeDeparture(Calendar dateTimeDeparture) {
+    public void setDateTimeDeparture(Long dateTimeDeparture) {
         this.dateTimeDeparture = dateTimeDeparture;
     }
 
-    public String getDataDeparture() {
-        SimpleDateFormat outputTime = new SimpleDateFormat("dd MMMM",Locale.ITALIAN);
-        return outputTime.format(dateTimeDeparture.getTime());
+    private GregorianCalendar timestampToCalendar(){
+        Date d = new Date(this.dateTimeDeparture);
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(d);
+
+        return calendar;
     }
 
-    public void setDataDeparture(String s) {
+    private void calendarToTimestamp(GregorianCalendar calendar){
+        this.dateTimeDeparture = calendar.getTimeInMillis();
+    }
+
+    public String formatDataDeparture() {
+        SimpleDateFormat outputTime = new SimpleDateFormat("dd MMMM",Locale.ITALIAN);
+        return outputTime.format(this.timestampToCalendar().getTime());
+    }
+
+    public void updateDateTimeDeparture(String date, String time) {
+        Calendar c = Calendar.getInstance();
+        String splitDate[] = date.split(" ");
+        int day = Integer.parseInt(splitDate[0]);
+        int year = c.get(Calendar.YEAR);
+
+        int currentMonth = c.get(Calendar.MONTH);
+
+        //Se ci troviamo a dicembre, ma la data del viaggio corrisponde a gennaio,
+        //vuol dire che l'anno del viaggio è successivo all'anno corrente
+        if (currentMonth == Calendar.DECEMBER && splitDate[1].equals("gennaio")) {
+            year++;
+        }
+
+        try {
+            c.setTime(new SimpleDateFormat("MMMM", Locale.ITALIAN).parse(splitDate[1]));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        int month = c.get(Calendar.MONTH);
+
+        System.out.println("Selected date:" + day + "-" + month + "-" + year);
+
+        String splitTime[] = time.split(":");
+        int hour = Integer.parseInt(splitTime[0]);
+        int minute = Integer.parseInt(splitTime[1]);
+
+        GregorianCalendar calendar = new GregorianCalendar(year,month,day,hour,minute);
+
+        calendarToTimestamp(calendar);
+    }
+
+    /*public void updateDataDeparture(String s) {
         Calendar c = Calendar.getInstance();
         String splitDate[] = s.split(" ");
         int day = Integer.parseInt(splitDate[0]);
@@ -90,35 +134,37 @@ public class TravelInfo implements Serializable {
         System.out.println("Selected date:" + day + "-" + month + "-" + year);
     }
 
-    public void setTimeDeparture(String s) {
+    public void updateTimeDeparture(String s) {
         String splitTime[] = s.split(":");
         int hour = Integer.parseInt(splitTime[0]);
         int minute = Integer.parseInt(splitTime[1]);
 
         this.setTravelTime(hour, minute);
-    }
+    }*/
 
-    public String getTimeDeparture() {
+    public String formatTimeDeparture() {
         SimpleDateFormat outputTime = new SimpleDateFormat("HH:mm",Locale.ITALIAN);
-        return outputTime.format(dateTimeDeparture.getTime());
+        return outputTime.format(this.timestampToCalendar().getTime());
     }
 
-    private void setTravelDate(int day, int month, int year) {
-        this.dateTimeDeparture.set(year, month, day);
+    /*private void setTravelDate(int day, int month, int year) {
+        GregorianCalendar calendar = new GregorianCalendar(year, month, day);
+
+        this.dateTimeDeparture = calendar.getTimeInMillis();
     }
 
     private void setTravelTime(int hour, int minute) {
         this.dateTimeDeparture.set(Calendar.HOUR_OF_DAY, hour);
         this.dateTimeDeparture.set(Calendar.MINUTE, minute);
-    }
+    }*/
 
-    public String getRegionDestination() {
+    /*public String getRegionDestination() {
         return regionDestination;
     }
 
     public void setRegionDestination(String regionDestination) {
         this.regionDestination = regionDestination;
-    }
+    }*/
 
     public SpotInfo getSpotDestination() {
         return spotDestination;
@@ -176,12 +222,26 @@ public class TravelInfo implements Serializable {
         this.passengersTravel = passengersTravel;
     }
 
+    public boolean isPassenger(String Key) {
+        if (this.passengersTravel != null) {
+            for (User u : this.passengersTravel){
+                if (u.getIdUser().equals(Key))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isFull(){
+        return (this.getPassengersTravel() != null && this.getPassengersTravel().size() == this.getCarTravel().getPassengersNumber());
+    }
+
     public String toString() {
         return "TravelInfo: " +
                 "\n" + this.addressDeparture.toString() +
-                "\nDate: " + this.dateTimeDeparture.get(Calendar.DAY_OF_MONTH) + this.dateTimeDeparture.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ITALIAN) +
-                "\nTime: " + this.dateTimeDeparture.get(Calendar.HOUR_OF_DAY) + this.dateTimeDeparture.get(Calendar.MINUTE) +
-                "\nRegion: " + this.regionDestination +
+                "\nDate: " + timestampToCalendar().get(Calendar.DAY_OF_MONTH) + " " + timestampToCalendar().getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ITALIAN) +
+                "\nTime: " + timestampToCalendar().get(Calendar.HOUR_OF_DAY) + ":" + timestampToCalendar().get(Calendar.MINUTE) +
                 "\n" + this.spotDestination.toString() +
                 "\nPrice: " + this.priceTravel +
                 "\n" + this.carTravel.toString() +
@@ -189,5 +249,4 @@ public class TravelInfo implements Serializable {
                 "\nNote: " + this.noteTravel +
                 "\n" + this.ownerTravel.toString();
     }
-
 }

@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -73,6 +72,8 @@ public class ModifyActivity extends AppCompatActivity implements GoogleApiClient
 
     private ArrayList<SpotInfo> selectedRegionSpot;
 
+    private String timeTravel = " ", dateTravel = " ";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +106,7 @@ public class ModifyActivity extends AppCompatActivity implements GoogleApiClient
         streetDepartureAutocompleteView.setAdapter(streetAdapter);
 
         datePickerButton = (Button) findViewById(R.id.modifyDateButton);
-        datePickerButton.setText(toModifyTravel.getDataDeparture());
+        datePickerButton.setText(toModifyTravel.formatDataDeparture());
         datePickerButton.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -118,12 +119,13 @@ public class ModifyActivity extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void afterTextChanged(Editable s) {
-                toModifyTravel.setDataDeparture(datePickerButton.getText().toString());
+                //toModifyTravel.updateDataDeparture(datePickerButton.getText().toString());
+                dateTravel = datePickerButton.getText().toString();
             }
         });
 
         timePickerButton = (Button) findViewById(R.id.modifyTimeButton);
-        timePickerButton.setText(toModifyTravel.getTimeDeparture());
+        timePickerButton.setText(toModifyTravel.formatTimeDeparture());
         timePickerButton.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -136,7 +138,8 @@ public class ModifyActivity extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void afterTextChanged(Editable s) {
-                toModifyTravel.setTimeDeparture(timePickerButton.getText().toString());
+                //toModifyTravel.updateTimeDeparture(timePickerButton.getText().toString());
+                timeTravel = timePickerButton.getText().toString();
             }
         });
 
@@ -158,8 +161,6 @@ public class ModifyActivity extends AppCompatActivity implements GoogleApiClient
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 spinnerSpotItemSelected(spotDestinationSpinner, parentView, selectedItemView, position, id);
-
-                toModifyTravel.setRegionDestination(parentView.getItemAtPosition(position).toString());
             }
 
             @Override
@@ -225,12 +226,15 @@ public class ModifyActivity extends AppCompatActivity implements GoogleApiClient
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spotSpinner.setAdapter(adapter);
 
-            int spotPosition = adapter.getPosition(toModifyTravel.getSpotDestination().getNameSpot());
+            int spotPosition = adapter.getPosition(toModifyTravel.getSpotDestination().getTitle());
             spotSpinner.setSelection(spotPosition);
         }
     }
 
     public void modifyCarListener(View w) {
+        if (!dateTravel.equals(" ") && timeTravel.equals(" ")){
+
+        }
         System.out.println("I'm editing the travel..." + toModifyTravel.toString());
 
         Intent intent = this.getIntent();

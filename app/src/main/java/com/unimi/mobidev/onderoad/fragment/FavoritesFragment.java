@@ -10,51 +10,47 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.activity.CreateActivity;
 import com.unimi.mobidev.onderoad.activity.TravelInfoActivity;
 import com.unimi.mobidev.onderoad.adapter.TravelDetailAdapter;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
-import com.unimi.mobidev.onderoad.model.User;
 import com.unimi.mobidev.onderoad.other.TravelDetail;
 
 import java.util.ArrayList;
 
-import static android.app.Activity.RESULT_OK;
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class FavoritesFragment extends Fragment {
-    private static final int CREATE_ACTIVITY_REQUEST = 1;
 
     private ListView travelListView;
     //TODO: Probabilmente questo arraylist non servirà più quando ci sarà il server
     private ArrayList<TravelDetail> travelsList;
-    private TravelInfo detail;
-    private TravelDetail detailToView;
     private TravelDetailAdapter travelAdapter;
 
     private FloatingActionButton addTravel;
 
-    //TODO: Esempio di viaggio, da eliminare
-    private TravelInfo temp = new TravelInfo(new ArrayList<User>(4));
-
+    private FirebaseDatabase database;
 
     public FavoritesFragment() {
         System.out.println("In Favorites Fragment...");
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_favorites, container, false);
-        this.detail = new TravelInfo();
         this.travelsList = new ArrayList<>();
         this.travelAdapter = new TravelDetailAdapter(this.getActivity().getApplicationContext(), R.layout.travel_detail_layout, this.travelsList);
 
-        //TODO: Esempio da eliminare
-        this.travelAdapter.addItem(new TravelDetail(this.getActivity().getApplicationContext(), temp));
+        database = FirebaseDatabase.getInstance();
+
+        DatabaseReference ref = database.getReference();
+        ref.child("travels").addValueEventListener(dataToRetrieve);
 
         travelListView = (ListView) v.findViewById(R.id.travelListViewFavorites);
         travelListView.setAdapter(this.travelAdapter);
@@ -65,17 +61,16 @@ public class FavoritesFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                final Intent create = new Intent(FavoritesFragment.this.getActivity(), CreateActivity.class);
+                final Intent createIntent = new Intent(FavoritesFragment.this.getActivity(), CreateActivity.class);
 
-                startActivityForResult(create, CREATE_ACTIVITY_REQUEST);
+                startActivity(createIntent);
             }
         });
-
 
         return v;
     }
 
-    @Override
+    /*@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CREATE_ACTIVITY_REQUEST) {
@@ -88,20 +83,45 @@ public class FavoritesFragment extends Fragment {
                 travelAdapter.notifyDataSetChanged();
             }
         }
-    }
+    }*/
 
     private AdapterView.OnItemClickListener boxSelectedListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             TravelDetail selectedBox = (TravelDetail) parent.getItemAtPosition(position);
             TravelInfo selectedBoxInfo = selectedBox.getCurrentTravel();
+            String selectedBoxKey = selectedBox.getTravelKey();
 
             System.out.println("Clicked item: " + selectedBox.toString());
             System.out.println("Clicked travel: " + selectedBoxInfo.toString());
 
             Intent infoIntent = new Intent(FavoritesFragment.this.getActivity(), TravelInfoActivity.class);
             infoIntent.putExtra("TravelInfo", selectedBoxInfo);
+            infoIntent.putExtra("TravelKey",selectedBoxKey);
             startActivity(infoIntent);
+        }
+    };
+
+    private ValueEventListener dataToRetrieve = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            String currentUserKey = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            travelAdapter.clear();
+            for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+
+                TravelInfo temp = postSnapshot.getValue(TravelInfo.class);
+                if(temp.getOwnerTravel().getIdUser().equals(currentUserKey) || temp.isPassenger(currentUserKey)) {
+                    System.out.println("Adding new travel...");
+                    travelAdapter.addItem(new TravelDetail(FavoritesFragment.this.getActivity().getApplicationContext(), temp, postSnapshot.getKey()));
+                }
+            }
+            travelAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
         }
     };
 }

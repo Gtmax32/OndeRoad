@@ -2,11 +2,12 @@ package com.unimi.mobidev.onderoad.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
@@ -19,15 +20,20 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.unimi.mobidev.onderoad.R;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.unimi.mobidev.onderoad.model.User;
 
 import java.util.Arrays;
 
@@ -41,6 +47,26 @@ public class LoginActivity extends AppCompatActivity {
     private Bundle userInfo;
 
     private AccessToken currentToken;
+
+    private FirebaseAuth mAuth;
+
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+    private ProgressDialog authenticationProgressDialog;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if(currentUser != null){
+            System.out.println("Utente già autenticato!");
+            loginIntent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(loginIntent);
+        }
+
+    }
 
     @TargetApi(21)
     @Override
@@ -70,48 +96,71 @@ public class LoginActivity extends AppCompatActivity {
 
         }
 
+        mAuth = FirebaseAuth.getInstance();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.nameToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.app_name);
         // TODO: Inserire l'icona dell'applicazione
         getSupportActionBar().setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_beach_access_black_24px, null));
 
+        authenticationProgressDialog = new ProgressDialog(this);
+        authenticationProgressDialog.setMessage(getApplicationContext().getResources().getString(R.string.login_progress_message));
+        authenticationProgressDialog.setCancelable(false);
+
         cm = CallbackManager.Factory.create();
 
         loginButton = (LoginButton) findViewById(R.id.loginButton);
 
-        if (AccessToken.getCurrentAccessToken() == null) {
-            loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_birthday", "user_friends"));
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_birthday", "user_friends"));
 
-            loginButton.registerCallback(cm, new FacebookCallback<LoginResult>() {
-                @Override
-                public void onSuccess(LoginResult loginResult) {
-                    System.out.println("In onSuccess...");
-                    appData = getSharedPreferences("UserData", Context.MODE_PRIVATE);
+        loginButton.registerCallback(cm, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                authenticationProgressDialog.show();
+                handleFacebookAccessToken(loginResult.getAccessToken());
 
-                    currentToken = loginResult.getAccessToken();
+                /*System.out.println("In onSuccess...");
+                appData = getSharedPreferences("UserData", Context.MODE_PRIVATE);
 
-                    GraphRequest request = GraphRequest.newMeRequest(currentToken, userCallBackInfo);
-                    Bundle parameters = new Bundle();
-                    parameters.putString("fields", "first_name,middle_name,last_name,email,id");
-                    request.setParameters(parameters);
-                    request.executeAsync();
+                currentToken = loginResult.getAccessToken();
 
-                    loginIntent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(loginIntent);
-                }
+                AuthCredential credential = FacebookAuthProvider.getCredential(currentToken.getToken());
 
-                @Override
-                public void onCancel() {
-                    System.out.println("In onCancel...");
-                }
+                mAuth.signInWithCredential(credential).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            System.out.println("Name: " + user.getDisplayName() + "\nEmail" + user.getEmail() + "\nEverything: " + user.toString());
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
-                @Override
-                public void onError(FacebookException exception) {
-                    System.out.println("In onError...");
-                }
-            });
-        } else {
+                GraphRequest request = GraphRequest.newMeRequest(currentToken, userCallBackInfo);
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "first_name,middle_name,last_name,email,id");
+                request.setParameters(parameters);
+                request.executeAsync();
+
+                loginIntent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(loginIntent);*/
+            }
+
+            @Override
+            public void onCancel() {
+                System.out.println("In onCancel...");
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                System.out.println("In onError...");
+            }
+        });
+        /*} else {
             appData = getSharedPreferences("UserData", Context.MODE_PRIVATE);
 
             GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), userCallBackInfo);
@@ -122,6 +171,43 @@ public class LoginActivity extends AppCompatActivity {
 
             loginIntent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(loginIntent);
+        }*/
+    }
+
+    private void handleFacebookAccessToken(AccessToken token) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user);
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            updateUI(null);
+                        }
+                    }
+                });
+    }
+
+    private void updateUI(FirebaseUser user) {
+        if (user != null) {
+            System.out.println("ID: " + user.getUid() +"\nName: " + user.getDisplayName() + "\nEmail" + user.getEmail() + "\nEverything: " + user.toString());
+
+            User current = new User(user.getUid(), user.getDisplayName(), user.getEmail());
+
+            DatabaseReference ref = database.getReference();
+
+            ref.child("users").child(user.getUid()).setValue(current);
+
+            authenticationProgressDialog.hide();
+            loginIntent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(loginIntent);
+        } else {
+            Toast.makeText(getApplicationContext(),"Errore nella registrazione dell'utente!",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -146,7 +232,6 @@ public class LoginActivity extends AppCompatActivity {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }
-                return;
             }
 
             // other 'case' lines to check for other
@@ -154,7 +239,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private GraphRequest.GraphJSONObjectCallback userCallBackInfo = new GraphRequest.GraphJSONObjectCallback() {
+    /*private GraphRequest.GraphJSONObjectCallback userCallBackInfo = new GraphRequest.GraphJSONObjectCallback() {
         @Override
         public void onCompleted(JSONObject object, GraphResponse response) {
             userInfo = new Bundle();
@@ -185,5 +270,5 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-    };
+    };*/
 }

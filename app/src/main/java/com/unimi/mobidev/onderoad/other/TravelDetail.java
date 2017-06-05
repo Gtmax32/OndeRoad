@@ -3,9 +3,11 @@ package com.unimi.mobidev.onderoad.other;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
 
@@ -15,29 +17,46 @@ import com.unimi.mobidev.onderoad.model.TravelInfo;
 
 public class TravelDetail extends LinearLayout {
     private TravelInfo currentTravel;
+    private String travelKey;
 
     private View rootView;
 
+    private ImageView passengerDriverImage;
     private TextView itineraryDepartureText;
     private TextView itineraryDestinationText;
     private TextView dateTimeText;
     private TextView priceText;
 
-    public TravelDetail(Context context, TravelInfo travelInfo) {
+    private boolean isOwner;
+
+    public TravelDetail(Context context, TravelInfo travelInfo, String travelKey) {
         super(context);
-        init(context, travelInfo);
+        init(context, travelInfo, travelKey);
     }
 
-    public TravelDetail(Context context, AttributeSet attributeSet, TravelInfo travelInfo) {
+    public TravelDetail(Context context, AttributeSet attributeSet, TravelInfo travelInfo, String travelKey) {
         super(context, attributeSet);
-        init(context, travelInfo);
+        init(context, travelInfo, travelKey);
     }
 
-    private void init(Context context, TravelInfo travelInfo) {
+    private void init(Context context, TravelInfo travelInfo, String travelKey) {
         String date, time, departure, destination;
         int price;
 
         this.rootView = inflate(context, R.layout.travel_detail_layout, this);
+
+        this.isOwner = FirebaseAuth.getInstance().getCurrentUser().getUid().equals(travelInfo.getOwnerTravel().getIdUser());
+
+        this.passengerDriverImage = (ImageView) rootView.findViewById(R.id.carDetailImage);
+
+        if (this.isOwner) {
+            this.passengerDriverImage.setImageResource(R.drawable.ic_action_driver);
+            System.out.println("Is Owner!");
+        }
+        else {
+            this.passengerDriverImage.setImageResource(R.drawable.ic_action_passenger);
+            System.out.println("Is Passenger!");
+        }
 
         this.dateTimeText = (TextView) rootView.findViewById(R.id.dateTimeTravel);
         this.itineraryDepartureText = (TextView) rootView.findViewById(R.id.itineraryTravelDeparture);
@@ -47,10 +66,10 @@ public class TravelDetail extends LinearLayout {
         this.currentTravel = travelInfo;
 
         if (this.currentTravel != null) {
-            date = this.currentTravel.getDataDeparture();
-            time = this.currentTravel.getTimeDeparture();
+            date = this.currentTravel.formatDataDeparture();
+            time = this.currentTravel.formatTimeDeparture();
             departure = this.currentTravel.getAddressDeparture().getProvinceInfo();
-            destination = this.currentTravel.getSpotDestination().getNameSpot();
+            destination = this.currentTravel.getSpotDestination().getTitle();
             price = this.currentTravel.getPriceTravel();
 
             this.dateTimeText.setText(date + " " + time);
@@ -58,6 +77,11 @@ public class TravelDetail extends LinearLayout {
             this.itineraryDestinationText.setText(destination);
             this.priceText.setText(price + "");
         }
+
+        this.travelKey = travelKey;
+
+        this.passengerDriverImage.postInvalidate();
+
     }
 
     public void setItineraryDepartureText(TextView itineraryDepartureText) {
@@ -114,6 +138,14 @@ public class TravelDetail extends LinearLayout {
 
     public void setCurrentTravel(TravelInfo currentTravel) {
         this.currentTravel = currentTravel;
+    }
+
+    public String getTravelKey() {
+        return travelKey;
+    }
+
+    public void setTravelKey(String travelKey) {
+        this.travelKey = travelKey;
     }
 
     public String toString(){

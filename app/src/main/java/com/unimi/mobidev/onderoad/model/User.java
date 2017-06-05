@@ -8,16 +8,24 @@ import java.io.Serializable;
 
 public class User implements Serializable{
 
+    private String idUser;
     private String nameUser;
-    private String surnameUser;
-    private String facebookIdUser;
     private String emailUser;
 
-    public User(String nameUser, String surnameUser, String facebookIdUser, String emailUser) {
+    public User(){}
+
+    public User(String ID, String nameUser, String emailUser) {
+        this.idUser = ID;
         this.nameUser = nameUser;
-        this.surnameUser = surnameUser;
-        this.facebookIdUser = facebookIdUser;
         this.emailUser = emailUser;
+    }
+
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
     }
 
     public String getNameUser() {
@@ -28,7 +36,7 @@ public class User implements Serializable{
         this.nameUser = nameUser;
     }
 
-    public String getSurnameUser() {
+    /*public String getSurnameUser() {
         return surnameUser;
     }
 
@@ -42,7 +50,7 @@ public class User implements Serializable{
 
     public void setFacebookIdUser(String facebookIdUser) {
         this.facebookIdUser = facebookIdUser;
-    }
+    }*/
 
     public String getEmailUser() {
         return emailUser;
@@ -55,8 +63,6 @@ public class User implements Serializable{
     public String toString(){
         return "User: " +
                "\nName: " + this.nameUser +
-               "\nSurname: " + this.surnameUser +
-               "\nFacebook ID: " + this.facebookIdUser +
                "\nEmail: " + this.emailUser;
     }
 }
