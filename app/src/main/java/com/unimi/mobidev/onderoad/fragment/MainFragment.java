@@ -1,5 +1,6 @@
 package com.unimi.mobidev.onderoad.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,6 +34,8 @@ public class MainFragment extends Fragment {
 
     private FirebaseDatabase database;
 
+    private ProgressDialog loadingProgressDialog;
+
     public MainFragment() {
         System.out.println("In MainFragment...");
     }
@@ -41,7 +44,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
 
-        suggestionNewTravel = (TextView) v.findViewById(R.id.addNewTravel);
+        suggestionNewTravel = (TextView) v.findViewById(R.id.addNewTravelMain);
 
         this.travelsList = new ArrayList<>();
         this.travelAdapter = new TravelDetailAdapter(this.getActivity().getApplicationContext(), R.layout.travel_detail_layout, this.travelsList);
@@ -55,6 +58,10 @@ public class MainFragment extends Fragment {
         travelListView = (ListView) v.findViewById(R.id.travelListViewMain);
         travelListView.setAdapter(this.travelAdapter);
         travelListView.setOnItemClickListener(boxSelectedListener);
+
+        loadingProgressDialog = new ProgressDialog(v.getContext());
+        loadingProgressDialog.setMessage(v.getContext().getResources().getString(R.string.loading_travel_list_message));
+        loadingProgressDialog.setCancelable(false);
 
         return v;
     }

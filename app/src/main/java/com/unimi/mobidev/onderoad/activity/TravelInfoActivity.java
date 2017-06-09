@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -54,7 +55,6 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
 
     private boolean isOwner;
 
-    private boolean alreadyPassenger;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -251,9 +251,10 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void shareTravel() {
+        Uri traveDeepLink = buildDeepLink(Uri.parse(getResources().getString(R.string.app_deeplink) + travelDisplayedKey));
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "Vieni a surfare?\n" + traveDeepLink);
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
     }
@@ -310,6 +311,8 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         Toast.makeText(getApplicationContext(),getString(R.string.passengers_added_perfectly_message) + " " + travelDisplayed.getSpotDestination().getTitle() + ".",Toast.LENGTH_SHORT).show();
 
         invalidateOptionsMenu();
+
+        this.recreate();
     }
 
     private void sendDriverEmail() {
@@ -326,7 +329,7 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CREATE_ACTIVITY_REQUEST) {
+        /*if (requestCode == CREATE_ACTIVITY_REQUEST) {
             if (resultCode == RESULT_OK) {
                 travelDisplayed = (TravelInfo) data.getExtras().get("TravelInfo");
                 System.out.println("Receiving data from ModifyActivity..." + travelDisplayed.toString());
@@ -337,6 +340,28 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
 
             }
         }
+        else*/
+        /*if (requestCode == INVITATION_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                System.out.println("Invitation succesfull");
+            }
+        }*/
+    }
+
+    public Uri buildDeepLink(Uri deepLink) {
+        // Get this app's package name.
+        String packageName = getApplicationContext().getPackageName();
+
+        // Build the link with all required parameters
+        Uri.Builder builder = new Uri.Builder()
+                .scheme("https")
+                .authority(getResources().getString(R.string.unique_app_code) + ".app.goo.gl")
+                .path("/")
+                .appendQueryParameter("link", deepLink.toString())
+                .appendQueryParameter("apn", packageName);
+
+        // Return the completed deep link.
+        return builder.build();
     }
 
     @Override

@@ -6,7 +6,7 @@
     android:elevation="5dp"
     android:background="@color/colorTravelDetail">
 
-    <!--Left part-->
+    <!--Left part
 
     <LinearLayout
         android:id="@+id/travelLeftLayout"
@@ -21,8 +21,7 @@
             android:id="@+id/carDetailImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_action_driver"/>
+            android:layout_gravity="center_vertical"/>
 
         <View
             android:id="@+id/divider"
@@ -33,57 +32,56 @@
             android:layout_marginRight="10dp" />
 
     </LinearLayout>
+    -->
 
     <!--Right part-->
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp">
+        android:layout_margin="10dp">
 
         <TextView
             android:id="@+id/priceTravel"
             android:layout_width="65dp"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ic_action_euro"
-            android:textColor="@color/colorBlack"
-            android:gravity="center_vertical"
-            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true" />
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:drawableEnd="@drawable/ic_action_euro"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorBlack" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_alignParentStart="true"
-            android:layout_centerInParent="true">
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/dateTimeTravel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorBlack"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/colorBlack" />
 
             <TextView
                 android:id="@+id/itineraryTravelDeparture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_action_departure"
-                android:textColor="@color/colorBlack"
                 android:layout_gravity="center_vertical"
-                android:layout_marginBottom="5dp"/>
+                android:layout_marginBottom="5dp"
+                android:drawableStart="@drawable/ic_action_departure"
+                android:textColor="@color/colorBlack" />
 
             <TextView
                 android:id="@+id/itineraryTravelDestination"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:drawableStart="@drawable/ic_action_destination"
-                android:textColor="@color/colorBlack"
-                android:layout_gravity="center_vertical"/>
+                android:textColor="@color/colorBlack" />
 
         </LinearLayout>
 

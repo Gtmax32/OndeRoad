@@ -3,6 +3,10 @@
 
     <string name="facebook_app_id">1262194670479172</string>
 
+    <string name="app_deeplink">https://travelsharing.com/info_travel/</string>
+
+    <string name="unique_app_code">whx3m</string>
+
     <string name="main_fragment">Home</string>
 
     <string name="favorites_fragment">My Travel</string>
@@ -46,10 +50,9 @@
     <string name="info_travel">Dettagli Viaggio</string>
 
     <string-array name="support_types">
-        <item>Soft rack</item>
         <item>Barre porta pacchi</item>
+        <item>Soft rack</item>
         <item>Dentro l\'auto</item>
-        <item>Fascioni</item>
     </string-array>
 
     <string name="actual_price">Prezzo att.</string>
@@ -136,7 +139,9 @@
 
     <string name="mail_label">E-mail</string>
 
-    <string name="add_new_travel">Non ci sono viaggi?\nVai in MyTravel e crea il tuo viaggio!</string>
+    <string name="add_new_travel_main">Non ci sono viaggi?\nVai in MyTravel e crea il tuo viaggio!</string>
+
+    <string name="add_new_travel_favorites">Cosa aspetti a partire?\nTocca il pulsante + e crea il tuo viaggio!</string>
 
     <string name="login_progress_message">Login in corso</string>
 
@@ -153,11 +158,28 @@
     <string name="add_settings">Aggiungiti al viaggio</string>
 
     <string name="passenger_mail_settings">Contatta guidatore</string>
+
     <string name="passenger_navigation_settings">Vai al punto di ritrovo</string>
+
     <string name="mail_error_message">Non ci sono passeggeri a cui inviare mail!</string>
+
     <string name="passengers_added_perfectly_message">Sei diventato un passeggero del viaggio per</string>
+
     <string name="full_car_message">La macchina non ha più posti disponibili.</string>
+
     <string name="adding_like_passenger_message">Vuoi aggiungerti come passeggero a questo viaggio?</string>
+
     <string name="deleting_travel_message">Vuoi davvero cancellare questo viaggio?</string>
+
+    <string name="loading_travel_message">Un attimo di pazienza</string>
+
+    <string name="driver_travel">Guido io</string>
+
+    <string name="passenger_travel">Sono un passeggero</string>
+
+    <string name="city_selection_alert_message">è troppo grande come punto d\'incontro. Seleziona magari una via o un posto conosciuto.</string>
+
+    <string name="price_not_set_alert_message">Il prezzo del viaggio è impostato a 0.\nNon è possibile creare un viaggio a costo 0.</string>
+    <string name="loading_travel_list_message">Sto cercando i viaggi per te</string>
 
 </resources>

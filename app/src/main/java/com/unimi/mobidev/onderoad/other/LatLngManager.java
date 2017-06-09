@@ -87,7 +87,7 @@ public class LatLngManager implements LocationListener {
             return new LatLngBounds(southwest, northeast);
         }
         else
-            Toast.makeText(this.activityContext, R.string.no_provider_enabled,Toast.LENGTH_LONG).show();
+            //Toast.makeText(this.activityContext, R.string.no_provider_enabled,Toast.LENGTH_LONG).show();
             return null;
     }
 

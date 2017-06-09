@@ -54,6 +54,10 @@ public class TravelDetailAdapter extends ArrayAdapter<TravelDetail> {
         listTravel.clear();
     }
 
+    public int size(){
+        return listTravel.size();
+    }
+
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
         TravelDetail holder;

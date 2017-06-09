@@ -43,7 +43,7 @@ public class PriceSelector extends LinearLayout {
         rootView = inflate(context, R.layout.plus_minus_button,this);
 
         priceTextView = (TextView) findViewById(R.id.priceTextView);
-        priceTextView.setText("10");
+        priceTextView.setText("0");
         plusButton = rootView.findViewById(R.id.plusButton);
         minusButton = rootView.findViewById(R.id.minusButton);
 

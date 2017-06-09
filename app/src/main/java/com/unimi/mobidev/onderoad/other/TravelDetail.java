@@ -21,7 +21,6 @@ public class TravelDetail extends LinearLayout {
 
     private View rootView;
 
-    private ImageView passengerDriverImage;
     private TextView itineraryDepartureText;
     private TextView itineraryDestinationText;
     private TextView dateTimeText;
@@ -47,7 +46,7 @@ public class TravelDetail extends LinearLayout {
 
         this.isOwner = FirebaseAuth.getInstance().getCurrentUser().getUid().equals(travelInfo.getOwnerTravel().getIdUser());
 
-        this.passengerDriverImage = (ImageView) rootView.findViewById(R.id.carDetailImage);
+        /*this.passengerDriverImage = (ImageView) rootView.findViewById(R.id.carDetailImage);
 
         if (this.isOwner) {
             this.passengerDriverImage.setImageResource(R.drawable.ic_action_driver);
@@ -56,7 +55,7 @@ public class TravelDetail extends LinearLayout {
         else {
             this.passengerDriverImage.setImageResource(R.drawable.ic_action_passenger);
             System.out.println("Is Passenger!");
-        }
+        }*/
 
         this.dateTimeText = (TextView) rootView.findViewById(R.id.dateTimeTravel);
         this.itineraryDepartureText = (TextView) rootView.findViewById(R.id.itineraryTravelDeparture);
@@ -79,10 +78,9 @@ public class TravelDetail extends LinearLayout {
         }
 
         this.travelKey = travelKey;
-
-        this.passengerDriverImage.postInvalidate();
-
     }
+
+
 
     public void setItineraryDepartureText(TextView itineraryDepartureText) {
         this.itineraryDepartureText = itineraryDepartureText;

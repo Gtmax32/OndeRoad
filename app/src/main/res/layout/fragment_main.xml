@@ -6,12 +6,12 @@
     android:background="@color/colorBackground">
 
     <TextView
-        android:id="@+id/addNewTravel"
+        android:id="@+id/addNewTravelMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
         android:gravity="center_horizontal"
-        android:text="@string/add_new_travel" />
+        android:text="@string/add_new_travel_main" />
 
     <ListView
         android:id="@+id/travelListViewMain"

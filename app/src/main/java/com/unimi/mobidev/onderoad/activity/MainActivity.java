@@ -1,12 +1,12 @@
 package com.unimi.mobidev.onderoad.activity;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,22 +14,32 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.appinvite.AppInvite;
+import com.google.android.gms.appinvite.AppInviteInvitationResult;
+import com.google.android.gms.appinvite.AppInviteReferral;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.adapter.TabsAdapter;
+import com.unimi.mobidev.onderoad.model.TravelInfo;
 
-import java.util.ArrayList;
-
-public class MainActivity extends AppCompatActivity {
-    private ArrayList<Drawable> tabIcons;
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, ResultCallback<AppInviteInvitationResult>{
     private ViewPager viewPager;
     private TabsAdapter adapter;
+
+    private GoogleApiClient googleApiClient;
+    private ProgressDialog loadingProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        initIconList();
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         TabLayout.Tab list = tabLayout.newTab(), favorites = tabLayout.newTab(),
@@ -38,9 +48,6 @@ public class MainActivity extends AppCompatActivity {
         View listView = getLayoutInflater().inflate(R.layout.tab_layout, null);
         ImageView listIcon = (ImageView) listView.findViewById(R.id.imageView);
         TextView listLabel = (TextView) listView.findViewById(R.id.textView);
-
-        //TODO: Ripristinare questo codice, inserendo inizialmente la tab selezionata a grigio
-        //listIcon.setImageResource(R.drawable.ic_list_white_24dp);
         listIcon.setImageResource(R.drawable.ic_action_home );
         listLabel.setText(R.string.main_fragment);
 
@@ -67,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         spot.setCustomView(spotView);
         settings.setCustomView(settView);
 
-        tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#000000"));
+        tabLayout.setSelectedTabIndicatorColor(Color.BLACK);
 
         tabLayout.addTab(list, 0);
         tabLayout.addTab(favorites, 1);
@@ -86,43 +93,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                //TODO: Quando avrò le icone grigie, dovrò riabilitare questo codice per modificare correttamente il colore
-                /*ImageView tabImage = (ImageView) tab.getCustomView().findViewById(R.id.imageView);
-                switch (tab.getPosition()) {
-                    case 0:
-                        tabImage.setImageDrawable(getIcon(tab.getPosition() + 1));
-                        break;
-                    case 1:
-                        tabImage.setImageDrawable(getIcon(tab.getPosition() + 2));
-                        break;
-                    case 2:
-                        tabImage.setImageDrawable(getIcon(tab.getPosition() + 3));
-                        break;
-                    case 3:
-                        tabImage.setImageDrawable(getIcon(tab.getPosition() + 4));
-                        break;
-                }*/
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                //TODO: Quando avrò le icone grigie, dovrò riabilitare questo codice per modificare correttamente il colore
-                /*ImageView tabImage = (ImageView) tab.getCustomView().findViewById(R.id.imageView);
-                switch(tab.getPosition()){
-                    case 0:
-                        tabImage.setImageDrawable(getIcon(tab.getPosition()));
-                        break;
-                    case 1:
-                        tabImage.setImageDrawable(getIcon(tab.getPosition() + 1));
-                        break;
-                    case 2:
-                        tabImage.setImageDrawable(getIcon(tab.getPosition() + 2));
-                        break;
-                    case 3:
-                        tabImage.setImageDrawable(getIcon(tab.getPosition() + 3));
-                        break;
-                }*/
             }
 
             @Override
@@ -130,23 +105,18 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-    }
 
-    private void initIconList() {
-        tabIcons = new ArrayList<>();
-        //ResourcesCompat.getDrawable(getResources(), R.drawable.ic_list_black_24dp),null)
-        tabIcons.add(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_list_black_24dp,null));
-        tabIcons.add(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_list_white_24dp,null));
-        tabIcons.add(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_star_black_24dp,null));
-        tabIcons.add(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_grade_white_24dp,null));
-        tabIcons.add(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_place_black_24dp,null));
-        tabIcons.add(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_place_white_24dp,null));
-        tabIcons.add(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_settings_black_24dp,null));
-        tabIcons.add(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_settings_white_24dp,null));
-    }
+        loadingProgressDialog = new ProgressDialog(this);
+        loadingProgressDialog.setMessage(getApplicationContext().getResources().getString(R.string.loading_travel_message));
+        loadingProgressDialog.setCancelable(false);
 
-    private Drawable getIcon(int index) {
-        return tabIcons.get(index);
+        // Build GoogleApiClient with AppInvite API for receiving deep links
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(AppInvite.API)
+                .build();
+
+        AppInvite.AppInviteApi.getInvitation(googleApiClient, this, false).setResultCallback(this);
     }
 
     @Override
@@ -169,6 +139,57 @@ public class MainActivity extends AppCompatActivity {
                 });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        System.out.println("Connection failed!");
+    }
+
+    @Override
+    public void onResult(@NonNull AppInviteInvitationResult result) {
+        if (result.getStatus().isSuccess()) {
+            loadingProgressDialog.show();
+            Intent intent = result.getInvitationIntent();
+            String deepLink = AppInviteReferral.getDeepLink(intent);
+
+            System.out.println("Deeplink received!" + "\nData arrived: " + deepLink);
+
+            String[] splitUri = deepLink.split("/");
+            System.out.println("Size: " + splitUri.length + "ID: " + splitUri[4]);
+
+            String travelID = splitUri[4];
+
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("travels");
+
+            ref.child(travelID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.getValue() != null){
+                        TravelInfo temp = dataSnapshot.getValue(TravelInfo.class);
+                        System.out.println(temp.toString() + " " + dataSnapshot.getKey());
+
+                        if(temp != null){
+                            Intent sharedTravel = new Intent(MainActivity.this.getApplicationContext(),TravelInfoActivity.class);
+
+                            sharedTravel.putExtra("TravelInfo", temp);
+                            sharedTravel.putExtra("TravelKey", dataSnapshot.getKey());
+
+                            loadingProgressDialog.hide();
+
+                            startActivity(sharedTravel);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        } else {
+            System.out.println("getInvitation: no deep link found.");
+        }
     }
 }
 

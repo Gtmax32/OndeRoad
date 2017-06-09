@@ -1,5 +1,6 @@
 package com.unimi.mobidev.onderoad.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -16,7 +19,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.activity.CreateActivity;
 import com.unimi.mobidev.onderoad.activity.TravelInfoActivity;
@@ -28,14 +30,23 @@ import java.util.ArrayList;
 
 public class FavoritesFragment extends Fragment {
 
-    private ListView travelListView;
-    //TODO: Probabilmente questo arraylist non servirà più quando ci sarà il server
-    private ArrayList<TravelDetail> travelsList;
-    private TravelDetailAdapter travelAdapter;
+    private ListView driverTravelListView;
+    private ArrayList<TravelDetail> driverTravelsList;
+    private TravelDetailAdapter driverTravelAdapter;
+    private RelativeLayout driverLabelLayout;
+
+    private ListView passengerTravelListView;
+    private ArrayList<TravelDetail> passengerTravelsList;
+    private TravelDetailAdapter passengerTravelAdapter;
+    private RelativeLayout passengerLabelLayout;
+
+    private TextView addTravelTextView;
 
     private FloatingActionButton addTravel;
 
     private FirebaseDatabase database;
+
+    private ProgressDialog loadingProgressDialog;
 
     public FavoritesFragment() {
         System.out.println("In Favorites Fragment...");
@@ -44,17 +55,29 @@ public class FavoritesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_favorites, container, false);
-        this.travelsList = new ArrayList<>();
-        this.travelAdapter = new TravelDetailAdapter(this.getActivity().getApplicationContext(), R.layout.travel_detail_layout, this.travelsList);
+        addTravelTextView = (TextView) v.findViewById(R.id.addNewTravelFavorites);
+
+        this.driverTravelsList = new ArrayList<>();
+        this.driverTravelAdapter = new TravelDetailAdapter(this.getActivity().getApplicationContext(), R.layout.travel_detail_layout, this.driverTravelsList);
+
+        this.passengerTravelsList = new ArrayList<>();
+        this.passengerTravelAdapter = new TravelDetailAdapter(this.getActivity().getApplicationContext(), R.layout.travel_detail_layout, this.passengerTravelsList);
+
+        this.driverLabelLayout = (RelativeLayout) v.findViewById(R.id.driverTravelsLayout);
+        this.passengerLabelLayout = (RelativeLayout) v.findViewById(R.id.passengerTravelsLayout);
+
+        driverTravelListView = (ListView) v.findViewById(R.id.driverTravelListView);
+        driverTravelListView.setAdapter(this.driverTravelAdapter);
+        driverTravelListView.setOnItemClickListener(boxSelectedListener);
+
+        passengerTravelListView = (ListView) v.findViewById(R.id.passengerTravelListView);
+        passengerTravelListView.setAdapter(this.passengerTravelAdapter);
+        passengerTravelListView.setOnItemClickListener(boxSelectedListener);
 
         database = FirebaseDatabase.getInstance();
 
         DatabaseReference ref = database.getReference();
         ref.child("travels").addValueEventListener(dataToRetrieve);
-
-        travelListView = (ListView) v.findViewById(R.id.travelListViewFavorites);
-        travelListView.setAdapter(this.travelAdapter);
-        travelListView.setOnItemClickListener(boxSelectedListener);
 
         addTravel = (FloatingActionButton) v.findViewById(R.id.addTravel);
         addTravel.setOnClickListener(new View.OnClickListener() {
@@ -67,23 +90,12 @@ public class FavoritesFragment extends Fragment {
             }
         });
 
+        loadingProgressDialog = new ProgressDialog(getActivity());
+        loadingProgressDialog.setMessage(getActivity().getResources().getString(R.string.loading_travel_message));
+        loadingProgressDialog.setCancelable(false);
+
         return v;
     }
-
-    /*@Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CREATE_ACTIVITY_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                detail = (TravelInfo) data.getExtras().get("TravelInfo");
-
-                this.detailToView = new TravelDetail(this.getActivity().getApplicationContext(), detail);
-
-                travelAdapter.addItem(detailToView);
-                travelAdapter.notifyDataSetChanged();
-            }
-        }
-    }*/
 
     private AdapterView.OnItemClickListener boxSelectedListener = new AdapterView.OnItemClickListener() {
         @Override
@@ -105,18 +117,53 @@ public class FavoritesFragment extends Fragment {
     private ValueEventListener dataToRetrieve = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            String currentUserKey = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            loadingProgressDialog.show();
 
-            travelAdapter.clear();
+            String currentUserKey = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            int driverSize, passengerSize;
+            driverTravelAdapter.clear();
+            passengerTravelAdapter.clear();
+
             for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
 
                 TravelInfo temp = postSnapshot.getValue(TravelInfo.class);
-                if(temp.getOwnerTravel().getIdUser().equals(currentUserKey) || temp.isPassenger(currentUserKey)) {
-                    System.out.println("Adding new travel...");
-                    travelAdapter.addItem(new TravelDetail(FavoritesFragment.this.getActivity().getApplicationContext(), temp, postSnapshot.getKey()));
+                if(temp.getOwnerTravel().getIdUser().equals(currentUserKey)){
+                    driverTravelAdapter.addItem(new TravelDetail(FavoritesFragment.this.getActivity().getApplicationContext(), temp, postSnapshot.getKey()));
+                }
+                else if (temp.isPassenger(currentUserKey)){
+                    passengerTravelAdapter.addItem(new TravelDetail(FavoritesFragment.this.getActivity().getApplicationContext(), temp, postSnapshot.getKey()));
                 }
             }
-            travelAdapter.notifyDataSetChanged();
+
+            driverSize = driverTravelAdapter.size();
+            passengerSize = passengerTravelAdapter.size();
+
+            if (driverSize > 0){
+                driverTravelListView.setVisibility(View.VISIBLE);
+                driverLabelLayout.setVisibility(View.VISIBLE);
+                driverTravelAdapter.notifyDataSetChanged();
+            }
+            else{
+                driverTravelListView.setVisibility(View.GONE);
+                driverLabelLayout.setVisibility(View.GONE);
+            }
+
+            if (passengerSize > 0){
+                passengerTravelListView.setVisibility(View.VISIBLE);
+                passengerLabelLayout.setVisibility(View.VISIBLE);
+                passengerTravelAdapter.notifyDataSetChanged();
+            }
+            else{
+                passengerTravelListView.setVisibility(View.GONE);
+                passengerLabelLayout.setVisibility(View.GONE);
+            }
+
+            if (driverSize == 0 && passengerSize == 0)
+                addTravelTextView.setVisibility(View.VISIBLE);
+            else
+                addTravelTextView.setVisibility(View.GONE);
+
+            loadingProgressDialog.hide();
         }
 
         @Override
