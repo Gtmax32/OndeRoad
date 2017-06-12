@@ -22,11 +22,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.adapter.TabsAdapter;
+import com.unimi.mobidev.onderoad.firebase.FirebaseUtils;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, ResultCallback<AppInviteInvitationResult>{
@@ -63,23 +62,23 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         spotIcon.setImageResource(R.drawable.ic_action_spot);
         spotLabel.setText(R.string.spot_fragment);
 
-        View settView = getLayoutInflater().inflate(R.layout.tab_layout, null);
+        /*View settView = getLayoutInflater().inflate(R.layout.tab_layout, null);
         ImageView settIcon = (ImageView) settView.findViewById(R.id.imageView);
         TextView settLabel = (TextView) settView.findViewById(R.id.textView);
         settIcon.setImageResource(R.drawable.ic_action_settings);
-        settLabel.setText(R.string.settings_fragment);
+        settLabel.setText(R.string.settings_fragment);*/
 
         list.setCustomView(listView);
         favorites.setCustomView(favView);
         spot.setCustomView(spotView);
-        settings.setCustomView(settView);
+        //settings.setCustomView(settView);
 
         tabLayout.setSelectedTabIndicatorColor(Color.BLACK);
 
         tabLayout.addTab(list, 0);
         tabLayout.addTab(favorites, 1);
         tabLayout.addTab(spot, 2);
-        tabLayout.addTab(settings, 3);
+        //tabLayout.addTab(settings, 3);
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
@@ -160,33 +159,32 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
             String travelID = splitUri[4];
 
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("travels");
+            FirebaseUtils.getDatabaseReference("travels").child(travelID)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getValue() != null){
+                                TravelInfo temp = dataSnapshot.getValue(TravelInfo.class);
+                                System.out.println(temp.toString() + " " + dataSnapshot.getKey());
 
-            ref.child(travelID).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.getValue() != null){
-                        TravelInfo temp = dataSnapshot.getValue(TravelInfo.class);
-                        System.out.println(temp.toString() + " " + dataSnapshot.getKey());
+                                if(temp != null){
+                                    Intent sharedTravel = new Intent(MainActivity.this.getApplicationContext(),TravelInfoActivity.class);
 
-                        if(temp != null){
-                            Intent sharedTravel = new Intent(MainActivity.this.getApplicationContext(),TravelInfoActivity.class);
+                                    sharedTravel.putExtra("TravelInfo", temp);
+                                    sharedTravel.putExtra("TravelKey", dataSnapshot.getKey());
 
-                            sharedTravel.putExtra("TravelInfo", temp);
-                            sharedTravel.putExtra("TravelKey", dataSnapshot.getKey());
+                                    loadingProgressDialog.hide();
 
-                            loadingProgressDialog.hide();
-
-                            startActivity(sharedTravel);
+                                    startActivity(sharedTravel);
+                                }
+                            }
                         }
-                    }
-                }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                }
-            });
+                        }
+                    });
         } else {
             System.out.println("getInvitation: no deep link found.");
         }

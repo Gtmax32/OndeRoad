@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -23,11 +22,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.unimi.mobidev.onderoad.R;
+import com.unimi.mobidev.onderoad.firebase.FirebaseUtils;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
 import com.unimi.mobidev.onderoad.model.User;
 
@@ -54,6 +54,7 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     private EditText noteActualText;
 
     private boolean isOwner;
+    private int passengersNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +71,21 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         travelDisplayed = (TravelInfo) this.getIntent().getSerializableExtra("TravelInfo");
         travelDisplayedKey = (String) this.getIntent().getSerializableExtra("TravelKey");
 
+        FirebaseUtils.getDatabaseReference("travels").child(this.travelDisplayedKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                travelDisplayed = dataSnapshot.getValue(TravelInfo.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         System.out.println("In TravelInfoActivity: " + travelDisplayed.toString());
 
-        isOwner = FirebaseAuth.getInstance().getCurrentUser().getUid().equals(travelDisplayed.getOwnerTravel().getIdUser());
+        isOwner = FirebaseUtils.getCurrentUser().getUid().equals(travelDisplayed.getOwnerTravel().getIdUser());
 
         passengerDriverImage = (ImageView) findViewById(R.id.carInfoImage);
 
@@ -83,8 +96,6 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.actualTravelMap);
         mapFragment.getMapAsync(this);
-
-        int passengersNumber;
 
         if (travelDisplayed.getPassengersTravel() == null)
             passengersNumber = 0;
@@ -144,11 +155,17 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         if (isOwner)
             inflater.inflate(R.menu.travel_info_driver_menu, menu);
         else {
-            String key = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            boolean condition = !(travelDisplayed.isPassenger(key) && travelDisplayed.isFull());
+            String key = FirebaseUtils.getCurrentUser().getUid();
+            boolean addCondition = !(travelDisplayed.isPassenger(key) || travelDisplayed.isFull()),
+                    removeCondition = travelDisplayed.isPassenger(key);
+
             inflater.inflate(R.menu.travel_info_passenger_menu, menu);
-            menu.findItem(R.id.addSubMenu).setEnabled(condition);
-            menu.findItem(R.id.addSubMenu).setVisible(condition);
+
+            menu.findItem(R.id.addSubMenu).setEnabled(addCondition);
+            menu.findItem(R.id.addSubMenu).setVisible(addCondition);
+
+            menu.findItem(R.id.removeFromTravelSubMenu).setEnabled(removeCondition);
+            menu.findItem(R.id.removeFromTravelSubMenu).setVisible(removeCondition);
         }
 
         return true;
@@ -219,6 +236,27 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
 
                 return true;
 
+            case R.id.removeFromTravelSubMenu:
+                System.out.println("Removing a passengers...");
+
+                AlertDialog.Builder builderRemove = new AlertDialog.Builder(this);
+                builderRemove.setMessage(R.string.removing_passenger_message)
+                        .setCancelable(false)
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                removePassenger();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alertRemove = builderRemove.create();
+                alertRemove.show();
+
+                return true;
+
             case R.id.startMapSubMenu:
                 showSpotMap(travelDisplayed.getAddressDeparture().getLatitudeInfo(), travelDisplayed.getAddressDeparture().getLongitudeInfo(), travelDisplayed.getAddressDeparture().getStreetInfo());
                 return true;
@@ -243,8 +281,22 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void deleteTravel() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("travels").child(travelDisplayedKey);
-        ref.removeValue();
+        FirebaseUtils.deleteTravel(this.travelDisplayedKey);
+
+        if(!this.travelDisplayed.isEmpty()){
+            int passengersNumber = this.travelDisplayed.getPassengersTravel().size(),
+                i = 0;
+            String[] tokens = new String[passengersNumber];
+
+            for(User u: this.travelDisplayed.getPassengersTravel()){
+                tokens[i] = u.getNotificationIdUser();
+                i++;
+            }
+
+            String notificationMessage = "Il guidatore ha eliminato il suo viaggio per " + travelDisplayed.getSpotDestination().getTitle() + ".\nCrea il tuo viaggio e parti lo stesso!";
+
+            FirebaseUtils.sendNotification(this.getApplicationContext(),false,tokens, notificationMessage);
+        }
 
         Toast.makeText(getApplicationContext(),"Il viaggio verso " + travelDisplayed.getSpotDestination().getTitle() + " è stato cancellato.",Toast.LENGTH_SHORT).show();
         finish();
@@ -290,29 +342,46 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void addPassenger() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        User passenger = new User(currentUser.getUid(), currentUser.getDisplayName(), currentUser.getEmail());
+        FirebaseUtils.addPassenger(this.travelDisplayed, this.travelDisplayedKey);
 
-        if(travelDisplayed.getPassengersTravel() == null){
-            ArrayList<User> passengerList = new ArrayList<>();
-            passengerList.add(passenger);
-            this.travelDisplayed.setPassengersTravel(passengerList);
-        }else{
+        String[] token = {this.travelDisplayed.getOwnerTravel().getNotificationIdUser()};
+        String notificationMessage = "Un nuovo passeggero si è aggiunto al tuo viaggio per " + travelDisplayed.getSpotDestination().getTitle() + "!";
 
-            this.travelDisplayed.getPassengersTravel().add(passenger);
-        }
-
-        Map<String,Object> dataToUpdate = new HashMap<>();
-        dataToUpdate.put(this.travelDisplayedKey,this.travelDisplayed);
-
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("travels");
-        ref.updateChildren(dataToUpdate);
+        FirebaseUtils.sendNotification(getApplicationContext(),true, token, notificationMessage);
 
         Toast.makeText(getApplicationContext(),getString(R.string.passengers_added_perfectly_message) + " " + travelDisplayed.getSpotDestination().getTitle() + ".",Toast.LENGTH_SHORT).show();
 
-        invalidateOptionsMenu();
+        passengersNumber =+ 1;
+        this.passengersActualInfo.setText(passengersNumber + "/" + travelDisplayed.getCarTravel().getPassengersNumber());
 
         this.recreate();
+
+        //this.passengersActualInfo.invalidate();
+
+        //this.recreate();
+    }
+
+    private void removePassenger(){
+        FirebaseUtils.removePassenger(this.travelDisplayed,this.travelDisplayedKey);
+
+        String[] token = {this.travelDisplayed.getOwnerTravel().getNotificationIdUser()};
+        String notificationMessage = "Un passeggero ha rinunciato al suo posto nel viaggio per " + travelDisplayed.getSpotDestination().getTitle() + "!";
+
+        FirebaseUtils.sendNotification(getApplicationContext(),true, token, notificationMessage);
+
+        Toast.makeText(getApplicationContext(),getString(R.string.passengers_aremoved_perfectly_message) + " " + travelDisplayed.getSpotDestination().getTitle() + ".",Toast.LENGTH_SHORT).show();
+
+
+        passengersNumber =- 1;
+        this.passengersActualInfo.setText(passengersNumber + "/" + travelDisplayed.getCarTravel().getPassengersNumber());
+
+        this.recreate();
+
+        //invalidateOptionsMenu();
+
+        //this.passengersActualInfo.invalidate();
+
+        //this.recreate();
     }
 
     private void sendDriverEmail() {

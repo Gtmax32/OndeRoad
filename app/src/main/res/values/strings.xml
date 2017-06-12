@@ -7,6 +7,10 @@
 
     <string name="unique_app_code">whx3m</string>
 
+    <string name="notification_server_key">AAAA7S0dITA:APA91bFtbzPbS5aZp6jUZnYlhtr8YFaoIOHOA8rE57lWLchFGtZlM_tzmcmDfGEO4JCemUXFDU1VROtk4SprUZmd46w0eMf8INVwOwJsNsTnfVgsrYfIN6-re_L0haj-ItLdDmGF84sr</string>
+
+    <string name="notification_server_address">https://fcm.googleapis.com/fcm/send</string>
+
     <string name="main_fragment">Home</string>
 
     <string name="favorites_fragment">My Travel</string>
@@ -83,7 +87,7 @@
 
     <string name="creation_not_complete_alert_message">Sicuro di voler tornare indietro?\nIl viaggio che stai creando non verrà salvato.</string>
 
-    <string name="not_complete_travel_alert_message">Mancano alcuni dati necessari per la creazione del viaggio!\nControlla data ed ora di partenza e punto di ritrovo.</string>
+    <string name="not_complete_travel_alert_message">Mancano alcuni dati necessari per la creazione del viaggio!\nAssicurati di aver scelto il punto di ritrovo.</string>
 
     <string name="incomplete_modify_alert_message">Sicuro di voler tornare indietro?\nPerderai eventuali modifiche fatte.</string>
 
@@ -180,6 +184,10 @@
     <string name="city_selection_alert_message">è troppo grande come punto d\'incontro. Seleziona magari una via o un posto conosciuto.</string>
 
     <string name="price_not_set_alert_message">Il prezzo del viaggio è impostato a 0.\nNon è possibile creare un viaggio a costo 0.</string>
+
     <string name="loading_travel_list_message">Sto cercando i viaggi per te</string>
+    <string name="remove_settings">Rinuncia al viaggio</string>
+    <string name="removing_passenger_message">Sei sicuro di voler rinunciare al viaggio?</string>
+    <string name="passengers_aremoved_perfectly_message">Hai rinunciato a partire per il viaggio per</string>
 
 </resources>

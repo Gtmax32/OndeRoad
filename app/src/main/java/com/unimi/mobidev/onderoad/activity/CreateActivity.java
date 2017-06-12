@@ -37,12 +37,10 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.adapter.PlaceAutocompleteAdapter;
+import com.unimi.mobidev.onderoad.firebase.FirebaseUtils;
 import com.unimi.mobidev.onderoad.fragment.DatePickerCreation;
 import com.unimi.mobidev.onderoad.fragment.TimePickerCreation;
 import com.unimi.mobidev.onderoad.model.AddressInfo;
@@ -61,7 +59,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-public class CreateActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class CreateActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private static final double TEN_KM_RADIUS = 7071.00;
 
     private StreetAutoCompleteTextView streetDepartureAutocompleteView;
@@ -73,10 +71,8 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
     private TextView priceTextView;
     private RadioGroup passengersRadioGroup;
-    //private Spinner passeggersSpinner;
     private CheckBox outboundCheckBox;
     private RadioGroup surfboardRadioGroup;
-    //private Spinner surfboardNumberSpinner;
     private Spinner carSupportTypeSpinner;
     private EditText noteText;
 
@@ -104,8 +100,6 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
     private int checkMod = 0;
 
-    private FirebaseDatabase database;
-
     private String timeTravel = " ", dateTravel = " ";
 
     @Override
@@ -131,11 +125,9 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         ownerTravel = new User(appData.getString("First name", first_name) + " " + appData.getString("Middle name", middle_name),appData.getString("Last name", last_name),appData.getString("ID", ID),appData.getString("Email", email));
         System.out.println(ownerTravel.toString());*/
 
-        database = FirebaseDatabase.getInstance();
+        FirebaseUser currentUser = FirebaseUtils.getCurrentUser();
 
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        ownerTravel = new User(currentUser.getUid(), currentUser.getDisplayName(), currentUser.getEmail());
+        ownerTravel = new User(currentUser.getUid(), currentUser.getDisplayName(), currentUser.getEmail(),FirebaseUtils.getFirebaseToken());
 
         mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, 0, this).addApi(Places.GEO_DATA_API).build();
 
@@ -269,12 +261,12 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         });
 
         passengersRadioGroup = (RadioGroup) findViewById(R.id.passengersRadioButtons);
-        newCar.setPassengersNumber(1);
+        newCar.setPassengersNumber(4);
 
         outboundCheckBox = (CheckBox) findViewById(R.id.outboundCheckBox);
 
         surfboardRadioGroup = (RadioGroup) findViewById(R.id.surfboardRadioButtons);
-        newCar.setSurfboardNumber(1);
+        newCar.setSurfboardNumber(4);
 
         /*adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, Arrays.asList("1","2","3","4","5"));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -451,11 +443,11 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
     public void saveCarListener(View w) {
         int price = Integer.valueOf(priceTextView.getText().toString());
 
-        if(price == 0){
+        if (price == 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Attenzione!").setMessage(R.string.price_not_set_alert_message)
                     .setCancelable(false)
-                    .setNeutralButton("OK",new DialogInterface.OnClickListener() {
+                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.cancel();
                         }
@@ -463,7 +455,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
             AlertDialog alert = builder.create();
             alert.show();
-        }else{
+        } else {
             if (checkMod > 0) {
                 //newTravel.setPassengersTravel(carAvailablePlace);
                 newTravel.setPassengersTravel(null);
@@ -483,9 +475,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
                             public void onClick(DialogInterface dialog, int id) {
                                 Toast.makeText(CreateActivity.this.getApplicationContext(), R.string.toast_travel_creation, Toast.LENGTH_SHORT).show();
 
-                                DatabaseReference ref = database.getReference();
-
-                                ref.child("travels").push().setValue(newTravel);
+                                FirebaseUtils.getDatabaseReference("travels").push().setValue(newTravel);
 
                                 finish();
                             }

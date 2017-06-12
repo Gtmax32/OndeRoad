@@ -222,10 +222,12 @@ public class TravelInfo extends Object implements Serializable {
         this.passengersTravel = passengersTravel;
     }
 
-    public boolean isPassenger(String Key) {
+    public boolean isPassenger(String key) {
         if (this.passengersTravel != null) {
             for (User u : this.passengersTravel){
-                if (u.getIdUser().equals(Key))
+                String id = u.getIdUser();
+
+                if (key.equals(id))
                     return true;
             }
         }
@@ -234,7 +236,11 @@ public class TravelInfo extends Object implements Serializable {
     }
 
     public boolean isFull(){
-        return (this.getPassengersTravel() != null && this.getPassengersTravel().size() == this.getCarTravel().getPassengersNumber());
+        return (this.passengersTravel != null && this.passengersTravel.size() == this.carTravel.getPassengersNumber());
+    }
+
+    public boolean isEmpty(){
+        return (this.getPassengersTravel() == null);
     }
 
     public String toString() {

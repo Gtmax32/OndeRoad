@@ -59,14 +59,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.unimi.mobidev.onderoad.activity.TravelInfoActivity" />
         </activity>
-
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCGksU7GecNKQMkO7CZEREWcfwWqEr0VCM" />
-
         <activity
             android:name=".activity.SpotInfoActivity"
             android:label="@string/title_activity_spot_info"
@@ -90,6 +82,31 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.unimi.mobidev.onderoad.activity.MainActivity" />
         </activity>
+
+        <service
+            android:name="com.unimi.mobidev.onderoad.firebase.FirebaseNotificationService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.unimi.mobidev.onderoad.firebase.FirebaseTokenManager"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCGksU7GecNKQMkO7CZEREWcfwWqEr0VCM" />
+
+
     </application>
 
 </manifest>

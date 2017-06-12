@@ -11,13 +11,15 @@ public class User implements Serializable{
     private String idUser;
     private String nameUser;
     private String emailUser;
+    private String notificationIdUser;
 
     public User(){}
 
-    public User(String ID, String nameUser, String emailUser) {
-        this.idUser = ID;
+    public User(String idUser, String nameUser, String emailUser, String notificationIdUser) {
+        this.idUser = idUser;
         this.nameUser = nameUser;
         this.emailUser = emailUser;
+        this.notificationIdUser = notificationIdUser;
     }
 
     public String getIdUser() {
@@ -36,28 +38,20 @@ public class User implements Serializable{
         this.nameUser = nameUser;
     }
 
-    /*public String getSurnameUser() {
-        return surnameUser;
-    }
-
-    public void setSurnameUser(String surnameUser) {
-        this.surnameUser = surnameUser;
-    }
-
-    public String getFacebookIdUser() {
-        return facebookIdUser;
-    }
-
-    public void setFacebookIdUser(String facebookIdUser) {
-        this.facebookIdUser = facebookIdUser;
-    }*/
-
     public String getEmailUser() {
         return emailUser;
     }
 
     public void setEmailUser(String emailUser) {
         this.emailUser = emailUser;
+    }
+
+    public String getNotificationIdUser() {
+        return notificationIdUser;
+    }
+
+    public void setNotificationIdUser(String notificationIdUser) {
+        this.notificationIdUser = notificationIdUser;
     }
 
     public String toString(){

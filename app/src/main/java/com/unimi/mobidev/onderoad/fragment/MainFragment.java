@@ -14,12 +14,11 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.activity.TravelInfoActivity;
 import com.unimi.mobidev.onderoad.adapter.TravelDetailAdapter;
+import com.unimi.mobidev.onderoad.firebase.FirebaseUtils;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
 import com.unimi.mobidev.onderoad.other.TravelDetail;
 
@@ -31,8 +30,6 @@ public class MainFragment extends Fragment {
 
     private ArrayList<TravelDetail> travelsList;
     private TravelDetailAdapter travelAdapter;
-
-    private FirebaseDatabase database;
 
     private ProgressDialog loadingProgressDialog;
 
@@ -49,10 +46,7 @@ public class MainFragment extends Fragment {
         this.travelsList = new ArrayList<>();
         this.travelAdapter = new TravelDetailAdapter(this.getActivity().getApplicationContext(), R.layout.travel_detail_layout, this.travelsList);
 
-        database = FirebaseDatabase.getInstance();
-
-        DatabaseReference ref = database.getReference();
-        ref.child("travels").addValueEventListener(dataToRetrieve);
+        FirebaseUtils.getDatabaseReference("travels").orderByValue().addValueEventListener(dataToRetrieve);
         //ref.child("travels").addChildEventListener(childToRetrieve);
 
         travelListView = (ListView) v.findViewById(R.id.travelListViewMain);
@@ -78,7 +72,7 @@ public class MainFragment extends Fragment {
 
             Intent infoIntent = new Intent(MainFragment.this.getActivity(), TravelInfoActivity.class);
             infoIntent.putExtra("TravelInfo", selectedBoxInfo);
-            infoIntent.putExtra("TravelKey",selectedBoxKey);
+            infoIntent.putExtra("TravelKey", selectedBoxKey);
             startActivity(infoIntent);
         }
     };
@@ -89,21 +83,20 @@ public class MainFragment extends Fragment {
             String currentUserKey = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
             travelAdapter.clear();
-            for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                 TravelInfo temp = postSnapshot.getValue(TravelInfo.class);
-                if(!temp.getOwnerTravel().getIdUser().equals(currentUserKey) && !temp.isPassenger(currentUserKey)) {
+                if (!temp.getOwnerTravel().getIdUser().equals(currentUserKey) && !temp.isPassenger(currentUserKey)) {
                     System.out.println("Adding new travel...");
                     travelAdapter.addItem(new TravelDetail(MainFragment.this.getActivity().getApplicationContext(), temp, postSnapshot.getKey()));
                 }
             }
 
-            if(!travelAdapter.isEmpty()){
+            if (!travelAdapter.isEmpty()) {
                 suggestionNewTravel.setVisibility(View.GONE);
                 travelListView.setVisibility(View.VISIBLE);
                 travelAdapter.notifyDataSetChanged();
-            }
-            else{
+            } else {
                 suggestionNewTravel.setVisibility(View.VISIBLE);
                 travelListView.setVisibility(View.GONE);
             }

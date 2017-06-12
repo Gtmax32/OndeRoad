@@ -16,13 +16,12 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.activity.CreateActivity;
 import com.unimi.mobidev.onderoad.activity.TravelInfoActivity;
 import com.unimi.mobidev.onderoad.adapter.TravelDetailAdapter;
+import com.unimi.mobidev.onderoad.firebase.FirebaseUtils;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
 import com.unimi.mobidev.onderoad.other.TravelDetail;
 
@@ -43,8 +42,6 @@ public class FavoritesFragment extends Fragment {
     private TextView addTravelTextView;
 
     private FloatingActionButton addTravel;
-
-    private FirebaseDatabase database;
 
     private ProgressDialog loadingProgressDialog;
 
@@ -74,10 +71,7 @@ public class FavoritesFragment extends Fragment {
         passengerTravelListView.setAdapter(this.passengerTravelAdapter);
         passengerTravelListView.setOnItemClickListener(boxSelectedListener);
 
-        database = FirebaseDatabase.getInstance();
-
-        DatabaseReference ref = database.getReference();
-        ref.child("travels").addValueEventListener(dataToRetrieve);
+        FirebaseUtils.getDatabaseReference("travels").addValueEventListener(dataToRetrieve);
 
         addTravel = (FloatingActionButton) v.findViewById(R.id.addTravel);
         addTravel.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +103,7 @@ public class FavoritesFragment extends Fragment {
 
             Intent infoIntent = new Intent(FavoritesFragment.this.getActivity(), TravelInfoActivity.class);
             infoIntent.putExtra("TravelInfo", selectedBoxInfo);
-            infoIntent.putExtra("TravelKey",selectedBoxKey);
+            infoIntent.putExtra("TravelKey", selectedBoxKey);
             startActivity(infoIntent);
         }
     };
@@ -124,13 +118,12 @@ public class FavoritesFragment extends Fragment {
             driverTravelAdapter.clear();
             passengerTravelAdapter.clear();
 
-            for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                 TravelInfo temp = postSnapshot.getValue(TravelInfo.class);
-                if(temp.getOwnerTravel().getIdUser().equals(currentUserKey)){
+                if (temp.getOwnerTravel().getIdUser().equals(currentUserKey)) {
                     driverTravelAdapter.addItem(new TravelDetail(FavoritesFragment.this.getActivity().getApplicationContext(), temp, postSnapshot.getKey()));
-                }
-                else if (temp.isPassenger(currentUserKey)){
+                } else if (temp.isPassenger(currentUserKey)) {
                     passengerTravelAdapter.addItem(new TravelDetail(FavoritesFragment.this.getActivity().getApplicationContext(), temp, postSnapshot.getKey()));
                 }
             }
@@ -138,22 +131,20 @@ public class FavoritesFragment extends Fragment {
             driverSize = driverTravelAdapter.size();
             passengerSize = passengerTravelAdapter.size();
 
-            if (driverSize > 0){
+            if (driverSize > 0) {
                 driverTravelListView.setVisibility(View.VISIBLE);
                 driverLabelLayout.setVisibility(View.VISIBLE);
                 driverTravelAdapter.notifyDataSetChanged();
-            }
-            else{
+            } else {
                 driverTravelListView.setVisibility(View.GONE);
                 driverLabelLayout.setVisibility(View.GONE);
             }
 
-            if (passengerSize > 0){
+            if (passengerSize > 0) {
                 passengerTravelListView.setVisibility(View.VISIBLE);
                 passengerLabelLayout.setVisibility(View.VISIBLE);
                 passengerTravelAdapter.notifyDataSetChanged();
-            }
-            else{
+            } else {
                 passengerTravelListView.setVisibility(View.GONE);
                 passengerLabelLayout.setVisibility(View.GONE);
             }

@@ -3,11 +3,9 @@ package com.unimi.mobidev.onderoad.other;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
 
@@ -26,8 +24,6 @@ public class TravelDetail extends LinearLayout {
     private TextView dateTimeText;
     private TextView priceText;
 
-    private boolean isOwner;
-
     public TravelDetail(Context context, TravelInfo travelInfo, String travelKey) {
         super(context);
         init(context, travelInfo, travelKey);
@@ -43,19 +39,6 @@ public class TravelDetail extends LinearLayout {
         int price;
 
         this.rootView = inflate(context, R.layout.travel_detail_layout, this);
-
-        this.isOwner = FirebaseAuth.getInstance().getCurrentUser().getUid().equals(travelInfo.getOwnerTravel().getIdUser());
-
-        /*this.passengerDriverImage = (ImageView) rootView.findViewById(R.id.carDetailImage);
-
-        if (this.isOwner) {
-            this.passengerDriverImage.setImageResource(R.drawable.ic_action_driver);
-            System.out.println("Is Owner!");
-        }
-        else {
-            this.passengerDriverImage.setImageResource(R.drawable.ic_action_passenger);
-            System.out.println("Is Passenger!");
-        }*/
 
         this.dateTimeText = (TextView) rootView.findViewById(R.id.dateTimeTravel);
         this.itineraryDepartureText = (TextView) rootView.findViewById(R.id.itineraryTravelDeparture);
@@ -79,7 +62,6 @@ public class TravelDetail extends LinearLayout {
 
         this.travelKey = travelKey;
     }
-
 
 
     public void setItineraryDepartureText(TextView itineraryDepartureText) {
@@ -146,7 +128,7 @@ public class TravelDetail extends LinearLayout {
         this.travelKey = travelKey;
     }
 
-    public String toString(){
+    public String toString() {
         return "TravelDetail: " +
                 "\nDate&Time : " + this.getDateTimeText() +
                 "\nDeparture: " + this.getItineraryDepartureText() +

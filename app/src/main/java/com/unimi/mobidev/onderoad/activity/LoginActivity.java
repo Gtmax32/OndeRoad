@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,11 +27,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.unimi.mobidev.onderoad.R;
+import com.unimi.mobidev.onderoad.firebase.FirebaseUtils;
 import com.unimi.mobidev.onderoad.model.User;
 
 import java.util.Arrays;
@@ -42,15 +39,6 @@ public class LoginActivity extends AppCompatActivity {
     private LoginButton loginButton;
     private Intent loginIntent;
     private CallbackManager cm = null;
-    private SharedPreferences appData;
-
-    private Bundle userInfo;
-
-    private AccessToken currentToken;
-
-    private FirebaseAuth mAuth;
-
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
 
     private ProgressDialog authenticationProgressDialog;
 
@@ -58,9 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        if(currentUser != null){
+        if (FirebaseUtils.getCurrentUser() != null) {
             System.out.println("Utente già autenticato!");
             loginIntent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(loginIntent);
@@ -95,8 +81,6 @@ public class LoginActivity extends AppCompatActivity {
             }
 
         }
-
-        mAuth = FirebaseAuth.getInstance();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.nameToolbar);
         setSupportActionBar(toolbar);
@@ -176,14 +160,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleFacebookAccessToken(AccessToken token) {
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
+        FirebaseUtils.getAuth().signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            updateUI(FirebaseUtils.getCurrentUser());
                         } else {
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
@@ -195,19 +177,17 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            System.out.println("ID: " + user.getUid() +"\nName: " + user.getDisplayName() + "\nEmail" + user.getEmail() + "\nEverything: " + user.toString());
+            System.out.println("ID: " + user.getUid() + "\nName: " + user.getDisplayName() + "\nEmail: " + user.getEmail() + "\nToken: " + FirebaseUtils.getFirebaseToken() + "\nEverything: " + user.toString());
 
-            User current = new User(user.getUid(), user.getDisplayName(), user.getEmail());
+            User current = new User(user.getUid(), user.getDisplayName(), user.getEmail(),FirebaseUtils.getFirebaseToken());
 
-            DatabaseReference ref = database.getReference();
-
-            ref.child("users").child(user.getUid()).setValue(current);
+            FirebaseUtils.getDatabaseReference("users").child(user.getUid()).setValue(current);
 
             authenticationProgressDialog.hide();
             loginIntent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(loginIntent);
         } else {
-            Toast.makeText(getApplicationContext(),"Errore nella registrazione dell'utente!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Errore nella registrazione dell'utente!", Toast.LENGTH_SHORT).show();
         }
     }
 
