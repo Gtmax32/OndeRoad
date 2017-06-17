@@ -14,22 +14,24 @@ public class SpotInfo implements Serializable, ClusterItem {
     private String regionSpot;
     private String provinceSpot;
     private String citySpot;
-    private String nameSpot;
+    private String title;
     private double latitudeSpot;
     private double longitudeSpot;
     private int ratingSpot;
-    private String descriptionSpot;
+    private String snippet;
     private SpotInfoTable tableSpot;
 
-    public SpotInfo(String regionSpot, String provinceSpot, String citySpot, String nameSpot, double latitudeSpot, double longitudeSpot, int ratingSpot, String descriptionSpot, SpotInfoTable table) {
+    public SpotInfo(){}
+
+    public SpotInfo(String regionSpot, String provinceSpot, String citySpot, String title, double latitudeSpot, double longitudeSpot, int ratingSpot, String snippet, SpotInfoTable table) {
         this.regionSpot = regionSpot;
         this.provinceSpot = provinceSpot;
         this.citySpot = citySpot;
-        this.nameSpot = nameSpot;
+        this.title = title;
         this.latitudeSpot = latitudeSpot;
         this.longitudeSpot = longitudeSpot;
         this.ratingSpot = ratingSpot;
-        this.descriptionSpot = descriptionSpot;
+        this.snippet = snippet;
         this.tableSpot = table;
     }
 
@@ -57,17 +59,18 @@ public class SpotInfo implements Serializable, ClusterItem {
         this.citySpot = citySpot;
     }
 
-    public String getNameSpot() {
-        return nameSpot;
+    @Override
+    public String getTitle() {
+        return this.title;
     }
 
-    public void setNameSpot(String nameSpot) {
-        this.nameSpot = nameSpot;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public LatLng getLatLngSpot() {
+    /*public LatLng getLatLngSpot() {
         return new LatLng(this.latitudeSpot, this.longitudeSpot);
-    }
+    }*/
 
     public double getLatitudeSpot() {
         return latitudeSpot;
@@ -85,20 +88,21 @@ public class SpotInfo implements Serializable, ClusterItem {
         this.longitudeSpot = longitudeSpot;
     }
 
-    public int getRatingSpot() {
+    /*public int getRatingSpot() {
         return ratingSpot;
     }
 
     public void setRatingSpot(int ratingSpot) {
         this.ratingSpot = ratingSpot;
+    }*/
+
+    @Override
+    public String getSnippet() {
+        return this.snippet;
     }
 
-    public String getDescriptionSpot() {
-        return descriptionSpot;
-    }
-
-    public void setDescriptionSpot(String descriptionSpot) {
-        this.descriptionSpot = descriptionSpot;
+    public void setSnippet(String snippet) {
+        this.snippet = snippet;
     }
 
     public SpotInfoTable getTableSpot() {
@@ -114,11 +118,11 @@ public class SpotInfo implements Serializable, ClusterItem {
                 "\nSpot Region: " + this.regionSpot +
                 "\nSpot Province: " + this.provinceSpot +
                 "\nSpot City: " + this.citySpot +
-                "\nSpot Name: " + this.nameSpot +
+                "\nSpot Name: " + this.title +
                 "\nLatitude: " + this.latitudeSpot +
                 "\nLongitude: " + this.longitudeSpot +
                 "\nRating: " + this.ratingSpot +
-                "\nDescription: " + this.descriptionSpot +
+                "\nDescription: " + this.snippet +
                 "\n" + this.tableSpot.toString();
     }
 
@@ -127,13 +131,7 @@ public class SpotInfo implements Serializable, ClusterItem {
         return new LatLng(this.latitudeSpot, this.longitudeSpot);
     }
 
-    @Override
-    public String getTitle() {
-        return this.nameSpot;
-    }
 
-    @Override
-    public String getSnippet() {
-        return this.descriptionSpot;
-    }
+
+
 }

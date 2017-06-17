@@ -61,7 +61,7 @@ public class SpotInfoActivity extends AppCompatActivity implements OnMapReadyCal
         citySpotValue.setText(spotToDisplay.getCitySpot());
 
         nameSpotValue = (TextView) findViewById(R.id.nameDataSpotInfo);
-        nameSpotValue.setText(spotToDisplay.getNameSpot());
+        nameSpotValue.setText(spotToDisplay.getTitle());
 
         spotWaveValue = (TextView) findViewById(R.id.waveDataSpotInfo);
         spotWaveValue.setText(spotToDisplay.getTableSpot().getWaveSpot());
@@ -76,7 +76,7 @@ public class SpotInfoActivity extends AppCompatActivity implements OnMapReadyCal
         spotSeabedValue.setText(spotToDisplay.getTableSpot().getSeabedSpot());
 
         noteSpotValue = (TextView) findViewById(R.id.spotNoteData);
-        temp = spotToDisplay.getDescriptionSpot();
+        temp = spotToDisplay.getSnippet();
         noteSpotValue.setText(temp);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.spotMap);
@@ -89,7 +89,7 @@ public class SpotInfoActivity extends AppCompatActivity implements OnMapReadyCal
         double spotLongitude = this.spotToDisplay.getLongitudeSpot();
         LatLng spotCoordinate = new LatLng(spotLatitude, spotLongitude);
 
-        String spotName = this.spotToDisplay.getNameSpot();
+        String spotName = this.spotToDisplay.getTitle();
 
         Marker spot = googleMap.addMarker(new MarkerOptions().position(spotCoordinate).title(spotName));
         spot.showInfoWindow();
@@ -128,7 +128,7 @@ public class SpotInfoActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     private void showMap() {
-        String spotInfo = spotToDisplay.getNameSpot() + ", " + spotToDisplay.getCitySpot();
+        String spotInfo = spotToDisplay.getTitle() + ", " + spotToDisplay.getCitySpot();
         String toParse = "geo:0,0?q= " + spotToDisplay.getLatitudeSpot() + "," + spotToDisplay.getLongitudeSpot() + "(" + spotInfo + ")";
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(toParse));

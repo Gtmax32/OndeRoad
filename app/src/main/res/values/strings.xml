@@ -3,6 +3,14 @@
 
     <string name="facebook_app_id">1262194670479172</string>
 
+    <string name="app_deeplink">https://travelsharing.com/info_travel/</string>
+
+    <string name="unique_app_code">whx3m</string>
+
+    <string name="notification_server_key">AAAA7S0dITA:APA91bFtbzPbS5aZp6jUZnYlhtr8YFaoIOHOA8rE57lWLchFGtZlM_tzmcmDfGEO4JCemUXFDU1VROtk4SprUZmd46w0eMf8INVwOwJsNsTnfVgsrYfIN6-re_L0haj-ItLdDmGF84sr</string>
+
+    <string name="notification_server_address">https://fcm.googleapis.com/fcm/send</string>
+
     <string name="main_fragment">Home</string>
 
     <string name="favorites_fragment">My Travel</string>
@@ -23,7 +31,7 @@
 
     <string name="region_label">Regione:</string>
 
-    <string name="province_label">Provincia:</string>
+    <string name="spot_name_label">Spot:</string>
 
     <string name="meeting_label">Punto di ritrovo:</string>
 
@@ -46,10 +54,9 @@
     <string name="info_travel">Dettagli Viaggio</string>
 
     <string-array name="support_types">
-        <item>Soft rack</item>
         <item>Barre porta pacchi</item>
+        <item>Soft rack</item>
         <item>Dentro l\'auto</item>
-        <item>Fascioni</item>
     </string-array>
 
     <string name="actual_price">Prezzo att.</string>
@@ -60,13 +67,13 @@
 
     <string name="modify_settings">Modifica</string>
 
-    <string name="navigation_settings">Avvia navigazione</string>
+    <string name="driver_navigation_settings">Vai allo Spot</string>
 
     <string name="delete_settings">Elimina</string>
 
     <string name="share_settings">Condividi</string>
 
-    <string name="mail_settings">Contatta</string>
+    <string name="driver_mail_settings">Contatta passeggeri</string>
 
     <string name="share_text">Condividi con...</string>
 
@@ -80,7 +87,7 @@
 
     <string name="creation_not_complete_alert_message">Sicuro di voler tornare indietro?\nIl viaggio che stai creando non verrà salvato.</string>
 
-    <string name="not_complete_travel_alert_message">Attenzione!\nMancano alcuni dati necessari per la creazione del viaggio!</string>
+    <string name="not_complete_travel_alert_message">Mancano alcuni dati necessari per la creazione del viaggio!\nAssicurati di aver scelto il punto di ritrovo.</string>
 
     <string name="incomplete_modify_alert_message">Sicuro di voler tornare indietro?\nPerderai eventuali modifiche fatte.</string>
 
@@ -91,28 +98,96 @@
     <string name="review_settings">Recensisci lo spot</string>
 
     <string name="create_settings">Crea un viaggio qui</string>
+
     <string name="info_spot">Dettagli Spot</string>
+
     <string name="title_activity_travel_info">TravelInfo Activity</string>
+
     <string name="region_label_spot">Regione</string>
+
     <string name="province_label_spot">Provincia</string>
+
     <string name="city_label_spot">Comune</string>
+
     <string name="name_label_spot">Nome Spot</string>
+
     <string name="wave_spot_label">Onda</string>
+
     <string name="wind_spot_label">Vento</string>
+
     <string name="swell_spot_label">Mareggiata</string>
+
     <string name="seabed_spot_label">Fondale</string>
+
     <string name="note_spot_label">Note</string>
+
     <string name="search_hint">Cerca uno spot...</string>
+
     <string name="search_title">Cerca uno spot</string>
+
     <string name="title_activity_search">SearchActivity</string>
+
     <string name="notification_label">Notifiche</string>
+
     <string name="first_setting_label">Impostazione 1</string>
+
     <string name="second_setting_label">Impostazione 2</string>
+
     <string name="third_setting_label">Impostazione 3</string>
+
     <string name="user_data_label">Le tue informazioni</string>
+
     <string name="name_label">Nome</string>
+
     <string name="surname_label">Cognome</string>
+
     <string name="mail_label">E-mail</string>
 
+    <string name="add_new_travel_main">Non ci sono viaggi?\nVai in MyTravel e crea il tuo viaggio!</string>
+
+    <string name="add_new_travel_favorites">Cosa aspetti a partire?\nTocca il pulsante + e crea il tuo viaggio!</string>
+
+    <string name="login_progress_message">Login in corso</string>
+
+    <string name="radio_1">1</string>
+
+    <string name="radio_2">2</string>
+
+    <string name="radio_3">3</string>
+
+    <string name="radio_4">4</string>
+
+    <string name="position_connection_error">Problemi di connessione!\nControlla di essere collegato alla rete o di avere il gps attivo.</string>
+
+    <string name="add_settings">Aggiungiti al viaggio</string>
+
+    <string name="passenger_mail_settings">Contatta guidatore</string>
+
+    <string name="passenger_navigation_settings">Vai al punto di ritrovo</string>
+
+    <string name="mail_error_message">Non ci sono passeggeri a cui inviare mail!</string>
+
+    <string name="passengers_added_perfectly_message">Sei diventato un passeggero del viaggio per</string>
+
+    <string name="full_car_message">La macchina non ha più posti disponibili.</string>
+
+    <string name="adding_like_passenger_message">Vuoi aggiungerti come passeggero a questo viaggio?</string>
+
+    <string name="deleting_travel_message">Vuoi davvero cancellare questo viaggio?</string>
+
+    <string name="loading_travel_message">Un attimo di pazienza</string>
+
+    <string name="driver_travel">Guido io</string>
+
+    <string name="passenger_travel">Sono un passeggero</string>
+
+    <string name="city_selection_alert_message">è troppo grande come punto d\'incontro. Seleziona magari una via o un posto conosciuto.</string>
+
+    <string name="price_not_set_alert_message">Il prezzo del viaggio è impostato a 0.\nNon è possibile creare un viaggio a costo 0.</string>
+
+    <string name="loading_travel_list_message">Sto cercando i viaggi per te</string>
+    <string name="remove_settings">Rinuncia al viaggio</string>
+    <string name="removing_passenger_message">Sei sicuro di voler rinunciare al viaggio?</string>
+    <string name="passengers_aremoved_perfectly_message">Hai rinunciato a partire per il viaggio per</string>
 
 </resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/addSubMenu"
+        android:title="@string/add_settings"
+        android:icon="@drawable/ic_action_circle_add"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/startMapSubMenu"
+        android:title="@string/passenger_navigation_settings"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/removeFromTravelSubMenu"
+        android:title="@string/remove_settings"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/shareSubMenu"
+        android:title="@string/share_settings"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/driverContactSubMenu"
+        android:title="@string/passenger_mail_settings"
+        app:showAsAction="never"/>
+    
+</menu>

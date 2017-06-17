@@ -4,13 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AutoCompleteTextView;
+import android.support.v7.widget.AppCompatAutoCompleteTextView;
 
 /**
  * Created by Pc-Utente on 28/09/2016.
  */
 
-public class StreetAutoCompleteTextView extends AutoCompleteTextView {
+public class StreetAutoCompleteTextView extends AppCompatAutoCompleteTextView {
 
     public StreetAutoCompleteTextView(Context context) {
         super(context);

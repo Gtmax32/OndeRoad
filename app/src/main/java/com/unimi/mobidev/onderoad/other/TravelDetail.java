@@ -15,6 +15,7 @@ import com.unimi.mobidev.onderoad.model.TravelInfo;
 
 public class TravelDetail extends LinearLayout {
     private TravelInfo currentTravel;
+    private String travelKey;
 
     private View rootView;
 
@@ -23,17 +24,17 @@ public class TravelDetail extends LinearLayout {
     private TextView dateTimeText;
     private TextView priceText;
 
-    public TravelDetail(Context context, TravelInfo travelInfo) {
+    public TravelDetail(Context context, TravelInfo travelInfo, String travelKey) {
         super(context);
-        init(context, travelInfo);
+        init(context, travelInfo, travelKey);
     }
 
-    public TravelDetail(Context context, AttributeSet attributeSet, TravelInfo travelInfo) {
+    public TravelDetail(Context context, AttributeSet attributeSet, TravelInfo travelInfo, String travelKey) {
         super(context, attributeSet);
-        init(context, travelInfo);
+        init(context, travelInfo, travelKey);
     }
 
-    private void init(Context context, TravelInfo travelInfo) {
+    private void init(Context context, TravelInfo travelInfo, String travelKey) {
         String date, time, departure, destination;
         int price;
 
@@ -47,10 +48,10 @@ public class TravelDetail extends LinearLayout {
         this.currentTravel = travelInfo;
 
         if (this.currentTravel != null) {
-            date = this.currentTravel.getDataDeparture();
-            time = this.currentTravel.getTimeDeparture();
+            date = this.currentTravel.formatDataDeparture();
+            time = this.currentTravel.formatTimeDeparture();
             departure = this.currentTravel.getAddressDeparture().getProvinceInfo();
-            destination = this.currentTravel.getSpotDestination().getNameSpot();
+            destination = this.currentTravel.getSpotDestination().getTitle();
             price = this.currentTravel.getPriceTravel();
 
             this.dateTimeText.setText(date + " " + time);
@@ -58,7 +59,10 @@ public class TravelDetail extends LinearLayout {
             this.itineraryDestinationText.setText(destination);
             this.priceText.setText(price + "");
         }
+
+        this.travelKey = travelKey;
     }
+
 
     public void setItineraryDepartureText(TextView itineraryDepartureText) {
         this.itineraryDepartureText = itineraryDepartureText;
@@ -116,7 +120,15 @@ public class TravelDetail extends LinearLayout {
         this.currentTravel = currentTravel;
     }
 
-    public String toString(){
+    public String getTravelKey() {
+        return travelKey;
+    }
+
+    public void setTravelKey(String travelKey) {
+        this.travelKey = travelKey;
+    }
+
+    public String toString() {
         return "TravelDetail: " +
                 "\nDate&Time : " + this.getDateTimeText() +
                 "\nDeparture: " + this.getItineraryDepartureText() +

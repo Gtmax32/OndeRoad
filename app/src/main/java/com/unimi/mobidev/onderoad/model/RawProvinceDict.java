@@ -20,7 +20,7 @@ public class RawProvinceDict {
         DICT.put("Asti", "Asti");
         DICT.put("Avellino", "Avellino");
         DICT.put("Città Metropolitana di Bari", "Bari");
-        DICT.put("Barletta-Andria-Trani", "Barletta-Andria-Trani");
+        DICT.put("Provincia di Barletta-Andria-Trani", "Barletta-Andria-Trani");
         DICT.put("Belluno", "Belluno");
         DICT.put("Benevento", "Benevento");
         DICT.put("Bergamo", "Bergamo");
@@ -43,7 +43,7 @@ public class RawProvinceDict {
         DICT.put("Crotone", "Crotone");
         DICT.put("Cuneo", "Cuneo");
         DICT.put("Enna", "Enna");
-        DICT.put("Fermo", "Fermo");
+        DICT.put("Provincia di Fermo", "Fermo");
         DICT.put("Ferrara", "Ferrara");
         DICT.put("Città Metropolitana di Firenze", "Firenze");
         DICT.put("Foggia", "Foggia");
@@ -70,7 +70,7 @@ public class RawProvinceDict {
         DICT.put("Città Metropolitana di Messina", "Messina");
         DICT.put("Città Metropolitana di Milano", "Milano");
         DICT.put("Modena", "Modena");
-        DICT.put("Monza e della Brianza", "Monza e della Brianza");
+        DICT.put("Provincia di Monza e della Brianza", "Monza e della Brianza");
         DICT.put("Città Metropolitana di Napoli", "Napoli");
         DICT.put("Novara", "Novara");
         DICT.put("Nuoro", "Nuoro");

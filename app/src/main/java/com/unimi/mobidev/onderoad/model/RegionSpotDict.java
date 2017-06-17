@@ -182,7 +182,7 @@ public class RegionSpotDict {
 
         if (DICT.containsKey(key)) {
             for (SpotInfo elem : DICT.get(key)) {
-                nameList.add(elem.getNameSpot());
+                nameList.add(elem.getTitle());
             }
 
             return nameList;

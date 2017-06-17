@@ -1,12 +1,14 @@
 package com.unimi.mobidev.onderoad.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +22,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,8 +37,10 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.firebase.auth.FirebaseUser;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.adapter.PlaceAutocompleteAdapter;
+import com.unimi.mobidev.onderoad.firebase.FirebaseUtils;
 import com.unimi.mobidev.onderoad.fragment.DatePickerCreation;
 import com.unimi.mobidev.onderoad.fragment.TimePickerCreation;
 import com.unimi.mobidev.onderoad.model.AddressInfo;
@@ -49,11 +55,11 @@ import com.unimi.mobidev.onderoad.other.StreetAutoCompleteTextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
-public class CreateActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class CreateActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private static final double TEN_KM_RADIUS = 7071.00;
 
     private StreetAutoCompleteTextView streetDepartureAutocompleteView;
@@ -64,9 +70,9 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
     private Spinner spotDestinationSpinner;
 
     private TextView priceTextView;
-    private Spinner passeggersSpinner;
+    private RadioGroup passengersRadioGroup;
     private CheckBox outboundCheckBox;
-    private Spinner surfboardNumberSpinner;
+    private RadioGroup surfboardRadioGroup;
     private Spinner carSupportTypeSpinner;
     private EditText noteText;
 
@@ -80,20 +86,22 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
     private TravelInfo newTravel;
 
-    private Calendar todayDate;
+    private GregorianCalendar todayDate;
 
     private CarInfo newCar;
 
     private AddressInfo meetingPoint;
 
     private User ownerTravel;
-    private SharedPreferences appData;
 
     private ArrayList<SpotInfo> selectedRegionSpot;
 
     private SpotInfo spotDetail;
 
     private int checkMod = 0;
+
+    private String timeTravel = " ", dateTravel = " ";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,13 +118,16 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         spotDetail = (SpotInfo) this.getIntent().getSerializableExtra("SpotData");
 
-        String todayText, nowText;
-        String first_name = "", middle_name = "", last_name = "", ID = "", email = "";
+        /*String first_name = "", middle_name = "", last_name = "";
 
         appData = getSharedPreferences("UserData", Context.MODE_PRIVATE);
 
         ownerTravel = new User(appData.getString("First name", first_name) + " " + appData.getString("Middle name", middle_name),appData.getString("Last name", last_name),appData.getString("ID", ID),appData.getString("Email", email));
-        System.out.println(ownerTravel.toString());
+        System.out.println(ownerTravel.toString());*/
+
+        FirebaseUser currentUser = FirebaseUtils.getCurrentUser();
+
+        ownerTravel = new User(currentUser.getUid(), currentUser.getDisplayName(), currentUser.getEmail(),FirebaseUtils.getFirebaseToken());
 
         mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, 0, this).addApi(Places.GEO_DATA_API).build();
 
@@ -131,12 +142,13 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         selectedRegionSpot = new ArrayList<>();
 
-        todayDate = Calendar.getInstance();
+        todayDate = new GregorianCalendar();
 
-        newTravel.setDateTimeDeparture(todayDate);
+        newTravel.setDateTimeDeparture(todayDate.getTimeInMillis());
 
-        todayText = String.format(Locale.ITALIAN,"%02d",todayDate.get(Calendar.DAY_OF_MONTH) + 1) + " " + todayDate.getDisplayName(Calendar.MONTH,Calendar.LONG, Locale.ITALIAN);
-        nowText = String.format(Locale.ITALIAN,"%02d",todayDate.get(Calendar.HOUR_OF_DAY)) + ":" + String.format(Locale.ITALIAN,"%02d",todayDate.get(Calendar.MINUTE));
+        dateTravel = String.format(Locale.ITALIAN, "%02d", todayDate.get(Calendar.DAY_OF_MONTH) + 1) + " " + todayDate.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ITALIAN);
+
+        timeTravel = String.format(Locale.ITALIAN, "%02d", todayDate.get(Calendar.HOUR_OF_DAY)) + ":" + String.format(Locale.ITALIAN, "%02d", todayDate.get(Calendar.MINUTE));
 
         //Departure Info
 
@@ -145,11 +157,11 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         streetDepartureAutocompleteView = (StreetAutoCompleteTextView) findViewById(R.id.streetAutoCompleteTextField);
         streetDepartureAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
 
-        streetAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, currentLocationBounds,null);
+        streetAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, currentLocationBounds, null);
         streetDepartureAutocompleteView.setAdapter(streetAdapter);
 
         datePickerButton = (Button) findViewById(R.id.dateButton);
-        datePickerButton.setText(todayText);
+        datePickerButton.setText(dateTravel);
         datePickerButton.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -162,13 +174,13 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void afterTextChanged(Editable s) {
-                newTravel.setDataDeparture(datePickerButton.getText().toString());
-                checkMod ++;
+                //newTravel.updateDataDeparture(datePickerButton.getText().toString());
+                dateTravel = datePickerButton.getText().toString();
             }
         });
 
         timePickerButton = (Button) findViewById(R.id.timeButton);
-        timePickerButton.setText(nowText);
+        timePickerButton.setText(timeTravel);
         timePickerButton.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -181,8 +193,8 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void afterTextChanged(Editable s) {
-                newTravel.setTimeDeparture(timePickerButton.getText().toString());
-                checkMod ++;
+                //newTravel.updateTimeDeparture(timePickerButton.getText().toString());
+                timeTravel = timePickerButton.getText().toString();
             }
         });
 
@@ -190,26 +202,24 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         int position = 0;
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, RegionSpotDict.getKeys());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, RegionSpotDict.getKeys());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         regionDestinationSpinner = (Spinner) findViewById(R.id.destinationRegionSpinner);
         regionDestinationSpinner.setAdapter(adapter);
 
-        if(spotDetail != null) {
+        if (spotDetail != null) {
             position = adapter.getPosition(spotDetail.getRegionSpot());
             regionDestinationSpinner.setSelection(position);
         }
 
-        spotDestinationSpinner = (Spinner) findViewById(R.id.destinationProvinceSpinner);
+        spotDestinationSpinner = (Spinner) findViewById(R.id.destinationSpotSpinner);
         spotDestinationSpinner.setEnabled(false);
 
         regionDestinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                spinnerSpotItemSelected(spotDestinationSpinner,parentView,selectedItemView,position,id);
-
-                newTravel.setRegionDestination(parentView.getItemAtPosition(position).toString());
+                spinnerSpotItemSelected(spotDestinationSpinner, parentView, selectedItemView, position, id);
             }
 
             @Override
@@ -221,7 +231,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         spotDestinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if (selectedRegionSpot != null && selectedRegionSpot.size()>0)
+                if (selectedRegionSpot != null && selectedRegionSpot.size() > 0)
                     newTravel.setSpotDestination(selectedRegionSpot.get(position));
             }
 
@@ -250,7 +260,15 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, Arrays.asList("1","2","3","4","5"));
+        passengersRadioGroup = (RadioGroup) findViewById(R.id.passengersRadioButtons);
+        newCar.setPassengersNumber(4);
+
+        outboundCheckBox = (CheckBox) findViewById(R.id.outboundCheckBox);
+
+        surfboardRadioGroup = (RadioGroup) findViewById(R.id.surfboardRadioButtons);
+        newCar.setSurfboardNumber(4);
+
+        /*adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, Arrays.asList("1","2","3","4","5"));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         passeggersSpinner = (Spinner) findViewById(R.id.passengersSpinner);
@@ -268,8 +286,6 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        outboundCheckBox = (CheckBox) findViewById(R.id.outboundCheckBox);
-
         surfboardNumberSpinner = (Spinner) findViewById(R.id.surfboardNumberSpinner);
         surfboardNumberSpinner.setAdapter(adapter);
 
@@ -283,10 +299,10 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
 
         //TODO: Bisognerebbe modificare il numero di tavole trasportabili in base al tipo di supporto ed il numero di passeggeri
-        ArrayAdapter<CharSequence> supportAdapter = ArrayAdapter.createFromResource(this,R.array.support_types,android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> supportAdapter = ArrayAdapter.createFromResource(this, R.array.support_types, android.R.layout.simple_spinner_item);
         supportAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         carSupportTypeSpinner = (Spinner) findViewById(R.id.carSupportTypeSpinner);
@@ -321,19 +337,49 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
+        int a = 0;
+
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this.getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+
+                Toast.makeText(this.getApplicationContext(), "I permessi sono necessari per migliorare\nl'efficienza dell'applicazione!", Toast.LENGTH_LONG).show();
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, a);
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, a);
+            }
+        }
     }
 
-    public void datePickerListener(View v){
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 0: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    streetDepartureAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
+                } else {
+                    Toast.makeText(this, "I permessi sono necessari per migliorare\nl'efficienza dell'applicazione!", Toast.LENGTH_LONG).show();
+                    streetDepartureAutocompleteView.setOnItemClickListener(null);
+                }
+            }
+        }
+    }
+
+    public void datePickerListener(View v) {
         DialogFragment newFragment = new DatePickerCreation();
         newFragment.show(getSupportFragmentManager(), "datePickerCreation");
     }
 
-    public void timePickerListener(View v){
+    public void timePickerListener(View v) {
         DialogFragment newFragment = new TimePickerCreation();
         newFragment.show(getSupportFragmentManager(), "timePickerCreation");
     }
 
-    private void spinnerSpotItemSelected(Spinner spotSpinner, AdapterView<?> parentView, View selectedItemView, int position, long id){
+    private void spinnerSpotItemSelected(Spinner spotSpinner, AdapterView<?> parentView, View selectedItemView, int position, long id) {
         if (!spotSpinner.isEnabled())
             spotSpinner.setEnabled(true);
 
@@ -341,50 +387,122 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         selectedRegionSpot = RegionSpotDict.getElemFromKey(parentView.getItemAtPosition(position).toString());
         ArrayList<String> spotNameList = RegionSpotDict.getNameListFromKey(parentView.getItemAtPosition(position).toString());
 
-        if(spotNameList != null) {
+        if (spotNameList != null) {
             adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, spotNameList);
 
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spotSpinner.setAdapter(adapter);
 
-            if(spotDetail != null) {
-                int pos = adapter.getPosition(spotDetail.getNameSpot());
+            if (spotDetail != null) {
+                int pos = adapter.getPosition(spotDetail.getTitle());
                 spotSpinner.setSelection(pos);
             }
         }
     }
 
-    public void saveCarListener(View w){
-        ArrayList<User> carAvailablePlace = new ArrayList<>(newCar.getPassengersNumber());
+    public void onRadioButtonClicked(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
 
-        if(checkMod == 3) {
-            newTravel.setPassengersTravel(carAvailablePlace);
-            newTravel.setAddressDeparture(meetingPoint);
-            newTravel.setPriceTravel(Integer.valueOf(priceTextView.getText().toString()));
-            newTravel.setOutbound(outboundCheckBox.isChecked());
-            newTravel.setCarTravel(newCar);
-            newTravel.setNoteTravel(noteText.getText().toString());
+        switch (view.getId()) {
+            case R.id.passengersRadio1:
+                if (checked)
+                    newCar.setPassengersNumber(1);
+                break;
+            case R.id.passengersRadio2:
+                if (checked)
+                    newCar.setPassengersNumber(2);
+                break;
+            case R.id.passengersRadio3:
+                if (checked)
+                    newCar.setPassengersNumber(3);
+                break;
+            case R.id.passengersRadio4:
+                if (checked)
+                    newCar.setPassengersNumber(4);
+                break;
+            case R.id.boardRadio1:
+                if (checked)
+                    newCar.setSurfboardNumber(1);
+                break;
+            case R.id.boardRadio2:
+                if (checked)
+                    newCar.setSurfboardNumber(2);
+                break;
+            case R.id.boardRadio3:
+                if (checked)
+                    newCar.setSurfboardNumber(3);
+                break;
+            case R.id.boardRadio4:
+                if (checked)
+                    newCar.setSurfboardNumber(4);
+                break;
 
-            Intent intent = this.getIntent();
-            intent.putExtra("TravelInfo",newTravel);
-
-            this.setResult(RESULT_OK,intent);
-            Toast.makeText(this.getApplicationContext(),R.string.toast_travel_creation,Toast.LENGTH_SHORT).show();
-            finish();
         }
-        else{
+    }
+
+    public void saveCarListener(View w) {
+        int price = Integer.valueOf(priceTextView.getText().toString());
+
+        if (price == 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.not_complete_travel_alert_message)
+            builder.setTitle("Attenzione!").setMessage(R.string.price_not_set_alert_message)
                     .setCancelable(false)
                     .setNeutralButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.cancel();
                         }
                     });
+
             AlertDialog alert = builder.create();
             alert.show();
-        }
+        } else {
+            if (checkMod > 0) {
+                //newTravel.setPassengersTravel(carAvailablePlace);
+                newTravel.setPassengersTravel(null);
+                newTravel.setAddressDeparture(meetingPoint);
+                newTravel.setPriceTravel(price);
+                newTravel.setOutbound(outboundCheckBox.isChecked());
+                newTravel.setCarTravel(newCar);
+                newTravel.setNoteTravel(noteText.getText().toString());
+                newTravel.updateDateTimeDeparture(dateTravel, timeTravel);
 
+                String completeCreation = "Confermi la creazione del viaggio in partenza il giorno " + dateTravel + " alle ore " + timeTravel +
+                        " da " + meetingPoint.getStreetInfo() + " e arrivo allo spot " + newTravel.getSpotDestination().getTitle() + " in " + newTravel.getSpotDestination().getRegionSpot() + "?";
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Terminata Creazione").setMessage(completeCreation)
+                        .setCancelable(false)
+                        .setPositiveButton("Conferma", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Toast.makeText(CreateActivity.this.getApplicationContext(), R.string.toast_travel_creation, Toast.LENGTH_SHORT).show();
+
+                                FirebaseUtils.getDatabaseReference("travels").push().setValue(newTravel);
+
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alert = builder.create();
+                alert.show();
+
+
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Attenzione!").setMessage(R.string.not_complete_travel_alert_message)
+                        .setCancelable(false)
+                        .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        }
     }
 
     private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
@@ -401,22 +519,44 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
             String completeAddress = item.getPrimaryText(null).toString() + " " + item.getSecondaryText(null).toString();
             Address selectedAddress = null;
+
+            if (currentLocationBounds == null) {
+                currentLocationBounds = currentLocation.getLatLngBounds(CreateActivity.TEN_KM_RADIUS);
+            }
+
             try {
                 selectedAddress = currentLocation.getAddressInfo(completeAddress);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            if(selectedAddress != null){
-                meetingPoint.setStreetInfo(completeAddress);
-                meetingPoint.setProvinceInfo(RawProvinceDict.getValue(selectedAddress.getSubAdminArea()));
-                meetingPoint.setLatitudeInfo(selectedAddress.getLatitude());
-                meetingPoint.setLongitudeInfo(selectedAddress.getLongitude());
-                checkMod++;
-            }
-            else{
-                //TODO: Parametrizzare messaggi, d'errore e non.
-                Toast.makeText(getApplicationContext(), "Connection problem!\nCheck you internet connection." , Toast.LENGTH_SHORT).show();
+            if (selectedAddress != null) {
+
+                if (selectedAddress.getFeatureName().equals(selectedAddress.getLocality())) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CreateActivity.this);
+                    builder.setMessage(selectedAddress.getLocality() + " " + getString(R.string.city_selection_alert_message))
+                            .setCancelable(false)
+                            .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    streetDepartureAutocompleteView.setText("");
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                } else {
+                    meetingPoint.setStreetInfo(completeAddress);
+                    meetingPoint.setProvinceInfo(RawProvinceDict.getValue(selectedAddress.getSubAdminArea()));
+                    meetingPoint.setLatitudeInfo(selectedAddress.getLatitude());
+                    meetingPoint.setLongitudeInfo(selectedAddress.getLongitude());
+
+                    System.out.println("Selected address: " + selectedAddress.toString());
+
+                    checkMod++;
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.position_connection_error, Toast.LENGTH_SHORT).show();
             }
 
             /*
@@ -426,7 +566,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
             placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
 
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 
             //Toast.makeText(getApplicationContext(), "Clicked: " + primaryText, Toast.LENGTH_SHORT).show();
@@ -466,7 +606,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Toast.makeText(this, "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(), Toast.LENGTH_SHORT).show();
     }
 
     @Override

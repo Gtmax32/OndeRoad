@@ -8,16 +8,26 @@ import java.io.Serializable;
 
 public class User implements Serializable{
 
+    private String idUser;
     private String nameUser;
-    private String surnameUser;
-    private String facebookIdUser;
     private String emailUser;
+    private String notificationIdUser;
 
-    public User(String nameUser, String surnameUser, String facebookIdUser, String emailUser) {
+    public User(){}
+
+    public User(String idUser, String nameUser, String emailUser, String notificationIdUser) {
+        this.idUser = idUser;
         this.nameUser = nameUser;
-        this.surnameUser = surnameUser;
-        this.facebookIdUser = facebookIdUser;
         this.emailUser = emailUser;
+        this.notificationIdUser = notificationIdUser;
+    }
+
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
     }
 
     public String getNameUser() {
@@ -28,22 +38,6 @@ public class User implements Serializable{
         this.nameUser = nameUser;
     }
 
-    public String getSurnameUser() {
-        return surnameUser;
-    }
-
-    public void setSurnameUser(String surnameUser) {
-        this.surnameUser = surnameUser;
-    }
-
-    public String getFacebookIdUser() {
-        return facebookIdUser;
-    }
-
-    public void setFacebookIdUser(String facebookIdUser) {
-        this.facebookIdUser = facebookIdUser;
-    }
-
     public String getEmailUser() {
         return emailUser;
     }
@@ -52,11 +46,17 @@ public class User implements Serializable{
         this.emailUser = emailUser;
     }
 
+    public String getNotificationIdUser() {
+        return notificationIdUser;
+    }
+
+    public void setNotificationIdUser(String notificationIdUser) {
+        this.notificationIdUser = notificationIdUser;
+    }
+
     public String toString(){
         return "User: " +
                "\nName: " + this.nameUser +
-               "\nSurname: " + this.surnameUser +
-               "\nFacebook ID: " + this.facebookIdUser +
                "\nEmail: " + this.emailUser;
     }
 }

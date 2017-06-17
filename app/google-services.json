@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1018664132912",
+    "firebase_url": "https://onderoad-b0fae.firebaseio.com",
+    "project_id": "onderoad-b0fae",
+    "storage_bucket": "onderoad-b0fae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1018664132912:android:a3bcee435bda4bdb",
+        "android_client_info": {
+          "package_name": "com.unimi.mobidev.onderoad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1018664132912-6ek7lutc2nu7tt8l84lpsihk1f37q441.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.unimi.mobidev.onderoad",
+            "certificate_hash": "2f62cf0d1fd49fcfa107258319f01fcc9661f62c"
+          }
+        },
+        {
+          "client_id": "1018664132912-4oh5m1p2d0iri64gnrjdjfc49g34o9a6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuMJz1JvEC9zMqnvqCC3QPSQCmqUHayPc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1018664132912-4oh5m1p2d0iri64gnrjdjfc49g34o9a6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

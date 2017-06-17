@@ -12,6 +12,8 @@ public class SpotInfoTable implements Serializable{
     private String swellSpot;
     private String seabedSpot;
 
+    public SpotInfoTable(){}
+
     public SpotInfoTable(String onda, String vento, String mareggiata, String fondale) {
         this.waveSpot = onda;
         this.windSpot = vento;

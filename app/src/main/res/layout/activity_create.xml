@@ -180,14 +180,14 @@
                     android:layout_marginTop="10dp" />
 
                 <TextView
-                    android:id="@+id/destinationProvinceLabel"
+                    android:id="@+id/destinationSpotLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/province_label"
+                    android:text="@string/spot_name_label"
                     android:layout_margin="10dp" />
 
                 <Spinner
-                    android:id="@+id/destinationProvinceSpinner"
+                    android:id="@+id/destinationSpotSpinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp" />
@@ -257,11 +257,41 @@
                     android:text="@string/passengers_label"
                     android:layout_margin="10dp"/>
 
-                <Spinner
-                    android:id="@+id/passengersSpinner"
-                    android:layout_width="wrap_content"
+                <RadioGroup
+                    android:id="@+id/passengersRadioButtons"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"/>
+                    android:orientation="horizontal">
+
+                    <RadioButton android:id="@+id/passengersRadio1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/radio_1"
+                        android:onClick="onRadioButtonClicked"/>
+
+                    <RadioButton android:id="@+id/passengersRadio2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/radio_2"
+                        android:onClick="onRadioButtonClicked"/>
+
+                    <RadioButton android:id="@+id/passengersRadio3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/radio_3"
+                        android:onClick="onRadioButtonClicked"/>
+
+                    <RadioButton android:id="@+id/passengersRadio4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/radio_4"
+                        android:checked="true"
+                        android:onClick="onRadioButtonClicked"/>
+
+                </RadioGroup>
 
                 <TextView
                     android:id="@+id/outboundLabel"
@@ -281,11 +311,41 @@
                     android:text="@string/surfboard_number"
                     android:layout_margin="10dp"/>
 
-                <Spinner
-                    android:id="@+id/surfboardNumberSpinner"
-                    android:layout_width="wrap_content"
+                <RadioGroup
+                    android:id="@+id/surfboardRadioButtons"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"/>
+                    android:orientation="horizontal">
+
+                    <RadioButton android:id="@+id/boardRadio1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/radio_1"
+                        android:onClick="onRadioButtonClicked"/>
+
+                    <RadioButton android:id="@+id/boardRadio2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/radio_2"
+                        android:onClick="onRadioButtonClicked"/>
+
+                    <RadioButton android:id="@+id/boardRadio3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/radio_3"
+                        android:onClick="onRadioButtonClicked"/>
+
+                    <RadioButton android:id="@+id/boardRadio4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/radio_4"
+                        android:checked="true"
+                        android:onClick="onRadioButtonClicked"/>
+
+                </RadioGroup>
 
                 <TextView
                     android:id="@+id/carSupportTypeLabel"
