@@ -111,7 +111,7 @@ public class RawProvinceDict {
         DICT.put("Trapani", "Trapani");
         DICT.put("Trento", "Trento");
         DICT.put("Treviso", "Treviso");
-        DICT.put("Trieste", "Trieste");
+        DICT.put("Provincia di Trieste", "Trieste");
         DICT.put("Udine", "Udine");
         DICT.put("Varese", "Varese");
         DICT.put("Città Metropolitana di Venezia", "Venezia");
