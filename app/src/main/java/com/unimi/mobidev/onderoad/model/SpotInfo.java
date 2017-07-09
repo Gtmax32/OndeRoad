@@ -88,13 +88,13 @@ public class SpotInfo implements Serializable, ClusterItem {
         this.longitudeSpot = longitudeSpot;
     }
 
-    /*public int getRatingSpot() {
+    public int getRatingSpot() {
         return ratingSpot;
     }
 
     public void setRatingSpot(int ratingSpot) {
         this.ratingSpot = ratingSpot;
-    }*/
+    }
 
     @Override
     public String getSnippet() {
@@ -130,8 +130,5 @@ public class SpotInfo implements Serializable, ClusterItem {
     public LatLng getPosition() {
         return new LatLng(this.latitudeSpot, this.longitudeSpot);
     }
-
-
-
 
 }

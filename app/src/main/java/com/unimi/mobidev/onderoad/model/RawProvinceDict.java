@@ -37,7 +37,7 @@ public class RawProvinceDict {
         DICT.put("Città Metropolitana di Catania", "Catania");
         DICT.put("Catanzaro", "Catanzaro");
         DICT.put("Chieti", "Chieti");
-        DICT.put("Como", "Como");
+        DICT.put("Provincia di Como", "Como");
         DICT.put("Cosenza", "Cosenza");
         DICT.put("Cremona", "Cremona");
         DICT.put("Crotone", "Crotone");
@@ -79,6 +79,7 @@ public class RawProvinceDict {
         DICT.put("Oristano", "Oristano");
         DICT.put("Padova", "Padova");
         DICT.put("Città Metropolitana di Palermo", "Palermo");
+        DICT.put("Provincia di Palermo", "Palermo");
         DICT.put("Parma", "Parma");
         DICT.put("Pavia", "Pavia");
         DICT.put("Perugia", "Perugia");
