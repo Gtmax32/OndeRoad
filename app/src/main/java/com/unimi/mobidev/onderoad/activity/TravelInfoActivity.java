@@ -10,11 +10,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -22,7 +27,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -32,23 +36,24 @@ import com.unimi.mobidev.onderoad.model.TravelInfo;
 import com.unimi.mobidev.onderoad.model.User;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int CREATE_ACTIVITY_REQUEST = 2;
+
+    private CallbackManager callbackManager;
+    private ShareDialog shareDialog;
     private TravelInfo travelDisplayed;
     private String travelDisplayedKey;
 
-    private ImageView passengerDriverImage;
-
     private TextView passengersActualInfo;
+    private TextView priceActualLabelInfo;
     private TextView priceActualInfo;
     private TextView surfboardActualInfo;
 
     private TextView dateTimeActualInfo;
     private TextView priceTotalInfo;
+    private TextView priceTotalLabelInfo;
     private TextView carSupportActualInfo;
 
     private EditText noteActualText;
@@ -60,6 +65,9 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_travel_info);
+
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.travelInfoToolbar);
         setSupportActionBar(toolbar);
@@ -87,12 +95,12 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
 
         isOwner = FirebaseUtils.getCurrentUser().getUid().equals(travelDisplayed.getOwnerTravel().getIdUser());
 
-        passengerDriverImage = (ImageView) findViewById(R.id.carInfoImage);
+        /*passengerDriverImage = (ImageView) findViewById(R.id.carInfoImage);
 
         if (isOwner)
             passengerDriverImage.setImageResource(R.drawable.ic_action_driver);
         else
-            passengerDriverImage.setImageResource(R.drawable.ic_action_passenger);
+            passengerDriverImage.setImageResource(R.drawable.ic_action_passenger);*/
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.actualTravelMap);
         mapFragment.getMapAsync(this);
@@ -106,12 +114,16 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         String temp = travelDisplayed.formatDataDeparture() + " - " + travelDisplayed.formatTimeDeparture();
 
         passengersActualInfo = (TextView) findViewById(R.id.passengersFractionDataText);
+        priceActualLabelInfo = (TextView) findViewById(R.id.actualPriceLabelText);
+        priceActualLabelInfo.setOnTouchListener(priceTouchForInfo);
         priceActualInfo = (TextView) findViewById(R.id.actualPriceDataText);
         surfboardActualInfo = (TextView) findViewById(R.id.surfboardFractionData);
 
         dateTimeActualInfo = (TextView) findViewById(R.id.actualDateTravel);
         dateTimeActualInfo.setText(temp);
 
+        priceTotalLabelInfo = (TextView) findViewById(R.id.totalPriceLabelInfo);
+        priceTotalLabelInfo.setOnTouchListener(priceTouchForInfo);
         priceTotalInfo = (TextView) findViewById(R.id.totalPriceDataInfo);
         carSupportActualInfo = (TextView) findViewById(R.id.carSupportDataInfo);
 
@@ -303,12 +315,21 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void shareTravel() {
-        Uri traveDeepLink = buildDeepLink(Uri.parse(getResources().getString(R.string.app_deeplink) + travelDisplayedKey));
-        Intent sendIntent = new Intent();
+        Uri travelDeepLink = buildDeepLink(Uri.parse(getResources().getString(R.string.app_deeplink) + travelDisplayedKey));
+
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                    .setQuote("Fuffa")
+                    .setContentUrl(travelDeepLink)
+                    .build();
+            shareDialog.show(linkContent);
+        }
+
+        /*Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, "Vieni a surfare?\n" + traveDeepLink);
         sendIntent.setType("text/plain");
-        startActivity(sendIntent);
+        startActivity(sendIntent);*/
     }
 
     private void modifyTravel() {
@@ -432,6 +453,16 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         // Return the completed deep link.
         return builder.build();
     }
+
+    private View.OnTouchListener priceTouchForInfo = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if(event.getAction() == MotionEvent.ACTION_UP) {
+                Toast.makeText(TravelInfoActivity.this.getApplicationContext(),"Prova",Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        }
+    };
 
     @Override
     public boolean onSupportNavigateUp() {

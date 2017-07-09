@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -69,6 +70,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
     private Spinner regionDestinationSpinner;
     private Spinner spotDestinationSpinner;
 
+    private TextView priceLabelInfo;
     private TextView priceTextView;
     private RadioGroup passengersRadioGroup;
     private CheckBox outboundCheckBox;
@@ -243,6 +245,9 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         //Car Info
 
+        priceLabelInfo = (TextView) findViewById(R.id.priceLabel);
+        priceLabelInfo.setOnTouchListener(touchForInfo);
+
         priceTextView = (TextView) findViewById(R.id.priceTextView);
         priceTextView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -399,6 +404,16 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             }
         }
     }
+
+    private View.OnTouchListener touchForInfo = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if(event.getAction() == MotionEvent.ACTION_UP) {
+                Toast.makeText(CreateActivity.this.getApplicationContext(),"Prova",Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        }
+    };
 
     public void onRadioButtonClicked(View view) {
         boolean checked = ((RadioButton) view).isChecked();
