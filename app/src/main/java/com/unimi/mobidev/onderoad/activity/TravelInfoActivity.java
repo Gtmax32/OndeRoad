@@ -13,11 +13,13 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -61,6 +63,31 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     private boolean isOwner;
     private int passengersNumber;
 
+    private int updatingPassengerInfo;
+
+    private FacebookCallback<Sharer.Result> shareCallback = new FacebookCallback<Sharer.Result>() {
+        @Override
+        public void onCancel() {
+            System.out.println("fb SHARE canceled");
+        }
+
+        @Override
+        public void onError(FacebookException error) {
+            System.out.println("fb SHARE error");
+        }
+
+        @Override
+        public void onSuccess(Sharer.Result result) {
+
+            String postId = result.getPostId();
+            if (postId != null)
+            {
+                // record successful FB share
+                System.out.println("fb SHARE success");
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +95,7 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
 
         callbackManager = CallbackManager.Factory.create();
         shareDialog = new ShareDialog(this);
+        shareDialog.registerCallback(callbackManager,shareCallback);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.travelInfoToolbar);
         setSupportActionBar(toolbar);
@@ -147,6 +175,8 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         carSupportActualInfo.setText(travelDisplayed.getCarTravel().getSurfboardType());
 
         noteActualText.setText(travelDisplayed.getNoteTravel());
+
+        updatingPassengerInfo = 0;
     }
 
     @Override
@@ -178,7 +208,28 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
 
             menu.findItem(R.id.removeFromTravelSubMenu).setEnabled(removeCondition);
             menu.findItem(R.id.removeFromTravelSubMenu).setVisible(removeCondition);
+
+            if (updatingPassengerInfo == 1) { //Passeggero appena aggiunto
+                menu.findItem(R.id.addSubMenu).setEnabled(false);
+                menu.findItem(R.id.addSubMenu).setVisible(false);
+
+                menu.findItem(R.id.removeFromTravelSubMenu).setEnabled(true);
+                menu.findItem(R.id.removeFromTravelSubMenu).setVisible(true);
+
+                updatingPassengerInfo = 0;
+            }
+            else if (updatingPassengerInfo == 2){ //Passeggero appena eliminato
+                menu.findItem(R.id.addSubMenu).setEnabled(true);
+                menu.findItem(R.id.addSubMenu).setVisible(true);
+
+                menu.findItem(R.id.removeFromTravelSubMenu).setEnabled(false);
+                menu.findItem(R.id.removeFromTravelSubMenu).setVisible(false);
+
+                updatingPassengerInfo = 0;
+            }
         }
+
+
 
         return true;
     }
@@ -319,7 +370,6 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
 
         if (ShareDialog.canShow(ShareLinkContent.class)) {
             ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                    .setQuote("Fuffa")
                     .setContentUrl(travelDeepLink)
                     .build();
             shareDialog.show(linkContent);
@@ -372,10 +422,16 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
 
         Toast.makeText(getApplicationContext(),getString(R.string.passengers_added_perfectly_message) + " " + travelDisplayed.getSpotDestination().getTitle() + ".",Toast.LENGTH_SHORT).show();
 
-        passengersNumber =+ 1;
+        passengersNumber += 1;
         this.passengersActualInfo.setText(passengersNumber + "/" + travelDisplayed.getCarTravel().getPassengersNumber());
 
-        this.recreate();
+        float actualPrice = travelDisplayed.getPriceTravel() / (passengersNumber + 1);
+        String temp = actualPrice + " €";
+        this.priceActualInfo.setText(temp);
+
+        updatingPassengerInfo = 1;
+
+        invalidateOptionsMenu();
 
         //this.passengersActualInfo.invalidate();
 
@@ -392,11 +448,16 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
 
         Toast.makeText(getApplicationContext(),getString(R.string.passengers_aremoved_perfectly_message) + " " + travelDisplayed.getSpotDestination().getTitle() + ".",Toast.LENGTH_SHORT).show();
 
-
-        passengersNumber =- 1;
+        passengersNumber -= 1;
         this.passengersActualInfo.setText(passengersNumber + "/" + travelDisplayed.getCarTravel().getPassengersNumber());
 
-        this.recreate();
+        float actualPrice = travelDisplayed.getPriceTravel() / (passengersNumber + 1);
+        String temp = actualPrice + " €";
+        this.priceActualInfo.setText(temp);
+
+        updatingPassengerInfo = 2;
+
+        invalidateOptionsMenu();
 
         //invalidateOptionsMenu();
 
@@ -419,6 +480,7 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         /*if (requestCode == CREATE_ACTIVITY_REQUEST) {
             if (resultCode == RESULT_OK) {
                 travelDisplayed = (TravelInfo) data.getExtras().get("TravelInfo");
@@ -457,8 +519,16 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     private View.OnTouchListener priceTouchForInfo = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+            String message = "";
             if(event.getAction() == MotionEvent.ACTION_UP) {
-                Toast.makeText(TravelInfoActivity.this.getApplicationContext(),"Prova",Toast.LENGTH_SHORT).show();
+                switch (v.getId()){
+                    case R.id.actualPriceLabelText:
+                        message = getString(R.string.passenger_price_hint);
+                        break;
+                    case R.id.totalPriceLabelInfo:
+                        message = getString(R.string.total_price_hint);
+                }
+                Toast.makeText(TravelInfoActivity.this.getApplicationContext(),message,Toast.LENGTH_LONG).show();
             }
             return true;
         }

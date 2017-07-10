@@ -409,7 +409,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if(event.getAction() == MotionEvent.ACTION_UP) {
-                Toast.makeText(CreateActivity.this.getApplicationContext(),"Prova",Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateActivity.this.getApplicationContext(), R.string.price_travel_hint,Toast.LENGTH_LONG).show();
             }
             return true;
         }

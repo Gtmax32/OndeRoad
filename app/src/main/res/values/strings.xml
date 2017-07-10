@@ -190,5 +190,8 @@
     <string name="removing_passenger_message">Sei sicuro di voler rinunciare al viaggio?</string>
     <string name="passengers_aremoved_perfectly_message">Hai rinunciato a partire per il viaggio per</string>
     <string name="street_textfield_hint">Inserisci il punto di ritrovo</string>
+    <string name="price_travel_hint">Prezzo viaggio: indica il prezzo complessivo del viaggio, che verrà diviso equamente tra i passeggeri ed il guidatore.</string>
+    <string name="passenger_price_hint">Prezzo x persona: indica il prezzo che ogni passeggero dovrà al guidatore.</string>
+    <string name="total_price_hint">Prezzo totale: indica il prezzo fissato dal guidatore per il viaggio, che andrà diviso per i passeggeri.</string>
 
 </resources>
