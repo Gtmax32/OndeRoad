@@ -46,7 +46,7 @@ public class MainFragment extends Fragment {
         this.travelsList = new ArrayList<>();
         this.travelAdapter = new TravelDetailAdapter(this.getActivity().getApplicationContext(), R.layout.travel_detail_layout, this.travelsList);
 
-        FirebaseUtils.getDatabaseReference("travels").orderByValue().addValueEventListener(dataToRetrieve);
+        FirebaseUtils.getDatabaseReference("travels").orderByChild("dateTimeDeparture").addValueEventListener(dataToRetrieve);
         //ref.child("travels").addChildEventListener(childToRetrieve);
 
         travelListView = (ListView) v.findViewById(R.id.travelListViewMain);

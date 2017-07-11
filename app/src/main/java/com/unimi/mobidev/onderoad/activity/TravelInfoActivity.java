@@ -107,7 +107,7 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         travelDisplayed = (TravelInfo) this.getIntent().getSerializableExtra("TravelInfo");
         travelDisplayedKey = (String) this.getIntent().getSerializableExtra("TravelKey");
 
-        FirebaseUtils.getDatabaseReference("travels").child(this.travelDisplayedKey).addListenerForSingleValueEvent(new ValueEventListener() {
+        /*FirebaseUtils.getDatabaseReference("travels").child(this.travelDisplayedKey).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 travelDisplayed = dataSnapshot.getValue(TravelInfo.class);
@@ -117,7 +117,7 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
         System.out.println("In TravelInfoActivity: " + travelDisplayed.toString());
 
@@ -237,11 +237,11 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.modifySubMenu:
+            /*case R.id.modifySubMenu:
                 System.out.println("Opening modification menu...");
-                Toast.makeText(this.getApplicationContext(), "Cooming soon!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.getApplicationContext(), "Coming soon!", Toast.LENGTH_SHORT).show();
                 //modifyTravel();
-                return true;
+                return true;*/
 
             case R.id.spotMapSubMenu:
                 System.out.println("Opening navigation menu...");

@@ -71,7 +71,7 @@ public class FavoritesFragment extends Fragment {
         passengerTravelListView.setAdapter(this.passengerTravelAdapter);
         passengerTravelListView.setOnItemClickListener(boxSelectedListener);
 
-        FirebaseUtils.getDatabaseReference("travels").addValueEventListener(dataToRetrieve);
+        FirebaseUtils.getDatabaseReference("travels").orderByChild("dateTimeDeparture").addValueEventListener(dataToRetrieve);
 
         addTravel = (FloatingActionButton) v.findViewById(R.id.addTravel);
         addTravel.setOnClickListener(new View.OnClickListener() {
