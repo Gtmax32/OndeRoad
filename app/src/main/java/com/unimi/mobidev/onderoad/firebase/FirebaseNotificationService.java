@@ -28,15 +28,15 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
         // message, here is where that should be initiated.
         System.out.println("From: " + remoteMessage.getFrom());
         System.out.println("Notification Message Body: " + remoteMessage.getNotification().getBody());
+        System.out.println("Data: " + remoteMessage.getData());
 
         pushNotification(remoteMessage.getNotification());
     }
 
     private void pushNotification(Notification message){
         Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)

@@ -270,8 +270,8 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         outboundCheckBox = (CheckBox) findViewById(R.id.outboundCheckBox);
 
-        surfboardRadioGroup = (RadioGroup) findViewById(R.id.surfboardRadioButtons);
-        newCar.setSurfboardNumber(4);
+        //surfboardRadioGroup = (RadioGroup) findViewById(R.id.surfboardRadioButtons);
+        newCar.setSurfboardNumber(0);
 
         /*adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, Arrays.asList("1","2","3","4","5"));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -435,7 +435,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
                 if (checked)
                     newCar.setPassengersNumber(4);
                 break;
-            case R.id.boardRadio1:
+            /*case R.id.boardRadio1:
                 if (checked)
                     newCar.setSurfboardNumber(1);
                 break;
@@ -450,7 +450,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             case R.id.boardRadio4:
                 if (checked)
                     newCar.setSurfboardNumber(4);
-                break;
+                break;*/
 
         }
     }
@@ -460,7 +460,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         if (price == 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Attenzione!").setMessage(R.string.price_not_set_alert_message)
+            builder.setTitle("Attenzione1").setMessage(R.string.price_not_set_alert_message)
                     .setCancelable(false)
                     .setNeutralButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -507,7 +507,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Attenzione!").setMessage(R.string.not_complete_travel_alert_message)
+                builder.setTitle("Attenzione").setMessage(R.string.not_complete_travel_alert_message)
                         .setCancelable(false)
                         .setNeutralButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -550,7 +550,8 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
                 if (selectedAddress.getFeatureName().equals(selectedAddress.getLocality())) {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(CreateActivity.this);
-                    builder.setMessage(selectedAddress.getLocality() + " " + getString(R.string.city_selection_alert_message))
+                    builder.setTitle("Attenzione")
+                            .setMessage(selectedAddress.getLocality() + " " + getString(R.string.city_selection_alert_message))
                             .setCancelable(false)
                             .setNeutralButton("OK", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
@@ -633,7 +634,8 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.creation_not_complete_alert_message)
+        builder.setTitle("Attenzione")
+                .setMessage(R.string.creation_not_complete_alert_message)
                 .setCancelable(false)
                 .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

@@ -2,6 +2,7 @@ package com.unimi.mobidev.onderoad.firebase;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -83,7 +84,7 @@ public class FirebaseUtils {
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
                 // Transaction completed
-                System.out.println("postTransaction:onComplete:" + databaseError);
+                //System.out.println("postTransaction:onComplete:" + databaseError);
             }
         });
     }

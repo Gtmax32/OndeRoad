@@ -29,9 +29,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.firebase.FirebaseUtils;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
@@ -51,7 +48,6 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     private TextView passengersActualInfo;
     private TextView priceActualLabelInfo;
     private TextView priceActualInfo;
-    private TextView surfboardActualInfo;
 
     private TextView dateTimeActualInfo;
     private TextView priceTotalInfo;
@@ -145,7 +141,6 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         priceActualLabelInfo = (TextView) findViewById(R.id.actualPriceLabelText);
         priceActualLabelInfo.setOnTouchListener(priceTouchForInfo);
         priceActualInfo = (TextView) findViewById(R.id.actualPriceDataText);
-        surfboardActualInfo = (TextView) findViewById(R.id.surfboardFractionData);
 
         dateTimeActualInfo = (TextView) findViewById(R.id.actualDateTravel);
         dateTimeActualInfo.setText(temp);
@@ -163,10 +158,6 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         temp = actualPrice + " €";
 
         priceActualInfo.setText(temp);
-
-        temp = travelDisplayed.getCarTravel().getSurfboardNumber() + "";
-
-        surfboardActualInfo.setText(temp);
 
         temp = travelDisplayed.getPriceTravel() + " €";
 
@@ -252,7 +243,8 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
                 System.out.println("Deleting current travel...");
 
                 AlertDialog.Builder builderDelete = new AlertDialog.Builder(this);
-                builderDelete.setMessage(R.string.deleting_travel_message)
+                builderDelete.setTitle("Attenzione")
+                        .setMessage(R.string.deleting_travel_message)
                         .setCancelable(false)
                         .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -282,7 +274,7 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
                 System.out.println("Adding a passengers...");
 
                 AlertDialog.Builder builderAdd = new AlertDialog.Builder(this);
-                builderAdd.setMessage(R.string.adding_like_passenger_message)
+                builderAdd.setTitle("Informazioni").setMessage(R.string.adding_like_passenger_message)
                         .setCancelable(false)
                         .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -303,7 +295,7 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
                 System.out.println("Removing a passengers...");
 
                 AlertDialog.Builder builderRemove = new AlertDialog.Builder(this);
-                builderRemove.setMessage(R.string.removing_passenger_message)
+                builderRemove.setTitle("Informazioni").setMessage(R.string.removing_passenger_message)
                         .setCancelable(false)
                         .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -366,20 +358,38 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void shareTravel() {
-        Uri travelDeepLink = buildDeepLink(Uri.parse(getResources().getString(R.string.app_deeplink) + travelDisplayedKey));
+        AlertDialog.Builder builderShare = new AlertDialog.Builder(this);
+        builderShare.setTitle("Informazioni").setMessage(R.string.sharing_platform_message)
+                .setCancelable(false)
+                .setPositiveButton("Facebook", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Uri travelDeepLink = buildDeepLink(Uri.parse(getResources().getString(R.string.app_deeplink) + travelDisplayedKey));
 
-        if (ShareDialog.canShow(ShareLinkContent.class)) {
-            ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                    .setContentUrl(travelDeepLink)
-                    .build();
-            shareDialog.show(linkContent);
-        }
+                        if (ShareDialog.canShow(ShareLinkContent.class)) {
+                            ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                                    .setContentUrl(travelDeepLink)
+                                    .build();
+                            shareDialog.show(linkContent);
+                        }
 
-        /*Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "Vieni a surfare?\n" + traveDeepLink);
-        sendIntent.setType("text/plain");
-        startActivity(sendIntent);*/
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton("Link", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Uri travelDeepLink = buildDeepLink(Uri.parse(getResources().getString(R.string.app_deeplink) + travelDisplayedKey));
+
+                        Intent sendIntent = new Intent();
+                        sendIntent.setAction(Intent.ACTION_SEND);
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, "Vieni a surfare?\n" + travelDeepLink);
+                        sendIntent.setType("text/plain");
+                        startActivity(sendIntent);
+
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertShare = builderShare.create();
+        alertShare.show();
     }
 
     private void modifyTravel() {

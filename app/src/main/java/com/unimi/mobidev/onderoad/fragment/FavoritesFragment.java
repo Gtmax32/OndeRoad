@@ -84,9 +84,11 @@ public class FavoritesFragment extends Fragment {
             }
         });
 
-        loadingProgressDialog = new ProgressDialog(getActivity());
+        loadingProgressDialog = new ProgressDialog(this.getActivity());
         loadingProgressDialog.setMessage(getActivity().getResources().getString(R.string.loading_travel_message));
         loadingProgressDialog.setCancelable(false);
+
+        loadingProgressDialog.show();
 
         return v;
     }
@@ -111,7 +113,6 @@ public class FavoritesFragment extends Fragment {
     private ValueEventListener dataToRetrieve = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            loadingProgressDialog.show();
 
             String currentUserKey = FirebaseAuth.getInstance().getCurrentUser().getUid();
             int driverSize, passengerSize;

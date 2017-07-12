@@ -29,6 +29,8 @@ import com.unimi.mobidev.onderoad.firebase.FirebaseUtils;
 import com.unimi.mobidev.onderoad.model.TravelInfo;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, ResultCallback<AppInviteInvitationResult>{
+    private final int TRAVEL_INFO_ACTIVITY_REQUEST = 10;
+
     private ViewPager viewPager;
     private TabsAdapter adapter;
 
@@ -121,7 +123,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.exit_alert_message)
+        builder.setTitle("Attenzione")
+                .setMessage(R.string.exit_alert_message)
                 .setCancelable(false)
                 .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -188,6 +191,26 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         } else {
             System.out.println("getInvitation: no deep link found.");
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        System.out.println("In MainActivity - onStop");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        System.out.println("In MainActivity - onPause");
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.out.println("In MainActivity - onDestroy");
+        finish();
     }
 }
 

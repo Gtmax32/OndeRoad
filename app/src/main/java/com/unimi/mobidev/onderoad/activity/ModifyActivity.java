@@ -335,7 +335,8 @@ public class ModifyActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.incomplete_modify_alert_message)
+        builder.setTitle("Attenzione")
+                .setMessage(R.string.incomplete_modify_alert_message)
                 .setCancelable(false)
                 .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

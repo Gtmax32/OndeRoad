@@ -91,7 +91,7 @@
 
     <string name="incomplete_modify_alert_message">Sicuro di voler tornare indietro?\nPerderai eventuali modifiche fatte.</string>
 
-    <string name="exit_alert_message">Sicuro di voler uscire?\n</string>
+    <string name="exit_alert_message">Sicuro di voler uscire dall\'applicazione?</string>
 
     <string name="title_activity_spot_info">SpotInfoActivity</string>
 
@@ -171,9 +171,9 @@
 
     <string name="full_car_message">La macchina non ha più posti disponibili.</string>
 
-    <string name="adding_like_passenger_message">Vuoi aggiungerti come passeggero a questo viaggio?</string>
+    <string name="adding_like_passenger_message">Vuoi aggiungerti come passeggero a questo viaggio? Ricorda che puoi portare al massimo una tavola, altrimenti contatta il guidatore.</string>
 
-    <string name="deleting_travel_message">Vuoi davvero cancellare questo viaggio?</string>
+    <string name="deleting_travel_message">Vuoi davvero cancellare questo viaggio? Non sarà possibile recuperarlo.</string>
 
     <string name="loading_travel_message">Un attimo di pazienza</string>
 
@@ -186,12 +186,21 @@
     <string name="price_not_set_alert_message">Il prezzo del viaggio è impostato a 0.\nNon è possibile creare un viaggio a costo 0.</string>
 
     <string name="loading_travel_list_message">Sto cercando i viaggi per te</string>
+
     <string name="remove_settings">Rinuncia al viaggio</string>
+
     <string name="removing_passenger_message">Sei sicuro di voler rinunciare al viaggio?</string>
+
     <string name="passengers_aremoved_perfectly_message">Hai rinunciato a partire per il viaggio per</string>
+
     <string name="street_textfield_hint">Inserisci il punto di ritrovo</string>
+
     <string name="price_travel_hint">Prezzo viaggio: indica il prezzo complessivo del viaggio, che verrà diviso equamente tra i passeggeri ed il guidatore.</string>
+
     <string name="passenger_price_hint">Prezzo a persona: indica il prezzo che ogni passeggero dovrà al guidatore.</string>
+
     <string name="total_price_hint">Prezzo totale: indica il prezzo fissato dal guidatore per il viaggio, che andrà diviso per i passeggeri.</string>
+
+    <string name="sharing_platform_message">Vuoi utilizzare Facebook o un link per condividere il tuo viaggio?</string>
 
 </resources>

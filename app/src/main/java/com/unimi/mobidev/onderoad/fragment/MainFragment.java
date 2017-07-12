@@ -53,9 +53,11 @@ public class MainFragment extends Fragment {
         travelListView.setAdapter(this.travelAdapter);
         travelListView.setOnItemClickListener(boxSelectedListener);
 
-        loadingProgressDialog = new ProgressDialog(v.getContext());
+        loadingProgressDialog = new ProgressDialog(this.getActivity());
         loadingProgressDialog.setMessage(v.getContext().getResources().getString(R.string.loading_travel_list_message));
         loadingProgressDialog.setCancelable(false);
+
+        loadingProgressDialog.show();
 
         return v;
     }
@@ -101,7 +103,7 @@ public class MainFragment extends Fragment {
                 travelListView.setVisibility(View.GONE);
             }
 
-
+            loadingProgressDialog.hide();
         }
 
         @Override
