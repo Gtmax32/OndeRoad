@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.unimi.mobidev.onderoad.R;
 import com.unimi.mobidev.onderoad.activity.TravelInfoActivity;
@@ -23,6 +24,7 @@ import com.unimi.mobidev.onderoad.model.TravelInfo;
 import com.unimi.mobidev.onderoad.other.TravelDetail;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainFragment extends Fragment {
     private TextView suggestionNewTravel;
@@ -41,23 +43,28 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
 
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.HOUR_OF_DAY,12);
+        Query travelToReturn;
+
         suggestionNewTravel = (TextView) v.findViewById(R.id.addNewTravelMain);
 
         this.travelsList = new ArrayList<>();
         this.travelAdapter = new TravelDetailAdapter(this.getActivity().getApplicationContext(), R.layout.travel_detail_layout, this.travelsList);
 
-        FirebaseUtils.getDatabaseReference("travels").orderByChild("dateTimeDeparture").addValueEventListener(dataToRetrieve);
+        travelToReturn = FirebaseUtils.getDatabaseReference("travels").orderByChild("dateTimeDeparture").startAt(c.getTimeInMillis());
+        travelToReturn.addValueEventListener(dataToRetrieve);
         //ref.child("travels").addChildEventListener(childToRetrieve);
 
         travelListView = (ListView) v.findViewById(R.id.travelListViewMain);
         travelListView.setAdapter(this.travelAdapter);
         travelListView.setOnItemClickListener(boxSelectedListener);
 
-        loadingProgressDialog = new ProgressDialog(this.getActivity());
+        /*loadingProgressDialog = new ProgressDialog(this.getActivity());
         loadingProgressDialog.setMessage(v.getContext().getResources().getString(R.string.loading_travel_list_message));
         loadingProgressDialog.setCancelable(false);
 
-        loadingProgressDialog.show();
+        loadingProgressDialog.show();*/
 
         return v;
     }
@@ -103,7 +110,7 @@ public class MainFragment extends Fragment {
                 travelListView.setVisibility(View.GONE);
             }
 
-            loadingProgressDialog.hide();
+            //loadingProgressDialog.hide();
         }
 
         @Override

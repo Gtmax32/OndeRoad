@@ -546,7 +546,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             }
 
             if (selectedAddress != null) {
-
+                System.out.println("SelectedAddress: " + selectedAddress.toString());
                 if (selectedAddress.getFeatureName().equals(selectedAddress.getLocality())) {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(CreateActivity.this);
