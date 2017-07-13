@@ -85,8 +85,6 @@ public class LoginActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.nameToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.app_name);
-        // TODO: Inserire l'icona dell'applicazione
-        getSupportActionBar().setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_beach_access_black_24px, null));
 
         authenticationProgressDialog = new ProgressDialog(this);
         authenticationProgressDialog.setMessage(getApplicationContext().getResources().getString(R.string.login_progress_message));

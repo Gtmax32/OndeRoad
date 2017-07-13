@@ -84,11 +84,11 @@ public class FavoritesFragment extends Fragment {
             }
         });
 
-        loadingProgressDialog = new ProgressDialog(this.getActivity());
+        /*loadingProgressDialog = new ProgressDialog(this.getActivity());
         loadingProgressDialog.setMessage(getActivity().getResources().getString(R.string.loading_travel_message));
         loadingProgressDialog.setCancelable(false);
 
-        loadingProgressDialog.show();
+        loadingProgressDialog.show();*/
 
         return v;
     }
@@ -155,7 +155,7 @@ public class FavoritesFragment extends Fragment {
             else
                 addTravelTextView.setVisibility(View.GONE);
 
-            loadingProgressDialog.hide();
+            //loadingProgressDialog.hide();
         }
 
         @Override

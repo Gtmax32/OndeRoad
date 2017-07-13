@@ -15,12 +15,29 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true" />
 
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/loginButton"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/facebookTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/facebook_message"
+            android:gravity="center"
+            android:layout_gravity="top"
+            android:layout_marginBottom="15dp"/>
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/loginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"/>
+
+    </LinearLayout>
+
+
 
 </RelativeLayout>
