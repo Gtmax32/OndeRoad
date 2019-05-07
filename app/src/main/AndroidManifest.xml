@@ -104,7 +104,7 @@
             android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCGksU7GecNKQMkO7CZEREWcfwWqEr0VCM" />
+            android:value="AIzaSyC8b1biBAOh2-JbzTE8rR1_IjJ5jUZj_7A" />
 
 
     </application>
