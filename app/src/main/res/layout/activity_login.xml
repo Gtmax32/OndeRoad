@@ -6,7 +6,7 @@
     tools:context=".activity.LoginActivity"
     android:background="@color/colorBackground">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/nameToolbar"
         android:layout_width="match_parent"

@@ -3,13 +3,14 @@ package com.unimi.mobidev.onderoad.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -41,7 +42,7 @@ public class SpotInfoActivity extends AppCompatActivity implements OnMapReadyCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spot_info);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.spotInfoToolbar);
+        Toolbar toolbar = findViewById(R.id.spotInfoToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.info_spot);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -51,31 +52,31 @@ public class SpotInfoActivity extends AppCompatActivity implements OnMapReadyCal
 
         String temp;
 
-        regionSpotValue = (TextView) findViewById(R.id.regionDataSpotInfo);
+        regionSpotValue = findViewById(R.id.regionDataSpotInfo);
         regionSpotValue.setText(spotToDisplay.getRegionSpot());
 
-        provinceSpotValue = (TextView) findViewById(R.id.provinceDataSpotInfo);
+        provinceSpotValue = findViewById(R.id.provinceDataSpotInfo);
         provinceSpotValue.setText(spotToDisplay.getProvinceSpot());
 
-        citySpotValue = (TextView) findViewById(R.id.cityDataSpotInfo);
+        citySpotValue = findViewById(R.id.cityDataSpotInfo);
         citySpotValue.setText(spotToDisplay.getCitySpot());
 
-        nameSpotValue = (TextView) findViewById(R.id.nameDataSpotInfo);
+        nameSpotValue = findViewById(R.id.nameDataSpotInfo);
         nameSpotValue.setText(spotToDisplay.getTitle());
 
-        spotWaveValue = (TextView) findViewById(R.id.waveDataSpotInfo);
+        spotWaveValue = findViewById(R.id.waveDataSpotInfo);
         spotWaveValue.setText(spotToDisplay.getTableSpot().getWaveSpot());
 
-        spotWindValue = (TextView) findViewById(R.id.windDataSpotInfo);
+        spotWindValue = findViewById(R.id.windDataSpotInfo);
         spotWindValue.setText(spotToDisplay.getTableSpot().getWindSpot());
 
-        spotSwellValue = (TextView) findViewById(R.id.swellDataSpotInfo);
+        spotSwellValue = findViewById(R.id.swellDataSpotInfo);
         spotSwellValue.setText(spotToDisplay.getTableSpot().getSwellSpot());
 
-        spotSeabedValue = (TextView) findViewById(R.id.seabedDataSpotInfo);
+        spotSeabedValue = findViewById(R.id.seabedDataSpotInfo);
         spotSeabedValue.setText(spotToDisplay.getTableSpot().getSeabedSpot());
 
-        noteSpotValue = (TextView) findViewById(R.id.spotNoteData);
+        noteSpotValue = findViewById(R.id.spotNoteData);
         temp = spotToDisplay.getSnippet();
         noteSpotValue.setText(temp);
 

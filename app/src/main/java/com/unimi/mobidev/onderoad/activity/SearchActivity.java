@@ -4,14 +4,14 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.SearchView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.unimi.mobidev.onderoad.R;
 
@@ -28,7 +28,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
         handleIntent(getIntent());
 
-        spotList = (ListView) findViewById(R.id.listViewSpot);
+        spotList = findViewById(R.id.listViewSpot);
 
     }
 

@@ -5,11 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -21,6 +16,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -81,7 +82,7 @@ public class ModifyActivity extends AppCompatActivity implements GoogleApiClient
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.modifyToolbar);
+        Toolbar toolbar = findViewById(R.id.modifyToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.modify_activity);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -98,14 +99,14 @@ public class ModifyActivity extends AppCompatActivity implements GoogleApiClient
 
         currentLocationBounds = currentLocation.getLatLngBounds(ModifyActivity.TEN_KM_RADIUS);
 
-        streetDepartureAutocompleteView = (StreetAutoCompleteTextView) findViewById(R.id.modifyStreetAutoCompleteTextField);
+        streetDepartureAutocompleteView = findViewById(R.id.modifyStreetAutoCompleteTextField);
         streetDepartureAutocompleteView.setText(toModifyTravel.getAddressDeparture().getStreetInfo());
         streetDepartureAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
 
         streetAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, currentLocationBounds, null);
         streetDepartureAutocompleteView.setAdapter(streetAdapter);
 
-        datePickerButton = (Button) findViewById(R.id.modifyDateButton);
+        datePickerButton = findViewById(R.id.modifyDateButton);
         datePickerButton.setText(toModifyTravel.formatDataDeparture());
         datePickerButton.addTextChangedListener(new TextWatcher() {
             @Override
@@ -124,7 +125,7 @@ public class ModifyActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        timePickerButton = (Button) findViewById(R.id.modifyTimeButton);
+        timePickerButton = findViewById(R.id.modifyTimeButton);
         timePickerButton.setText(toModifyTravel.formatTimeDeparture());
         timePickerButton.addTextChangedListener(new TextWatcher() {
             @Override
@@ -149,12 +150,12 @@ public class ModifyActivity extends AppCompatActivity implements GoogleApiClient
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, RegionSpotDict.getKeys());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        regionDestinationSpinner = (Spinner) findViewById(R.id.modifyDestinationRegionSpinner);
+        regionDestinationSpinner = findViewById(R.id.modifyDestinationRegionSpinner);
         regionDestinationSpinner.setAdapter(adapter);
         int position = adapter.getPosition(toModifyTravel.getSpotDestination().getRegionSpot());
         regionDestinationSpinner.setSelection(position);
 
-        spotDestinationSpinner = (Spinner) findViewById(R.id.modifyDestinationProvinceSpinner);
+        spotDestinationSpinner = findViewById(R.id.modifyDestinationProvinceSpinner);
         spotDestinationSpinner.setEnabled(false);
 
         regionDestinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -182,7 +183,7 @@ public class ModifyActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        noteText = (EditText) findViewById(R.id.modifyNoteTextField);
+        noteText = findViewById(R.id.modifyNoteTextField);
         noteText.setText(toModifyTravel.getNoteTravel());
 
         noteText.addTextChangedListener(new TextWatcher() {

@@ -3,13 +3,14 @@ package com.unimi.mobidev.onderoad.fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -47,7 +48,7 @@ public class MainFragment extends Fragment {
         c.add(Calendar.HOUR_OF_DAY,12);
         Query travelToReturn;
 
-        suggestionNewTravel = (TextView) v.findViewById(R.id.addNewTravelMain);
+        suggestionNewTravel = v.findViewById(R.id.addNewTravelMain);
 
         this.travelsList = new ArrayList<>();
         this.travelAdapter = new TravelDetailAdapter(this.getActivity().getApplicationContext(), R.layout.travel_detail_layout, this.travelsList);
@@ -56,7 +57,7 @@ public class MainFragment extends Fragment {
         travelToReturn.addValueEventListener(dataToRetrieve);
         //ref.child("travels").addChildEventListener(childToRetrieve);
 
-        travelListView = (ListView) v.findViewById(R.id.travelListViewMain);
+        travelListView = v.findViewById(R.id.travelListViewMain);
         travelListView.setAdapter(this.travelAdapter);
         travelListView.setOnItemClickListener(boxSelectedListener);
 

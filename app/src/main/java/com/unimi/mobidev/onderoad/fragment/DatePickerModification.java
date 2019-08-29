@@ -3,9 +3,10 @@ package com.unimi.mobidev.onderoad.fragment;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.widget.Button;
 import android.widget.DatePicker;
+
+import androidx.fragment.app.DialogFragment;
 
 import com.unimi.mobidev.onderoad.R;
 
@@ -24,8 +25,8 @@ public class DatePickerModification extends DialogFragment implements DatePicker
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Calendar c = Calendar.getInstance();
 
-        Button dateButton = (Button) getActivity().findViewById(R.id.modifyDateButton);
-        String splitDate[] = dateButton.getText().toString().split(" ");
+        Button dateButton = getActivity().findViewById(R.id.modifyDateButton);
+        String[] splitDate = dateButton.getText().toString().split(" ");
 
         int day = Integer.parseInt(splitDate[0]);
 
@@ -58,7 +59,7 @@ public class DatePickerModification extends DialogFragment implements DatePicker
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        Button dateButton = (Button) getActivity().findViewById(R.id.modifyDateButton);
+        Button dateButton = getActivity().findViewById(R.id.modifyDateButton);
         String date;
 
         Calendar c = Calendar.getInstance();

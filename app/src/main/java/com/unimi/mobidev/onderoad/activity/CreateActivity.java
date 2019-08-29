@@ -6,12 +6,6 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
@@ -28,6 +22,13 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -104,6 +105,16 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
     private String timeTravel = " ", dateTravel = " ";
 
+    private View.OnTouchListener touchForInfo = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                Toast.makeText(CreateActivity.this.getApplicationContext(), R.string.price_travel_hint, Toast.LENGTH_LONG).show();
+            }
+            return true;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +122,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.travelInfoToolbar);
+        Toolbar toolbar = findViewById(R.id.travelInfoToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.info_create);
 
@@ -129,7 +140,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         FirebaseUser currentUser = FirebaseUtils.getCurrentUser();
 
-        ownerTravel = new User(currentUser.getUid(), currentUser.getDisplayName(), currentUser.getEmail(),FirebaseUtils.getFirebaseToken());
+        ownerTravel = new User(currentUser.getUid(), currentUser.getDisplayName(), currentUser.getEmail(), FirebaseUtils.getFirebaseToken());
 
         mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, 0, this).addApi(Places.GEO_DATA_API).build();
 
@@ -156,13 +167,13 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         currentLocationBounds = currentLocation.getLatLngBounds(CreateActivity.TEN_KM_RADIUS);
 
-        streetDepartureAutocompleteView = (StreetAutoCompleteTextView) findViewById(R.id.streetAutoCompleteTextField);
+        streetDepartureAutocompleteView = findViewById(R.id.streetAutoCompleteTextField);
         streetDepartureAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
 
         streetAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, currentLocationBounds, null);
         streetDepartureAutocompleteView.setAdapter(streetAdapter);
 
-        datePickerButton = (Button) findViewById(R.id.dateButton);
+        datePickerButton = findViewById(R.id.dateButton);
         datePickerButton.setText(dateTravel);
         datePickerButton.addTextChangedListener(new TextWatcher() {
             @Override
@@ -181,7 +192,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        timePickerButton = (Button) findViewById(R.id.timeButton);
+        timePickerButton = findViewById(R.id.timeButton);
         timePickerButton.setText(timeTravel);
         timePickerButton.addTextChangedListener(new TextWatcher() {
             @Override
@@ -207,7 +218,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, RegionSpotDict.getKeys());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        regionDestinationSpinner = (Spinner) findViewById(R.id.destinationRegionSpinner);
+        regionDestinationSpinner = findViewById(R.id.destinationRegionSpinner);
         regionDestinationSpinner.setAdapter(adapter);
 
         if (spotDetail != null) {
@@ -215,7 +226,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             regionDestinationSpinner.setSelection(position);
         }
 
-        spotDestinationSpinner = (Spinner) findViewById(R.id.destinationSpotSpinner);
+        spotDestinationSpinner = findViewById(R.id.destinationSpotSpinner);
         spotDestinationSpinner.setEnabled(false);
 
         regionDestinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -245,10 +256,10 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
 
         //Car Info
 
-        priceLabelInfo = (TextView) findViewById(R.id.priceLabel);
+        priceLabelInfo = findViewById(R.id.priceLabel);
         priceLabelInfo.setOnTouchListener(touchForInfo);
 
-        priceTextView = (TextView) findViewById(R.id.priceTextView);
+        priceTextView = findViewById(R.id.priceTextView);
         priceTextView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -265,10 +276,10 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        passengersRadioGroup = (RadioGroup) findViewById(R.id.passengersRadioButtons);
+        passengersRadioGroup = findViewById(R.id.passengersRadioButtons);
         newCar.setPassengersNumber(4);
 
-        outboundCheckBox = (CheckBox) findViewById(R.id.outboundCheckBox);
+        outboundCheckBox = findViewById(R.id.outboundCheckBox);
 
         //surfboardRadioGroup = (RadioGroup) findViewById(R.id.surfboardRadioButtons);
         newCar.setSurfboardNumber(0);
@@ -310,7 +321,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         ArrayAdapter<CharSequence> supportAdapter = ArrayAdapter.createFromResource(this, R.array.support_types, android.R.layout.simple_spinner_item);
         supportAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        carSupportTypeSpinner = (Spinner) findViewById(R.id.carSupportTypeSpinner);
+        carSupportTypeSpinner = findViewById(R.id.carSupportTypeSpinner);
         carSupportTypeSpinner.setAdapter(supportAdapter);
 
         carSupportTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -325,7 +336,7 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        noteText = (EditText) findViewById(R.id.noteTextField);
+        noteText = findViewById(R.id.noteTextField);
         noteText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -355,21 +366,6 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, a);
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, a);
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 0: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    streetDepartureAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
-                } else {
-                    Toast.makeText(this, "I permessi sono necessari per migliorare\nl'efficienza dell'applicazione!", Toast.LENGTH_LONG).show();
-                    streetDepartureAutocompleteView.setOnItemClickListener(null);
-                }
             }
         }
     }
@@ -405,15 +401,20 @@ public class CreateActivity extends AppCompatActivity implements GoogleApiClient
         }
     }
 
-    private View.OnTouchListener touchForInfo = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            if(event.getAction() == MotionEvent.ACTION_UP) {
-                Toast.makeText(CreateActivity.this.getApplicationContext(), R.string.price_travel_hint,Toast.LENGTH_LONG).show();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 0: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    streetDepartureAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
+                } else {
+                    Toast.makeText(this, "I permessi sono necessari per migliorare\nl'efficienza dell'applicazione!", Toast.LENGTH_LONG).show();
+                    streetDepartureAutocompleteView.setOnItemClickListener(null);
+                }
             }
-            return true;
         }
-    };
+    }
 
     public void onRadioButtonClicked(View view) {
         boolean checked = ((RadioButton) view).isChecked();

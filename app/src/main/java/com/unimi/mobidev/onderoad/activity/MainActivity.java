@@ -5,14 +5,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitationResult;
@@ -20,6 +20,7 @@ import com.google.android.gms.appinvite.AppInviteReferral;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -42,25 +43,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
         TabLayout.Tab list = tabLayout.newTab(), favorites = tabLayout.newTab(),
                 spot = tabLayout.newTab(), settings = tabLayout.newTab();
 
         View listView = getLayoutInflater().inflate(R.layout.tab_layout, null);
-        ImageView listIcon = (ImageView) listView.findViewById(R.id.imageView);
-        TextView listLabel = (TextView) listView.findViewById(R.id.textView);
+        ImageView listIcon = listView.findViewById(R.id.imageView);
+        TextView listLabel = listView.findViewById(R.id.textView);
         listIcon.setImageResource(R.drawable.ic_action_home );
         listLabel.setText(R.string.main_fragment);
 
         View favView = getLayoutInflater().inflate(R.layout.tab_layout, null);
-        ImageView favIcon = (ImageView) favView.findViewById(R.id.imageView);
-        TextView favLabel = (TextView) favView.findViewById(R.id.textView);
+        ImageView favIcon = favView.findViewById(R.id.imageView);
+        TextView favLabel = favView.findViewById(R.id.textView);
         favIcon.setImageResource(R.drawable.ic_action_favorites);
         favLabel.setText(R.string.favorites_fragment);
 
         View spotView = getLayoutInflater().inflate(R.layout.tab_layout, null);
-        ImageView spotIcon = (ImageView) spotView.findViewById(R.id.imageView);
-        TextView spotLabel = (TextView) spotView.findViewById(R.id.textView);
+        ImageView spotIcon = spotView.findViewById(R.id.imageView);
+        TextView spotLabel = spotView.findViewById(R.id.textView);
         spotIcon.setImageResource(R.drawable.ic_action_spot);
         spotLabel.setText(R.string.spot_fragment);
 
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = findViewById(R.id.pager);
         adapter = new TabsAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
 
         viewPager.setAdapter(adapter);

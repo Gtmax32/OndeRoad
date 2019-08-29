@@ -3,8 +3,6 @@ package com.unimi.mobidev.onderoad.fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +11,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,7 +53,7 @@ public class FavoritesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_favorites, container, false);
-        addTravelTextView = (TextView) v.findViewById(R.id.addNewTravelFavorites);
+        addTravelTextView = v.findViewById(R.id.addNewTravelFavorites);
 
         this.driverTravelsList = new ArrayList<>();
         this.driverTravelAdapter = new TravelDetailAdapter(this.getActivity().getApplicationContext(), R.layout.travel_detail_layout, this.driverTravelsList);
@@ -60,20 +61,20 @@ public class FavoritesFragment extends Fragment {
         this.passengerTravelsList = new ArrayList<>();
         this.passengerTravelAdapter = new TravelDetailAdapter(this.getActivity().getApplicationContext(), R.layout.travel_detail_layout, this.passengerTravelsList);
 
-        this.driverLabelLayout = (RelativeLayout) v.findViewById(R.id.driverTravelsLayout);
-        this.passengerLabelLayout = (RelativeLayout) v.findViewById(R.id.passengerTravelsLayout);
+        this.driverLabelLayout = v.findViewById(R.id.driverTravelsLayout);
+        this.passengerLabelLayout = v.findViewById(R.id.passengerTravelsLayout);
 
-        driverTravelListView = (ListView) v.findViewById(R.id.driverTravelListView);
+        driverTravelListView = v.findViewById(R.id.driverTravelListView);
         driverTravelListView.setAdapter(this.driverTravelAdapter);
         driverTravelListView.setOnItemClickListener(boxSelectedListener);
 
-        passengerTravelListView = (ListView) v.findViewById(R.id.passengerTravelListView);
+        passengerTravelListView = v.findViewById(R.id.passengerTravelListView);
         passengerTravelListView.setAdapter(this.passengerTravelAdapter);
         passengerTravelListView.setOnItemClickListener(boxSelectedListener);
 
         FirebaseUtils.getDatabaseReference("travels").orderByChild("dateTimeDeparture").addValueEventListener(dataToRetrieve);
 
-        addTravel = (FloatingActionButton) v.findViewById(R.id.addTravel);
+        addTravel = v.findViewById(R.id.addTravel);
         addTravel.setOnClickListener(new View.OnClickListener() {
 
             @Override

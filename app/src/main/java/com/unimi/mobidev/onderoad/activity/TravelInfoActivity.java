@@ -4,9 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +12,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -93,7 +94,7 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         shareDialog = new ShareDialog(this);
         shareDialog.registerCallback(callbackManager,shareCallback);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.travelInfoToolbar);
+        Toolbar toolbar = findViewById(R.id.travelInfoToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.info_travel);
 
@@ -137,20 +138,20 @@ public class TravelInfoActivity extends AppCompatActivity implements OnMapReadyC
         float actualPrice = travelDisplayed.getPriceTravel() / (passengersNumber + 1);
         String temp = travelDisplayed.formatDataDeparture() + " - " + travelDisplayed.formatTimeDeparture();
 
-        passengersActualInfo = (TextView) findViewById(R.id.passengersFractionDataText);
-        priceActualLabelInfo = (TextView) findViewById(R.id.actualPriceLabelText);
+        passengersActualInfo = findViewById(R.id.passengersFractionDataText);
+        priceActualLabelInfo = findViewById(R.id.actualPriceLabelText);
         priceActualLabelInfo.setOnTouchListener(priceTouchForInfo);
-        priceActualInfo = (TextView) findViewById(R.id.actualPriceDataText);
+        priceActualInfo = findViewById(R.id.actualPriceDataText);
 
-        dateTimeActualInfo = (TextView) findViewById(R.id.actualDateTravel);
+        dateTimeActualInfo = findViewById(R.id.actualDateTravel);
         dateTimeActualInfo.setText(temp);
 
-        priceTotalLabelInfo = (TextView) findViewById(R.id.totalPriceLabelInfo);
+        priceTotalLabelInfo = findViewById(R.id.totalPriceLabelInfo);
         priceTotalLabelInfo.setOnTouchListener(priceTouchForInfo);
-        priceTotalInfo = (TextView) findViewById(R.id.totalPriceDataInfo);
-        carSupportActualInfo = (TextView) findViewById(R.id.carSupportDataInfo);
+        priceTotalInfo = findViewById(R.id.totalPriceDataInfo);
+        carSupportActualInfo = findViewById(R.id.carSupportDataInfo);
 
-        noteActualText = (EditText) findViewById(R.id.actualNoteText);
+        noteActualText = findViewById(R.id.actualNoteText);
         noteActualText.setKeyListener(null);
 
         passengersActualInfo.setText(passengersNumber + "/" + travelDisplayed.getCarTravel().getPassengersNumber());

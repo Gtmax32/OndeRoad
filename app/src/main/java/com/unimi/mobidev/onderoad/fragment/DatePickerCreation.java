@@ -3,9 +3,10 @@ package com.unimi.mobidev.onderoad.fragment;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.widget.Button;
 import android.widget.DatePicker;
+
+import androidx.fragment.app.DialogFragment;
 
 import com.unimi.mobidev.onderoad.R;
 
@@ -38,7 +39,7 @@ public class DatePickerCreation extends DialogFragment implements DatePickerDial
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        Button dateButton = (Button) getActivity().findViewById(R.id.dateButton);
+        Button dateButton = getActivity().findViewById(R.id.dateButton);
         String date;
 
         Calendar c = Calendar.getInstance();

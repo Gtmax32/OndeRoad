@@ -4,7 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
-import android.support.v7.widget.AppCompatAutoCompleteTextView;
+
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 /**
  * Created by Pc-Utente on 28/09/2016.

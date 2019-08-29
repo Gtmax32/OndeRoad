@@ -3,10 +3,11 @@ package com.unimi.mobidev.onderoad.fragment;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.widget.Button;
 import android.widget.TimePicker;
+
+import androidx.fragment.app.DialogFragment;
 
 import com.unimi.mobidev.onderoad.R;
 
@@ -32,7 +33,7 @@ public class TimePickerCreation extends DialogFragment implements TimePickerDial
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        Button timeButton = (Button) getActivity().findViewById(R.id.timeButton);
+        Button timeButton = getActivity().findViewById(R.id.timeButton);
         String time;
 
         time = String.format(Locale.ITALIAN, "%02d", hourOfDay) + ":" + String.format(Locale.ITALIAN, "%02d", minute);

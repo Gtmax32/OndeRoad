@@ -9,7 +9,7 @@
     android:orientation="vertical"
     tools:context="com.unimi.mobidev.onderoad.activity.SpotInfoActivity">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/spotInfoToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
